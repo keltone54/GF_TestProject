@@ -27,6 +27,7 @@ bool HelloWorld::init()
 
 	// ³»¿ë ======================================================
 
+	//merong
 
 	//g_pTestData->init();
 	this->schedule(schedule_selector(HelloWorld::callEveryFrame));

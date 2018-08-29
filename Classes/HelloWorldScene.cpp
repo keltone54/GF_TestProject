@@ -48,24 +48,7 @@ bool HelloWorld::init()
 	sPlayer->setScale(1.0f);
 	playerBox->setZOrder(101);
 	playerBox->addChild(sPlayer);
-
-
-
-	initMonster();
-
-	monsterBox = Sprite::create();
-	monsterBox->setTextureRect(Rect(-50, -100, 50, 100));
-	monsterBox->setColor(Color3B::RED);
-	monsterBox->setOpacity(0.0f);
-	monsterBox->setPosition(wPos5 + Vec2(100, 0));
-	this->addChild(monsterBox);
-
-	sMonster->setPosition(Vec2(monsterBox->getContentSize().width / 2, monsterBox->getContentSize().height / 2));
-	sMonster->setScale(1.0f);
-	monsterBox->setZOrder(100);
-	monsterBox->setScale(0.75f);
-	monsterBox->addChild(sMonster);
-
+		
 	//============================================================
 
 	{
@@ -91,8 +74,6 @@ void HelloWorld::initValue()
 	isUp = false;
 	isPressUp = false;
 	isPressDown = false;
-
-	chaseOn = false;
 }
 
 void HelloWorld::onEnter()
@@ -111,17 +92,17 @@ void HelloWorld::callEveryFrame(float f)
 	{
 		if (isPressedLR)
 		{
-			if (isLeft && !playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
-				playerBox->setPosition(playerBox->getPosition() + Vec2(-5.0f, 0));
-			else if (!isLeft && !playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
-				playerBox->setPosition(playerBox->getPosition() + Vec2(5.0f, 0));
+			if (isLeft)
+				playerBox->setPosition(playerBox->getPosition() + Vec2(-8.0f, 0));
+			else if (!isLeft)
+				playerBox->setPosition(playerBox->getPosition() + Vec2(8.0f, 0));
 			
-			if (isLeft && playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
+			/*if (isLeft && playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
 				playerBox->setPosition(playerBox->getPosition() + Vec2(5.0f, 0));
 			else if (!isLeft && playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
-				playerBox->setPosition(playerBox->getPosition() + Vec2(-5.0f, 0));
+				playerBox->setPosition(playerBox->getPosition() + Vec2(-5.0f, 0));*/
 		}
-		if (isPressedUD)
+		/*if (isPressedUD)
 		{
 			if (isUp && !playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
 				playerBox->setPosition(playerBox->getPosition() + Vec2(0, 3.0f));
@@ -132,21 +113,7 @@ void HelloWorld::callEveryFrame(float f)
 				playerBox->setPosition(playerBox->getPosition() + Vec2(0, -3.0f));
 			else if (!isUp && playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
 				playerBox->setPosition(playerBox->getPosition() + Vec2(0, 3.0f));
-		}
-	}
-
-	if (chaseOn)
-	{
-
-	}
-
-	if (playerBox->getPosition().x > monsterBox->getPosition().x)
-	{
-		sMonster->setFlippedX(true);
-	}
-	else if (playerBox->getPosition().x < monsterBox->getPosition().x)
-	{
-		sMonster->setFlippedX(false);
+		}*/
 	}
 }
 
@@ -215,23 +182,23 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 		break;
 	case KEY::KEY_W: // Up
 	case KEY::KEY_UP_ARROW:
-		isUp = true;
+		/*isUp = true;
 		isPressUp = true;
 		if (!isPressedLR || !isPressedUD)
 		{
 			moveCharacter(n_sltChar);
 			isPressedUD = true;
-		}
+		}*/
 		break;
 	case KEY::KEY_S: // Down
 	case KEY::KEY_DOWN_ARROW:
-		isUp = false;
+		/*isUp = false;
 		isPressDown = true;
 		if (!isPressedLR || !isPressedUD)
 		{
 			moveCharacter(n_sltChar);
 			isPressedUD = true;
-		}
+		}*/
 		break;
 	case KEY::KEY_TAB:
 		if (isPressedLR || isPressedUD)
@@ -246,11 +213,6 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 		}
 		break;
 	case KEY::KEY_SPACE:
-		chaseOn = true;
-		monsterBox->stopAllActions();
-		mAction_MoveTo = MoveTo::create(getDistance(playerBox->getPosition(), monsterBox->getPosition(), 50), playerBox->getPosition());
-		monsterBox->runAction(mAction_MoveTo);
-		moveMonster();
 		break;
 	case KEY::KEY_ESCAPE:
 		Director::sharedDirector()->end();
@@ -295,7 +257,7 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 		break;
 	case KEY::KEY_W:
 	case KEY::KEY_UP_ARROW:
-		isPressUp = false;
+		/*isPressUp = false;
 		if (isPressDown)
 		{
 			isUp = false;
@@ -305,11 +267,11 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 			if (!isPressedLR)
 				waitCharacter(n_sltChar);
 			isPressedUD = false;
-		}
+		}*/
 		break;
 	case KEY::KEY_S:
 	case KEY::KEY_DOWN_ARROW:
-		isPressDown = false;
+		/*isPressDown = false;
 		if (isPressUp)
 		{
 			isUp = true;
@@ -319,7 +281,7 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 			if (!isPressedLR)
 				waitCharacter(n_sltChar);
 			isPressedUD = false;
-		}
+		}*/
 		break;
 	case KEY::KEY_TAB:
 		break;
@@ -331,7 +293,7 @@ void HelloWorld::initBackground()
 {
 	auto bg_street = Sprite::create("GF/Street.jpg");
 	bg_street->setPosition(wPos5);
-	bg_street->setScale(2.5f, 2.0f);
+	bg_street->setScale(1.25f, 1.0f);
 	this->addChild(bg_street);
 }
 
@@ -376,23 +338,6 @@ void HelloWorld::waitCharacter(int _sltChar)
 		setCharacter.setAnimation(sPlayer, "GF/G11/G11-wait.png", 54, 6, 9);
 		break;
 	}
-}
-
-void HelloWorld::initMonster()
-{
-	sMonster = Sprite::create();
-
-	setMonster.setAnimation(sMonster, "GF/Zombie/Zombie-wait.png", 107, 11, 10);
-}
-
-void HelloWorld::moveMonster()
-{
-	setMonster.setAnimation(sMonster, "GF/Zombie/Zombie-move.png", 80, 9, 9);
-}
-
-void HelloWorld::waitMonster()
-{
-	setMonster.setAnimation(sMonster, "GF/Zombie/Zombie-wait.png", 107, 11, 10);
 }
 
 double HelloWorld::getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, int _magni)

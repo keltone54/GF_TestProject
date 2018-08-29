@@ -18,13 +18,10 @@ using namespace CocosDenshion;
 
 USING_NS_CC;
 
-static cocos2d::Size customResSize = cocos2d::Size(rSizeX, rSizeY);
-static cocos2d::Size customWinSize = cocos2d::Size(wSizeX, wSizeY);
-
-static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
-static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
-static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
-static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
+static cocos2d::Size designResolutionSize = cocos2d::Size(1280, 720);
+static cocos2d::Size smallResolutionSize = cocos2d::Size(1280, 720);
+static cocos2d::Size mediumResolutionSize = cocos2d::Size(1280, 720);
+static cocos2d::Size largeResolutionSize = cocos2d::Size(1280, 720);
 
 AppDelegate::AppDelegate()
 {
@@ -62,9 +59,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	auto glview = director->getOpenGLView();
 	if (!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-		glview = GLViewImpl::createWithRect("TEST", cocos2d::Rect(0, 0, customWinSize.width, customWinSize.height));
+		glview = GLViewImpl::createWithRect("GF_TestProject", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
 #else
-		glview = GLViewImpl::create("TEST");
+		glview = GLViewImpl::create("GF_TestProject");
 #endif
 		director->setOpenGLView(glview);
 	}
@@ -76,14 +73,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	director->setAnimationInterval(1.0f / 60);
 
 	// Set the design resolution
-	glview->setDesignResolutionSize(customWinSize.width, customWinSize.height, ResolutionPolicy::NO_BORDER);
+	glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
 	auto frameSize = glview->getFrameSize();
 	// if the frame's height is larger than the height of medium size.
-	if (frameSize.height == customWinSize.height)
-	{
-		director->setContentScaleFactor(MIN(customWinSize.height / customResSize.height, customWinSize.width / customResSize.width));
-	}
-	else if (frameSize.height > mediumResolutionSize.height)
+	if (frameSize.height > mediumResolutionSize.height)
 	{
 		director->setContentScaleFactor(MIN(largeResolutionSize.height / designResolutionSize.height, largeResolutionSize.width / designResolutionSize.width));
 	}

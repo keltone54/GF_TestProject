@@ -26,12 +26,6 @@ public:
 	Sprite* sPlayer;
 	int n_sltChar;
 
-	Sprite* monsterBox;
-	Character setMonster;
-	Sprite* sMonster;
-	MoveTo* mAction_MoveTo;
-	bool chaseOn;
-
 	bool isPressedLR;
 	bool isLeft;
 	bool isPressLeft;
@@ -62,10 +56,6 @@ public:
 	void moveCharacter(int _sltChar);
 	void waitCharacter(int _sltChar);
 
-	void initMonster();
-	void moveMonster();
-	void waitMonster();
-
 	double getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, int _magni);
 
 	//====================================================
@@ -73,10 +63,8 @@ public:
 	CREATE_FUNC(HelloWorld);
 };
 
-const short rSizeX = 640.0f;
-const short rSizeY = 360.0f;
-const short wSizeX = rSizeX * 2;
-const short wSizeY = rSizeY * 2;
+const short wSizeX = 1280;
+const short wSizeY = 720;
 const short wCenterX = wSizeX / 2;
 const short wCenterY = wSizeY / 2;
 

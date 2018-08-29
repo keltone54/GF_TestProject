@@ -112,7 +112,7 @@ void HelloWorld::callEveryFrame(float f)
 
 void HelloWorld::addLabelTimer(cocos2d::Node* pParent, int nTime, const cocos2d::Vec2& pos, const cocos2d::Vec2& anc)
 {
-	TTFConfig ttfConfig("fonts/Marker Felt.ttf", 40);
+	TTFConfig ttfConfig("fonts/hexgon.ttf", 40);
 	auto pLabelTime = Label::createWithTTF(ttfConfig, "");
 	pLabelTime->setUserData((int*)nTime);
 	pLabelTime->setColor(Color3B::WHITE);
@@ -131,7 +131,7 @@ void HelloWorld::updateLabel(cocos2d::Label* pLabel)
 	if (pLabel)
 	{
 		int userTime = (int)(pLabel->getUserData()) - 1;
-		pLabel->setString(StringUtils::format("- %d -", userTime));
+		pLabel->setString(StringUtils::format("Noel Vermillion - %d", userTime));
 
 		if (userTime <= 0)
 		{

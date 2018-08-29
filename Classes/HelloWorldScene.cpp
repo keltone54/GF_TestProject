@@ -195,6 +195,7 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 		actCharacter(actList::Attack);
 		break;
 	case KEY::KEY_2:
+		sPlayer->isFlippedX() ? sPlayer->setFlippedX(false) : sPlayer->setFlippedX(true);
 		actCharacter(actList::Victory);
 		break;
 	case KEY::KEY_3:

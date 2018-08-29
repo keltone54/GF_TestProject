@@ -6,10 +6,15 @@ USING_NS_CC;
 
 #define KEY EventKeyboard::KeyCode
 
-enum sltChar
+enum actList
 {
-	Noel,
-	G11
+	Wait,
+	Move,
+	Attack,
+	Die,
+	Skill,
+	Victory,
+	VictoryLoop
 };
 
 Scene* HelloWorld::createScene()
@@ -21,34 +26,22 @@ bool HelloWorld::init()
 {
 	{
 		if (!Scene::init()) return false;
-		auto wlayer = LayerColor::create(Color4B::WHITE);
-		this->addChild(wlayer);
+		actLayer = Layer::create();
+		this->addChild(actLayer);
 	}
 
 	// 내용 ======================================================
-
-	//merong
 
 	//g_pTestData->init();
 	this->schedule(schedule_selector(HelloWorld::callEveryFrame));
 
 	initValue();
 	initBackground();
+	initCharacter();
+	initPlayerBox();
 
-	initCharacter(sltChar::Noel);
+	addLabelTimer(this, 10, wPos8 - Vec2(0, 10.0f), anc8);
 
-	playerBox = Sprite::create();
-	playerBox->setTextureRect(Rect(-50, -80, 50, 80));
-	playerBox->setColor(Color3B::GREEN);
-	playerBox->setOpacity(0.0f);
-	playerBox->setPosition(wPos5);
-	this->addChild(playerBox);
-
-	sPlayer->setPosition(Vec2(playerBox->getContentSize().width / 2, playerBox->getContentSize().height / 2));
-	sPlayer->setScale(1.0f);
-	playerBox->setZOrder(101);
-	playerBox->addChild(sPlayer);
-		
 	//============================================================
 
 	{
@@ -119,38 +112,36 @@ void HelloWorld::callEveryFrame(float f)
 
 void HelloWorld::addLabelTimer(cocos2d::Node* pParent, int nTime, const cocos2d::Vec2& pos, const cocos2d::Vec2& anc)
 {
-	auto pLabelTime = Label::create("", "Arial", 32);
+	TTFConfig ttfConfig("fonts/Marker Felt.ttf", 40);
+	auto pLabelTime = Label::createWithTTF(ttfConfig, "");
 	pLabelTime->setUserData((int*)nTime);
-	pLabelTime->setColor(Color3B::BLACK);
+	pLabelTime->setColor(Color3B::WHITE);
 	pLabelTime->setAnchorPoint(anc);
 	pParent->addChild(pLabelTime);
 	pLabelTime->setPosition(pos);
 
-	auto scheduleAction = CallFuncN::create(CC_CALLBACK_0(HelloWorld::upddateLabel, this, pLabelTime));
+	auto scheduleAction = CallFuncN::create(CC_CALLBACK_0(HelloWorld::updateLabel, this, pLabelTime));
 	auto repeatF = RepeatForever::create(Sequence::create(scheduleAction, DelayTime::create(1.0f), nullptr));
 	pLabelTime->runAction(repeatF);
 
 }
 
-void HelloWorld::upddateLabel(cocos2d::Label* pLabel)
+void HelloWorld::updateLabel(cocos2d::Label* pLabel)
 {
 	if (pLabel)
 	{
-		int userTime = (int)(pLabel->getUserData());
-		pLabel->setString(StringUtils::format("%d초 후 이동", userTime));
+		int userTime = (int)(pLabel->getUserData()) - 1;
+		pLabel->setString(StringUtils::format("- %d -", userTime));
 
 		if (userTime <= 0)
 		{
 			//이 구간에는, 시간이 0이 되었을때의 동작내용을 구현합니다.
 
 			pLabel->stopAllActions();
-			log("timer End");
 			return;
 		}
-
-		userTime -= 1;
-
-		pLabel->setUserData((int*)userTime);
+		else
+			pLabel->setUserData((int*)userTime);
 	}
 }
 
@@ -165,7 +156,7 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 		sPlayer->setFlippedX(true);
 		if (!isPressedLR || !isPressedUD)
 		{
-			moveCharacter(n_sltChar);
+			actCharacter(actList::Move);
 			isPressedLR = true;
 		}
 		break;
@@ -176,7 +167,7 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 		sPlayer->setFlippedX(false);
 		if (!isPressedLR || !isPressedUD)
 		{
-			moveCharacter(n_sltChar);
+			actCharacter(actList::Move);
 			isPressedLR = true;
 		}
 		break;
@@ -186,7 +177,7 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 		isPressUp = true;
 		if (!isPressedLR || !isPressedUD)
 		{
-			moveCharacter(n_sltChar);
+			actCharacter(actList::Move);
 			isPressedUD = true;
 		}*/
 		break;
@@ -196,23 +187,21 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 		isPressDown = true;
 		if (!isPressedLR || !isPressedUD)
 		{
-			moveCharacter(n_sltChar);
+			actCharacter(actList::Move);
 			isPressedUD = true;
 		}*/
 		break;
-	case KEY::KEY_TAB:
-		if (isPressedLR || isPressedUD)
-		{
-			n_sltChar == sltChar::Noel ? n_sltChar = sltChar::G11 : n_sltChar = sltChar::Noel;
-			moveCharacter(n_sltChar);
-		}
-		else
-		{
-			n_sltChar == sltChar::Noel ? n_sltChar = sltChar::G11 : n_sltChar = sltChar::Noel;
-			waitCharacter(n_sltChar);
-		}
+	case KEY::KEY_1:
+		actCharacter(actList::Attack);
 		break;
-	case KEY::KEY_SPACE:
+	case KEY::KEY_2:
+		actCharacter(actList::Victory);
+		break;
+	case KEY::KEY_3:
+		actCharacter(actList::Die);
+		break;
+	case KEY::KEY_4:
+		actCharacter(actList::Skill);
 		break;
 	case KEY::KEY_ESCAPE:
 		Director::sharedDirector()->end();
@@ -236,7 +225,7 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 		if (!isPressLeft && !isPressRight)
 		{
 			if (!isPressedUD)
-				waitCharacter(n_sltChar);
+				actCharacter(actList::Wait);
 			isPressedLR = false;
 		}
 		break;
@@ -251,7 +240,7 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 		if (!isPressLeft && !isPressRight)
 		{
 			if (!isPressedUD)
-				waitCharacter(n_sltChar);
+				actCharacter(actList::Wait);
 			isPressedLR = false;
 		}
 		break;
@@ -265,7 +254,7 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 		if (!isPressUp && !isPressDown)
 		{
 			if (!isPressedLR)
-				waitCharacter(n_sltChar);
+				actCharacter(actList::Wait);
 			isPressedUD = false;
 		}*/
 		break;
@@ -279,7 +268,7 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 		if (!isPressUp && !isPressDown)
 		{
 			if (!isPressedLR)
-				waitCharacter(n_sltChar);
+				actCharacter(actList::Wait);
 			isPressedUD = false;
 		}*/
 		break;
@@ -294,50 +283,36 @@ void HelloWorld::initBackground()
 	auto bg_street = Sprite::create("GF/Street.jpg");
 	bg_street->setPosition(wPos5);
 	bg_street->setScale(1.25f, 1.0f);
-	this->addChild(bg_street);
+	actLayer->addChild(bg_street);
 }
 
-void HelloWorld::initCharacter(int _sltChar)
+void HelloWorld::initPlayerBox()
 {
-	n_sltChar = _sltChar;
+	playerBox = Sprite::create();
+	playerBox->setTextureRect(Rect(-50, -80, 50, 80));
+	playerBox->setColor(Color3B::GREEN);
+	playerBox->setOpacity(0.0f);
+	playerBox->setPosition(wPos5);
+	actLayer->addChild(playerBox);
 
+	sPlayer->setPosition(Vec2(playerBox->getContentSize().width / 2, 0));
+	sPlayer->setScale(0.65f);
+	playerBox->setZOrder(101);
+	playerBox->addChild(sPlayer);
+}
+
+void HelloWorld::initCharacter()
+{
 	sPlayer = Sprite::create();
 
-	switch (_sltChar)
-	{
-	case sltChar::Noel:
-		setCharacter.setAnimation(sPlayer, "GF/Noel/Noel-wait.png", 40, 6, 7);
-		break;
-	case sltChar::G11:
-		setCharacter.setAnimation(sPlayer, "GF/G11/G11-wait.png", 54, 6, 9);
-		break;
-	}
+	setCharacter.init();
+
+	actCharacter(actList::Wait);
 }
 
-void HelloWorld::moveCharacter(int _sltChar)
+void HelloWorld::actCharacter(int _type)
 {
-	switch (_sltChar)
-	{
-	case sltChar::Noel:
-		setCharacter.setAnimation(sPlayer, "GF/Noel/Noel-move.png", 24, 5, 5);
-		break;
-	case sltChar::G11:
-		setCharacter.setAnimation(sPlayer, "GF/G11/G11-move.png", 24, 5, 5);
-		break;
-	}
-}
-
-void HelloWorld::waitCharacter(int _sltChar)
-{
-	switch (_sltChar)
-	{
-	case sltChar::Noel:
-		setCharacter.setAnimation(sPlayer, "GF/Noel/Noel-wait.png", 40, 6, 7);
-		break;
-	case sltChar::G11:
-		setCharacter.setAnimation(sPlayer, "GF/G11/G11-wait.png", 54, 6, 9);
-		break;
-	}
+	setCharacter.setAnimation(sPlayer, _type);
 }
 
 double HelloWorld::getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, int _magni)

@@ -6,11 +6,11 @@
 #endif
 
 #include "cocos2d.h"
-#include "Character.h"
+#include "PlayerSprite.h"
 
 USING_NS_CC;
 
-class Character;
+class PlayerSprite;
 
 class HelloWorld : public cocos2d::Scene
 {
@@ -21,10 +21,11 @@ public:
 
 	// º¯¼ö ==============================================
 
+	Layer* actLayer;
+
 	Sprite* playerBox;
-	Character setCharacter;
+	PlayerSprite setCharacter;
 	Sprite* sPlayer;
-	int n_sltChar;
 
 	bool isPressedLR;
 	bool isLeft;
@@ -45,16 +46,16 @@ public:
 	void callEveryFrame(float f);
 
 	void addLabelTimer(cocos2d::Node* pParent, int nTime, const cocos2d::Vec2& pos, const cocos2d::Vec2& anc);
-	void upddateLabel(cocos2d::Label* pLabel);
+	void updateLabel(cocos2d::Label* pLabel);
 
 	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 
 	void initBackground();
 
-	void initCharacter(int _sltChar);
-	void moveCharacter(int _sltChar);
-	void waitCharacter(int _sltChar);
+	void initPlayerBox();
+	void initCharacter();
+	void actCharacter(int _type);
 
 	double getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, int _magni);
 

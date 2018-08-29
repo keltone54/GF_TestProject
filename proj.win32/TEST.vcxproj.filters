@@ -36,9 +36,6 @@
     <ClCompile Include="..\Classes\Officer_Data.cpp">
       <Filter>src\Data</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Character.cpp">
-      <Filter>src\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\HelloWorldScene.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
@@ -47,6 +44,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\AppDelegate.cpp">
       <Filter>src\ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\PlayerSprite.cpp">
+      <Filter>src\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,9 +62,6 @@
     <ClInclude Include="..\Classes\Officer_Data.h">
       <Filter>src\Data</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Character.h">
-      <Filter>src\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\HelloWorldScene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
@@ -73,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\AppDelegate.h">
       <Filter>src\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PlayerSprite.h">
+      <Filter>src\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

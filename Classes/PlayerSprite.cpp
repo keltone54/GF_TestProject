@@ -19,9 +19,9 @@ void PlayerSprite::init()
 	anime[1].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-move.png");
 	anime[2].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-attack.png");
 	anime[3].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-die.png");
-	anime[4].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-skill.png");
-	anime[5].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-victory.png");
-	anime[6].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-victoryloop.png");
+	//anime[4].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-skill.png");
+	//anime[5].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-victory.png");
+	//anime[6].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-victoryloop.png");
 
 	anime[0].maxFrame = 40;		anime[0].cols = 5;	anime[0].rows = 8;
 	anime[1].maxFrame = 24;		anime[1].cols = 5;	anime[1].rows = 5;

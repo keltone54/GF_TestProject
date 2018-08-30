@@ -42,6 +42,12 @@ bool HelloWorld::init()
 	initPlayerBox();
 
 	addLabelTimer(this, 10, wPos8 - Vec2(0, 10.0f), anc8);
+	
+	TTFConfig ttfconfg("fonts/xenosphere.ttf", 32);
+	lbl = Label::createWithTTF(ttfconfg, "");
+	lbl->setAnchorPoint(anc7);
+	lbl->setPosition(wPos7 + Vec2(20, -20));
+	this->addChild(lbl);
 
 	//============================================================
 
@@ -117,17 +123,25 @@ void HelloWorld::callEveryFrame(float f)
 		}
 	}	
 
-	float minX1 = bgLayer->getPositionX() + (bgSprite[0]->getPositionX() - bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX() / 2);
-	float maxX1 = bgLayer->getPositionX() + (bgSprite[0]->getPositionX() + bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX() / 2);
-	float minX2 = bgLayer->getPositionX() + (bgSprite[1]->getPositionX() - bgSprite[1]->getContentSize().width * bgSprite[1]->getScaleX() / 2);
-	float maxX2 = bgLayer->getPositionX() + (bgSprite[1]->getPositionX() + bgSprite[1]->getContentSize().width * bgSprite[1]->getScaleX() / 2);
-	float wZero = bgLayer->getPositionX() + (actLayer->getPositionX() - actLayer->getContentSize().width);
-	
+	{
+		float minX1 = bgLayer->getPositionX() + (bgSprite[0]->getPositionX() - bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX() / 2);
+		float maxX1 = bgLayer->getPositionX() + (bgSprite[0]->getPositionX() + bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX() / 2);
+		float minX2 = bgLayer->getPositionX() + (bgSprite[1]->getPositionX() - bgSprite[1]->getContentSize().width * bgSprite[1]->getScaleX() / 2);
+		float maxX2 = bgLayer->getPositionX() + (bgSprite[1]->getPositionX() + bgSprite[1]->getContentSize().width * bgSprite[1]->getScaleX() / 2);
+
+		// 배경 이미지 무한반복
+		if (minX1 > 0 && minX2 > wSizeX) bgSprite[1]->setPositionX(bgSprite[1]->getPositionX() - wSizeX * 2);
+		else if (maxX1 < wSizeX && maxX2 < 0) bgSprite[1]->setPositionX(bgSprite[1]->getPositionX() + wSizeX * 2);
+		else if (minX2 > 0 && minX1 > wSizeX) bgSprite[0]->setPositionX(bgSprite[0]->getPositionX() - wSizeX * 2);
+		else if (maxX2 < wSizeX && maxX1 < 0) bgSprite[0]->setPositionX(bgSprite[0]->getPositionX() + wSizeX * 2);
+	}
+
+	lbl->setString(StringUtils::format("%d", (int)-bgLayer->getPositionX()));
 }
 
 void HelloWorld::addLabelTimer(cocos2d::Node* pParent, int nTime, const cocos2d::Vec2& pos, const cocos2d::Vec2& anc)
 {
-	TTFConfig ttfConfig("fonts/hexgon.ttf", 40);
+	TTFConfig ttfConfig("fonts/xenosphere.ttf", 40);
 	auto pLabelTime = Label::createWithTTF(ttfConfig, "");
 	pLabelTime->setUserData((int*)nTime);
 	pLabelTime->setColor(Color3B::WHITE);
@@ -174,6 +188,8 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 			actCharacter(actList::Move);
 			isPressedLR = true;
 		}
+		else if (isPressedLR && isPressedUD)
+			actCharacter(actList::Move);
 		break;
 	case KEY::KEY_D: // Right
 	case KEY::KEY_RIGHT_ARROW:
@@ -185,6 +201,8 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 			actCharacter(actList::Move);
 			isPressedLR = true;
 		}
+		else if(isPressedLR && isPressedUD)
+			actCharacter(actList::Move);
 		break;
 	case KEY::KEY_W: // Up
 	case KEY::KEY_UP_ARROW:
@@ -220,7 +238,7 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 		actCharacter(actList::Skill);
 		break;
 	case KEY::KEY_TAB:
-		log("%f2", bgLayer->getPositionX() + (actLayer->getPositionX() - actLayer->getContentSize().width));
+		
 		break;
 	case KEY::KEY_ESCAPE:
 		Director::sharedDirector()->end();
@@ -240,6 +258,7 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 		{
 			isLeft = false;
 			sPlayer->setFlippedX(false);
+			actCharacter(actList::Move);
 		}
 		if (!isPressLeft && !isPressRight)
 		{
@@ -255,6 +274,7 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 		{
 			isLeft = true;
 			sPlayer->setFlippedX(true);
+			actCharacter(actList::Move);
 		}
 		if (!isPressLeft && !isPressRight)
 		{
@@ -299,8 +319,8 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 
 void HelloWorld::initBackground()
 {
-	bgSprite[0] = Sprite::create("GF/Street.jpg");
-	bgSprite[1] = Sprite::create("GF/Street.jpg");
+	bgSprite[0] = Sprite::create("GF/Bridge.jpg");
+	bgSprite[1] = Sprite::create("GF/Bridge.jpg");
 
 	bgSprite[0]->setPosition(wPos5);
 	bgSprite[0]->setScale(1.25f, 1.0f);

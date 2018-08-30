@@ -23,6 +23,7 @@ public:
 
 	Layer* actLayer;
 	Layer* bgLayer;
+	Label* lbl;
 
 	Sprite* playerBox;
 	PlayerSprite setCharacter;

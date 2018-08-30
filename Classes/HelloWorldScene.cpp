@@ -26,6 +26,8 @@ bool HelloWorld::init()
 {
 	{
 		if (!Scene::init()) return false;
+		bgLayer = Layer::create();
+		this->addChild(bgLayer);
 		actLayer = Layer::create();
 		this->addChild(actLayer);
 	}
@@ -33,7 +35,6 @@ bool HelloWorld::init()
 	// ³»¿ë ======================================================
 
 	//g_pTestData->init();
-	this->schedule(schedule_selector(HelloWorld::callEveryFrame));
 
 	initValue();
 	initBackground();
@@ -43,6 +44,8 @@ bool HelloWorld::init()
 	addLabelTimer(this, 10, wPos8 - Vec2(0, 10.0f), anc8);
 
 	//============================================================
+
+	this->schedule(schedule_selector(HelloWorld::callEveryFrame));
 
 	{
 		auto K_listner = EventListenerKeyboard::create();
@@ -86,28 +89,40 @@ void HelloWorld::callEveryFrame(float f)
 		if (isPressedLR)
 		{
 			if (isLeft)
-				playerBox->setPosition(playerBox->getPosition() + Vec2(-8.0f, 0));
+			{
+				if (playerBox->getPositionX() > 400.0f)
+					playerBox->setPositionX(playerBox->getPositionX() - 8.0f);
+				else
+					bgLayer->setPositionX(bgLayer->getPositionX() + 8.0f);
+
+			}
 			else if (!isLeft)
-				playerBox->setPosition(playerBox->getPosition() + Vec2(8.0f, 0));
-			
+			{
+				if (playerBox->getPositionX() < wSizeX - 400.0f)
+					playerBox->setPositionX(playerBox->getPositionX() + 8.0f);
+				else
+					bgLayer->setPositionX(bgLayer->getPositionX() - 8.0f);
+			}
 			/*if (isLeft && playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
 				playerBox->setPosition(playerBox->getPosition() + Vec2(5.0f, 0));
 			else if (!isLeft && playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
 				playerBox->setPosition(playerBox->getPosition() + Vec2(-5.0f, 0));*/
 		}
-		/*if (isPressedUD)
+		if (isPressedUD)
 		{
-			if (isUp && !playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
+			if (isUp)
 				playerBox->setPosition(playerBox->getPosition() + Vec2(0, 3.0f));
-			else if (!isUp && !playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
+			else if (!isUp)
 				playerBox->setPosition(playerBox->getPosition() + Vec2(0, -3.0f));
+		}
+	}	
 
-			if (isUp && playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
-				playerBox->setPosition(playerBox->getPosition() + Vec2(0, -3.0f));
-			else if (!isUp && playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
-				playerBox->setPosition(playerBox->getPosition() + Vec2(0, 3.0f));
-		}*/
-	}
+	float minX1 = bgLayer->getPositionX() + (bgSprite[0]->getPositionX() - bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX() / 2);
+	float maxX1 = bgLayer->getPositionX() + (bgSprite[0]->getPositionX() + bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX() / 2);
+	float minX2 = bgLayer->getPositionX() + (bgSprite[1]->getPositionX() - bgSprite[1]->getContentSize().width * bgSprite[1]->getScaleX() / 2);
+	float maxX2 = bgLayer->getPositionX() + (bgSprite[1]->getPositionX() + bgSprite[1]->getContentSize().width * bgSprite[1]->getScaleX() / 2);
+	float wZero = bgLayer->getPositionX() + (actLayer->getPositionX() - actLayer->getContentSize().width);
+	
 }
 
 void HelloWorld::addLabelTimer(cocos2d::Node* pParent, int nTime, const cocos2d::Vec2& pos, const cocos2d::Vec2& anc)
@@ -173,23 +188,23 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 		break;
 	case KEY::KEY_W: // Up
 	case KEY::KEY_UP_ARROW:
-		/*isUp = true;
+		isUp = true;
 		isPressUp = true;
 		if (!isPressedLR || !isPressedUD)
 		{
 			actCharacter(actList::Move);
 			isPressedUD = true;
-		}*/
+		}
 		break;
 	case KEY::KEY_S: // Down
 	case KEY::KEY_DOWN_ARROW:
-		/*isUp = false;
+		isUp = false;
 		isPressDown = true;
 		if (!isPressedLR || !isPressedUD)
 		{
 			actCharacter(actList::Move);
 			isPressedUD = true;
-		}*/
+		}
 		break;
 	case KEY::KEY_1:
 		actCharacter(actList::Attack);
@@ -203,6 +218,9 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 		break;
 	case KEY::KEY_4:
 		actCharacter(actList::Skill);
+		break;
+	case KEY::KEY_TAB:
+		log("%f2", bgLayer->getPositionX() + (actLayer->getPositionX() - actLayer->getContentSize().width));
 		break;
 	case KEY::KEY_ESCAPE:
 		Director::sharedDirector()->end();
@@ -247,7 +265,7 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 		break;
 	case KEY::KEY_W:
 	case KEY::KEY_UP_ARROW:
-		/*isPressUp = false;
+		isPressUp = false;
 		if (isPressDown)
 		{
 			isUp = false;
@@ -257,11 +275,11 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 			if (!isPressedLR)
 				actCharacter(actList::Wait);
 			isPressedUD = false;
-		}*/
+		}
 		break;
 	case KEY::KEY_S:
 	case KEY::KEY_DOWN_ARROW:
-		/*isPressDown = false;
+		isPressDown = false;
 		if (isPressUp)
 		{
 			isUp = true;
@@ -271,7 +289,7 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 			if (!isPressedLR)
 				actCharacter(actList::Wait);
 			isPressedUD = false;
-		}*/
+		}
 		break;
 	case KEY::KEY_TAB:
 		break;
@@ -281,16 +299,22 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 
 void HelloWorld::initBackground()
 {
-	auto bg_street = Sprite::create("GF/Street.jpg");
-	bg_street->setPosition(wPos5);
-	bg_street->setScale(1.25f, 1.0f);
-	actLayer->addChild(bg_street);
+	bgSprite[0] = Sprite::create("GF/Street.jpg");
+	bgSprite[1] = Sprite::create("GF/Street.jpg");
+
+	bgSprite[0]->setPosition(wPos5);
+	bgSprite[0]->setScale(1.25f, 1.0f);
+	bgSprite[1]->setPosition(wPos5 + Vec2(bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX(), 0));
+	bgSprite[1]->setScale(1.25f, 1.0f);
+	bgLayer->addChild(bgSprite[0]);
+	bgLayer->addChild(bgSprite[1]);
 }
 
 void HelloWorld::initPlayerBox()
 {
 	playerBox = Sprite::create();
-	playerBox->setTextureRect(Rect(-50, -80, 50, 80));
+	//playerBox->setTextureRect(Rect(-50, -80, 50, 80));
+	playerBox->setTextureRect(Rect(-50, -80, 50, 90));
 	playerBox->setColor(Color3B::GREEN);
 	playerBox->setOpacity(0.0f);
 	playerBox->setPosition(wPos5);
@@ -298,8 +322,16 @@ void HelloWorld::initPlayerBox()
 
 	sPlayer->setPosition(Vec2(playerBox->getContentSize().width / 2, 0));
 	sPlayer->setScale(0.65f);
+	//sPlayer->setOpacity(50.0f);
+
 	playerBox->setZOrder(101);
 	playerBox->addChild(sPlayer);
+
+	/*auto chkpos = Sprite::create();
+	chkpos->setTextureRect(Rect(0, 0, 10, 10));
+	chkpos->setColor((Color3B::RED));
+	chkpos->setPosition(playerBox->getContentSize() / 2);
+	playerBox->addChild(chkpos);*/
 }
 
 void HelloWorld::initCharacter()

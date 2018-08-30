@@ -22,10 +22,13 @@ public:
 	// º¯¼ö ==============================================
 
 	Layer* actLayer;
+	Layer* bgLayer;
 
 	Sprite* playerBox;
 	PlayerSprite setCharacter;
 	Sprite* sPlayer;
+
+	Sprite* bgSprite[2];
 
 	bool isPressedLR;
 	bool isLeft;

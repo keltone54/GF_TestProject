@@ -44,15 +44,7 @@ bool HelloWorld::init()
 
 	addLabelTimer(this, -1, wPos8 - Vec2(0, 10.0f), anc8);
 	
-	TTFConfig ttfconfg("fonts/xenosphere.ttf", 24);
-	lbl_PosX = Label::createWithTTF(ttfconfg, "");
-	lbl_PosX->setAnchorPoint(anc7);
-	lbl_PosX->setPosition(wPos7 + Vec2(20, -20));
-	this->addChild(lbl_PosX);
-
-	lbl_shootingCooldown = Label::createWithTTF(ttfconfg, "");
-	lbl_shootingCooldown->setPosition(Vec2(playerBox->getContentSize().width / 2, playerBox->getContentSize().height + 30.0f));
-	playerBox->addChild(lbl_shootingCooldown);
+	debugLabel();
 			
 	//============================================================
 
@@ -69,6 +61,8 @@ bool HelloWorld::init()
 
 	return true;
 }
+
+//==========================================================
 
 void HelloWorld::initValue()
 {
@@ -87,15 +81,20 @@ void HelloWorld::initValue()
 	isCanMove = true;
 }
 
-void HelloWorld::onEnter()
+void HelloWorld::debugLabel()
 {
-	Scene::onEnter();
+	TTFConfig ttfconfg("fonts/xenosphere.ttf", 24);
+	lbl_PosX = Label::createWithTTF(ttfconfg, "");
+	lbl_PosX->setAnchorPoint(anc7);
+	lbl_PosX->setPosition(wPos7 + Vec2(20, -20));
+	this->addChild(lbl_PosX);
+
+	lbl_shootingCooldown = Label::createWithTTF(ttfconfg, "");
+	lbl_shootingCooldown->setPosition(Vec2(playerBox->getContentSize().width / 2, playerBox->getContentSize().height + 30.0f));
+	playerBox->addChild(lbl_shootingCooldown);
 }
 
-void HelloWorld::onExit()
-{
-	Scene::onExit();
-}
+//==========================================================
 
 void HelloWorld::callEveryFrame(float f)
 {
@@ -141,9 +140,9 @@ void HelloWorld::callEveryFrame(float f)
 			if (!isCanMove)
 			{
 				if (isPressedLR || isPressedUD)
-					setNoel.setAnimation(sPlayer, actList::Move);
+					actCharacter(actList::Move);
 				else
-					setNoel.setAnimation(sPlayer, actList::Wait);
+					actCharacter(actList::Wait);
 
 				isCanMove = true;
 			}
@@ -180,38 +179,7 @@ void HelloWorld::callEveryFrame(float f)
 		lbl_shootingCooldown->setString("");
 }
 
-void HelloWorld::addLabelTimer(cocos2d::Node* pParent, int nTime, const cocos2d::Vec2& pos, const cocos2d::Vec2& anc)
-{
-	TTFConfig ttfConfig("fonts/xenosphere.ttf", 40);
-	auto pLabelTime = Label::createWithTTF(ttfConfig, "");
-	pLabelTime->setUserData((int*)nTime);
-	pLabelTime->setColor(Color3B::WHITE);
-	pLabelTime->setAnchorPoint(anc);
-	pParent->addChild(pLabelTime);
-	pLabelTime->setPosition(pos);
-
-	auto scheduleAction = CallFuncN::create(CC_CALLBACK_0(HelloWorld::updateLabel, this, pLabelTime));
-	auto repeatF = RepeatForever::create(Sequence::create(scheduleAction, DelayTime::create(1.0f), nullptr));
-	pLabelTime->runAction(repeatF);
-
-}
-
-void HelloWorld::updateLabel(cocos2d::Label* pLabel)
-{
-	if (pLabel)
-	{
-		int userTime = (int)(pLabel->getUserData()) + 1;
-		pLabel->setString(StringUtils::format("TIME\n%3d", userTime));
-
-		if (userTime < 0)
-		{
-			pLabel->stopAllActions();
-			return;
-		}
-		else
-			pLabel->setUserData((int*)userTime);
-	}
-}
+//==========================================================
 
 void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event)
 {
@@ -358,6 +326,43 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 
 }
 
+//==========================================================
+
+void HelloWorld::addLabelTimer(cocos2d::Node* pParent, int nTime, const cocos2d::Vec2& pos, const cocos2d::Vec2& anc)
+{
+	TTFConfig ttfConfig("fonts/xenosphere.ttf", 40);
+	auto pLabelTime = Label::createWithTTF(ttfConfig, "");
+	pLabelTime->setUserData((int*)nTime);
+	pLabelTime->setColor(Color3B::WHITE);
+	pLabelTime->setAnchorPoint(anc);
+	pParent->addChild(pLabelTime);
+	pLabelTime->setPosition(pos);
+
+	auto scheduleAction = CallFuncN::create(CC_CALLBACK_0(HelloWorld::updateLabel, this, pLabelTime));
+	auto repeatF = RepeatForever::create(Sequence::create(scheduleAction, DelayTime::create(1.0f), nullptr));
+	pLabelTime->runAction(repeatF);
+
+}
+
+void HelloWorld::updateLabel(cocos2d::Label* pLabel)
+{
+	if (pLabel)
+	{
+		int userTime = (int)(pLabel->getUserData()) + 1;
+		pLabel->setString(StringUtils::format("TIME\n%3d", userTime));
+
+		if (userTime < 0)
+		{
+			pLabel->stopAllActions();
+			return;
+		}
+		else
+			pLabel->setUserData((int*)userTime);
+	}
+}
+
+//==========================================================
+
 void HelloWorld::initBackground()
 {
 	bgSprite[0] = Sprite::create("GF/Street.jpg");
@@ -407,6 +412,8 @@ void HelloWorld::actCharacter(int _type)
 	setNoel.setAnimation(sPlayer, _type);
 }
 
+//==========================================================
+
 double HelloWorld::getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, int _magni)
 {
 	double c = sqrt(((p1.x - p2.x) * (p1.x - p2.x)) + ((p1.y - p2.y) * (p1.y - p2.y)));
@@ -414,3 +421,5 @@ double HelloWorld::getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2,
 	
 	return t;
 }
+
+//==========================================================

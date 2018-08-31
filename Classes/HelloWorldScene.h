@@ -49,19 +49,17 @@ public:
 	// ÇÔ¼ö ==============================================
 
 	void initValue();
-	void onEnter();
-	void onExit();
+	void debugLabel();
 
 	void callEveryFrame(float f);
-
-	void addLabelTimer(cocos2d::Node* pParent, int nTime, const cocos2d::Vec2& pos, const cocos2d::Vec2& anc);
-	void updateLabel(cocos2d::Label* pLabel);
 
 	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 
-	void initBackground();
+	void addLabelTimer(cocos2d::Node* pParent, int nTime, const cocos2d::Vec2& pos, const cocos2d::Vec2& anc);
+	void updateLabel(cocos2d::Label* pLabel);
 
+	void initBackground();
 	void initPlayerBox();
 	void initCharacter();
 	void actCharacter(int _type);

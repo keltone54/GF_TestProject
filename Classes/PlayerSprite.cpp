@@ -128,8 +128,7 @@ void PlayerSprite::setAnimation(cocos2d::Sprite* _sprite, int _type)
 	}
 }
 
-
-// SHOOTING COOLDOWN
+//==========================================================
 
 void PlayerSprite::setShootingCooldown()
 {

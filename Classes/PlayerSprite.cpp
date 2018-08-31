@@ -8,90 +8,116 @@ enum actList
 	Move,
 	Attack,
 	Die,
-	Skill,
 	Victory,
 	VictoryLoop
 };
 
-void PlayerSprite::init()
+PlayerSprite::PlayerSprite()
 {
-	anime[0].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-wait.png");
-	anime[1].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-move.png");
-	anime[2].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-attack.png");
-	anime[3].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-die.png");
-	//anime[4].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-skill.png");
-	//anime[5].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-victory.png");
-	//anime[6].texture = Director::getInstance()->getTextureCache()->addImage("GF/Noel/Noel-victoryloop.png");
+	initValue();
 
-	anime[0].maxFrame = 40;		anime[0].cols = 5;	anime[0].rows = 8;
-	anime[1].maxFrame = 24;		anime[1].cols = 5;	anime[1].rows = 5;
-	anime[2].maxFrame = 20;		anime[2].cols = 5;	anime[2].rows = 4;
-	anime[3].maxFrame = 51;		anime[3].cols = 11;	anime[3].rows = 5;
-	anime[4].maxFrame = 174;	anime[4].cols = 22;	anime[4].rows = 8;
-	anime[5].maxFrame = 140;	anime[5].cols = 11;	anime[5].rows = 13;
-	anime[6].maxFrame = 40;		anime[6].cols = 5;	anime[6].rows = 8;
+	for (int i = 0; i < MAX_ANIM; i++)
+	{
+		anime[i].texture = SpriteFrameCache::getInstance();
+		anime[i].name = getTypeName(i);
+		anime[i].file = "GF/Noel/Noel-";
+		anime[i].file.append(anime[i].name.c_str());
+		anime[i].file.append(".plist");
+		anime[i].texture->addSpriteFramesWithFile(anime[i].file);
+		anime[i].maxFrame = getMaxFrame(i);
+		anime[i].anchor = getAnchor(i);
+	}
+}
 
-	//"GF/Noel/Noel-wait.png",			40, 5, 8
-	//"GF/Noel/Noel-move.png",			24, 5, 5
-	//"GF/Noel/Noel-attack.png",		20, 5, 4
-	//"GF/Noel/Noel-die.png",			51, 11, 5
-	//"GF/Noel/Noel-skill.png",			174, 22, 8
-	//"GF/Noel/Noel-victory.png",		140, 11, 13
-	//"GF/Noel/Noel-victoryloop.png",	40, 5, 8
-	
+void PlayerSprite::initValue()
+{
+	m_name.push_back("wait");
+	m_name.push_back("move");
+	m_name.push_back("attack");
+	m_name.push_back("die");
+	m_name.push_back("victory");
+	m_name.push_back("victoryloop");
+
+	m_maxFrame.push_back(40);
+	m_maxFrame.push_back(24);
+	m_maxFrame.push_back(20);
+	m_maxFrame.push_back(51);
+	m_maxFrame.push_back(140);
+	m_maxFrame.push_back(40);
+
+	m_anchor.push_back(Vec2(91, 25));
+	m_anchor.push_back(Vec2(82, 26));
+	m_anchor.push_back(Vec2(101, 25));
+	m_anchor.push_back(Vec2(211, 70));
+	m_anchor.push_back(Vec2(131, 34));
+	m_anchor.push_back(Vec2(94, 25));
+}
+
+std::string PlayerSprite::getTypeName(int _type)
+{
+	return m_name[_type];
+}
+
+int PlayerSprite::getMaxFrame(int _type)
+{
+	return m_maxFrame[_type];
+}
+
+Vec2 PlayerSprite::getAnchor(int _type)
+{
+	return m_anchor[_type];
 }
 
 void PlayerSprite::setAnimation(cocos2d::Sprite* _sprite, int _type)
 {
 	_sprite->stopAllActions();
 
-	auto anim = Animation::create();
-	anim->setDelayPerUnit(0.025f);
+	Vector<SpriteFrame*> animFrames;
 
-	float wW = anime[_type].texture->getContentSize().width / anime[_type].cols;
-	float wH = anime[_type].texture->getContentSize().height / anime[_type].rows;
+	for (int i = 0; i < anime[_type].maxFrame; i++)
+	{
+		char fileName[30];
+		sprintf(fileName, "BB_Noel-%s-%03d.png", anime[_type].name.c_str(), i);
+		SpriteFrame* frame = anime[_type].texture->getSpriteFrameByName(fileName);
+		animFrames.pushBack(frame);
+	}
 
-	float ancX = 227.0f;
-	float ancY = 70.0f;
+	char fileName[30];
+	sprintf(fileName, "BB_Noel-%s-000.png", anime[_type].name.c_str());
+	bool saveFlip = _sprite->isFlippedX();
+	_sprite->initWithSpriteFrameName(fileName);
+	_sprite->setFlippedX(saveFlip);
 
-	float aX = ancX / wW;
-	float aY = ancY / wH;
-	float faX = (wW - ancX) / wW;
+	float wW = _sprite->getContentSize().width;
+	float wH = _sprite->getContentSize().height;
+
+	float aX = anime[_type].anchor.x / wW;
+	float aY = anime[_type].anchor.y / wH;
+	float faX = (wW - anime[_type].anchor.x) / wW;
 
 	if (!_sprite->isFlippedX())
 		_sprite->setAnchorPoint(Vec2(aX, aY));
 	else
 		_sprite->setAnchorPoint(Vec2(faX, aY));
 
-	_sprite->setTexture(anime[_type].texture);
-	_sprite->setTextureRect(Rect(0, 0, wW, wH));
-
-	for (int i = 0; i < anime[_type].maxFrame; i++)
-	{
-		int col = i % anime[_type].cols;
-		int row = i / anime[_type].cols;
-
-		anim->addSpriteFrameWithTexture(
-			anime[_type].texture, Rect(col * wW, row * wH, wW, wH));
-	}
-
-	auto ani = Animate::create(anim);
-	auto rep = RepeatForever::create(ani);
-
-	if(_type == actList::Wait || _type == actList::Move || _type == actList::VictoryLoop)
+	auto animation = Animation::createWithSpriteFrames(animFrames, 0.025f);
+	auto animate = Animate::create(animation);
+	auto rep = RepeatForever::create(animate);
+		
+	if (_type == actList::Wait || _type == actList::Move || _type == actList::VictoryLoop)
 		_sprite->runAction(rep);
-	else if (_type == actList::Attack || _type == actList::Skill)
+	else if (_type == actList::Attack)
 	{
-		auto seq = Sequence::create(ani, CallFunc::create(CC_CALLBACK_0(PlayerSprite::setAnimation, this, _sprite, actList::Wait)), nullptr);
+		auto seq = Sequence::create(animate, CallFunc::create(CC_CALLBACK_0(PlayerSprite::setAnimation, this, _sprite, actList::Wait)), nullptr);
 		_sprite->runAction(seq);
 	}
 	else if (_type == actList::Victory)
 	{
-		auto seq = Sequence::create(ani, CallFunc::create(CC_CALLBACK_0(PlayerSprite::setAnimation, this, _sprite, actList::VictoryLoop)), nullptr);
+		auto seq = Sequence::create(animate, CallFunc::create(CC_CALLBACK_0(PlayerSprite::setAnimation, this, _sprite, actList::VictoryLoop)), nullptr);
 		_sprite->runAction(seq);
 	}
 	else if (_type == Die)
 	{
-		_sprite->runAction(ani);
+		_sprite->runAction(animate);
 	}
 }

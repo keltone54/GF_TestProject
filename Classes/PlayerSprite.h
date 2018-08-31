@@ -4,37 +4,35 @@
 #include "cocos2d.h"
 
 USING_NS_CC;
+using namespace std;
 
-enum crType
-{
-	PLAYER,
-	NPC,
-	MONSTER
-};
+#define MAX_ANIM 6
 
 class PlayerSprite
 {
 private:
-	Texture2D* txWait;
-	Texture2D* txMove;
-	Texture2D* txAttack;
-	Texture2D* txDie;
-	Texture2D* txSkill;
-	Texture2D* txVictory;
-	Texture2D* txVictoryLoop;
-
 	struct aniStat
 	{
-		Texture2D* texture;
+		SpriteFrameCache* texture;
 		int maxFrame;
-		int cols;
-		int rows;
+		std::string name;
+		std::string file;
+		Vec2 anchor;
 	};
-	aniStat anime[7];
+	aniStat anime[MAX_ANIM];
 
+	vector<std::string> m_name;
+	vector<int>			m_maxFrame;
+	vector<Vec2>		m_anchor;
+
+	void initValue();
+	std::string getTypeName(int _type);
+	int getMaxFrame(int _type);
+	Vec2 getAnchor(int _type);
 
 public:
-	void init();
+	PlayerSprite();
+
 	void setAnimation(cocos2d::Sprite* _sprite, int _type);
 };
 

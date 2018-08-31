@@ -12,7 +12,6 @@ enum actList
 	Move,
 	Attack,
 	Die,
-	Skill,
 	Victory,
 	VictoryLoop
 };
@@ -48,7 +47,7 @@ bool HelloWorld::init()
 	lbl->setAnchorPoint(anc7);
 	lbl->setPosition(wPos7 + Vec2(20, -20));
 	this->addChild(lbl);
-
+			
 	//============================================================
 
 	this->schedule(schedule_selector(HelloWorld::callEveryFrame));
@@ -234,11 +233,7 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 	case KEY::KEY_3:
 		actCharacter(actList::Die);
 		break;
-	case KEY::KEY_4:
-		actCharacter(actList::Skill);
-		break;
 	case KEY::KEY_TAB:
-		
 		break;
 	case KEY::KEY_ESCAPE:
 		Director::sharedDirector()->end();
@@ -336,7 +331,7 @@ void HelloWorld::initPlayerBox()
 	//playerBox->setTextureRect(Rect(-50, -80, 50, 80));
 	playerBox->setTextureRect(Rect(-50, -80, 50, 90));
 	playerBox->setColor(Color3B::GREEN);
-	playerBox->setOpacity(0.0f);
+	//playerBox->setOpacity(0.0f);
 	playerBox->setPosition(wPos5);
 	actLayer->addChild(playerBox);
 
@@ -357,8 +352,6 @@ void HelloWorld::initPlayerBox()
 void HelloWorld::initCharacter()
 {
 	sPlayer = Sprite::create();
-
-	setCharacter.init();
 
 	actCharacter(actList::Wait);
 }

@@ -6,6 +6,8 @@ USING_NS_CC;
 
 #define KEY EventKeyboard::KeyCode
 
+#define PLAYER_SPEED 8.0f
+
 enum actList
 {
 	Wait,
@@ -47,6 +49,10 @@ bool HelloWorld::init()
 	lbl->setAnchorPoint(anc7);
 	lbl->setPosition(wPos7 + Vec2(20, -20));
 	this->addChild(lbl);
+
+	lbl2 = Label::createWithTTF(ttfconfg, "");
+	lbl2->setPosition(Vec2(playerBox->getContentSize().width / 2, playerBox->getContentSize().height + 50.0f));
+	playerBox->addChild(lbl2);
 			
 	//============================================================
 
@@ -75,6 +81,8 @@ void HelloWorld::initValue()
 	isUp = false;
 	isPressUp = false;
 	isPressDown = false;
+
+	isPressSPC = false;
 }
 
 void HelloWorld::onEnter()
@@ -95,18 +103,18 @@ void HelloWorld::callEveryFrame(float f)
 		{
 			if (isLeft)
 			{
-				if (playerBox->getPositionX() > 400.0f)
-					playerBox->setPositionX(playerBox->getPositionX() - 8.0f);
+				if (playerBox->getPositionX() > 300.0f)
+					playerBox->setPositionX(playerBox->getPositionX() - PLAYER_SPEED);
 				else
-					bgLayer->setPositionX(bgLayer->getPositionX() + 8.0f);
+					bgLayer->setPositionX(bgLayer->getPositionX() + PLAYER_SPEED);
 
 			}
 			else if (!isLeft)
 			{
-				if (playerBox->getPositionX() < wSizeX - 400.0f)
-					playerBox->setPositionX(playerBox->getPositionX() + 8.0f);
+				if (playerBox->getPositionX() < wSizeX - 300.0f)
+					playerBox->setPositionX(playerBox->getPositionX() + PLAYER_SPEED);
 				else
-					bgLayer->setPositionX(bgLayer->getPositionX() - 8.0f);
+					bgLayer->setPositionX(bgLayer->getPositionX() - PLAYER_SPEED);
 			}
 			/*if (isLeft && playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
 				playerBox->setPosition(playerBox->getPosition() + Vec2(5.0f, 0));
@@ -116,9 +124,9 @@ void HelloWorld::callEveryFrame(float f)
 		if (isPressedUD)
 		{
 			if (isUp)
-				playerBox->setPosition(playerBox->getPosition() + Vec2(0, 3.0f));
+				playerBox->setPosition(playerBox->getPosition() + Vec2(0, PLAYER_SPEED / 2));
 			else if (!isUp)
-				playerBox->setPosition(playerBox->getPosition() + Vec2(0, -3.0f));
+				playerBox->setPosition(playerBox->getPosition() + Vec2(0, -PLAYER_SPEED / 2));
 		}
 	}	
 
@@ -135,7 +143,19 @@ void HelloWorld::callEveryFrame(float f)
 		else if (maxX2 < wSizeX && maxX1 < 0) bgSprite[0]->setPositionX(bgSprite[0]->getPositionX() + wSizeX * 2);
 	}
 
-	lbl->setString(StringUtils::format("%d", (int)-bgLayer->getPositionX()));
+	lbl->setString(StringUtils::format("Pos_X : %d", (int)-bgLayer->getPositionX()));
+
+
+	if (!setNoel.isShooting() && isPressSPC)
+		actCharacter(actList::Attack);
+
+	if (setNoel.isShooting())
+		setNoel.runShootingCooldown();
+
+	if(setNoel.isShooting())
+		lbl2->setString(StringUtils::format("%d", setNoel.getShootingCooldown()));
+	else if (lbl2->getString() != "")
+		lbl2->setString("");
 }
 
 void HelloWorld::addLabelTimer(cocos2d::Node* pParent, int nTime, const cocos2d::Vec2& pos, const cocos2d::Vec2& anc)
@@ -230,10 +250,8 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 		sPlayer->isFlippedX() ? sPlayer->setFlippedX(false) : sPlayer->setFlippedX(true);
 		actCharacter(actList::Victory);
 		break;
-	case KEY::KEY_3:
-		actCharacter(actList::Die);
-		break;
-	case KEY::KEY_TAB:
+	case KEY::KEY_SPACE:
+		isPressSPC = true;
 		break;
 	case KEY::KEY_ESCAPE:
 		Director::sharedDirector()->end();
@@ -306,7 +324,8 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 			isPressedUD = false;
 		}
 		break;
-	case KEY::KEY_TAB:
+	case KEY::KEY_SPACE:
+		isPressSPC = false;
 		break;
 	}
 
@@ -331,7 +350,7 @@ void HelloWorld::initPlayerBox()
 	//playerBox->setTextureRect(Rect(-50, -80, 50, 80));
 	playerBox->setTextureRect(Rect(-50, -80, 50, 90));
 	playerBox->setColor(Color3B::GREEN);
-	//playerBox->setOpacity(0.0f);
+	playerBox->setOpacity(0.0f);
 	playerBox->setPosition(wPos5);
 	actLayer->addChild(playerBox);
 
@@ -358,7 +377,7 @@ void HelloWorld::initCharacter()
 
 void HelloWorld::actCharacter(int _type)
 {
-	setCharacter.setAnimation(sPlayer, _type);
+	setNoel.setAnimation(sPlayer, _type);
 }
 
 double HelloWorld::getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, int _magni)

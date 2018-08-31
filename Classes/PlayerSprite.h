@@ -30,10 +30,17 @@ private:
 	int getMaxFrame(int _type);
 	Vec2 getAnchor(int _type);
 
+	int ShootingCooldown;
+	bool isShootingCooldown;
+	void setShootingCooldown();
+
 public:
 	PlayerSprite();
 
 	void setAnimation(cocos2d::Sprite* _sprite, int _type);
+	void runShootingCooldown();
+	bool isShooting();
+	int getShootingCooldown();
 };
 
 #endif

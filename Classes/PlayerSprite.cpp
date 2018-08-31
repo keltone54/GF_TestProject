@@ -2,6 +2,8 @@
 
 USING_NS_CC;
 
+#define SHOOTING_COOLDOWN 20
+
 enum actList
 {
 	Wait,
@@ -51,6 +53,9 @@ void PlayerSprite::initValue()
 	m_anchor.push_back(Vec2(211, 70));
 	m_anchor.push_back(Vec2(131, 34));
 	m_anchor.push_back(Vec2(94, 25));
+
+	ShootingCooldown = SHOOTING_COOLDOWN;
+	isShootingCooldown = false;
 }
 
 std::string PlayerSprite::getTypeName(int _type)
@@ -108,16 +113,51 @@ void PlayerSprite::setAnimation(cocos2d::Sprite* _sprite, int _type)
 		_sprite->runAction(rep);
 	else if (_type == actList::Attack)
 	{
-		auto seq = Sequence::create(animate, CallFunc::create(CC_CALLBACK_0(PlayerSprite::setAnimation, this, _sprite, actList::Wait)), nullptr);
+		ShootingCooldown = true;
+		auto seq = Sequence::create(
+			CallFunc::create(CC_CALLBACK_0(PlayerSprite::setShootingCooldown, this)),
+			animate, 
+			CallFunc::create(CC_CALLBACK_0(PlayerSprite::setAnimation, this, _sprite, actList::Wait)),
+			nullptr);
 		_sprite->runAction(seq);
 	}
 	else if (_type == actList::Victory)
 	{
-		auto seq = Sequence::create(animate, CallFunc::create(CC_CALLBACK_0(PlayerSprite::setAnimation, this, _sprite, actList::VictoryLoop)), nullptr);
+		auto seq = Sequence::create(
+			animate,
+			CallFunc::create(CC_CALLBACK_0(PlayerSprite::setAnimation, this, _sprite, actList::VictoryLoop)),
+			nullptr);
 		_sprite->runAction(seq);
 	}
 	else if (_type == Die)
 	{
 		_sprite->runAction(animate);
 	}
+}
+
+
+// SHOOTING COOLDOWN
+
+void PlayerSprite::setShootingCooldown()
+{
+	ShootingCooldown = SHOOTING_COOLDOWN;
+	isShootingCooldown = true;
+}
+
+void PlayerSprite::runShootingCooldown()
+{
+	if (ShootingCooldown <= 0)
+		isShootingCooldown = false;
+	else
+		ShootingCooldown--;
+}
+
+bool PlayerSprite::isShooting()
+{
+	return isShootingCooldown;
+}
+
+int PlayerSprite::getShootingCooldown()
+{
+	return ShootingCooldown;
 }

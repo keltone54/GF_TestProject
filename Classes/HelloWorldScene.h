@@ -24,9 +24,10 @@ public:
 	Layer* actLayer;
 	Layer* bgLayer;
 	Label* lbl;
+	Label* lbl2;
 
 	Sprite* playerBox;
-	PlayerSprite setCharacter;
+	PlayerSprite setNoel;
 	Sprite* sPlayer;
 
 	Sprite* bgSprite[2];
@@ -40,6 +41,8 @@ public:
 	bool isUp;
 	bool isPressUp;
 	bool isPressDown;
+
+	bool isPressSPC;
 
 	// ÇÔ¼ö ==============================================
 

@@ -26,6 +26,7 @@ private:
 	vector<Vec2>		m_anchor;
 
 	void initValue();
+	void addAnimInfo(std::string _name, int _maxFrame, Vec2 _anchor);
 	std::string getTypeName(int _type);
 	int getMaxFrame(int _type);
 	Vec2 getAnchor(int _type);

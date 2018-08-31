@@ -23,8 +23,8 @@ public:
 
 	Layer* actLayer;
 	Layer* bgLayer;
-	Label* lbl;
-	Label* lbl2;
+	Label* lbl_PosX;
+	Label* lbl_shootingCooldown;
 
 	Sprite* playerBox;
 	PlayerSprite setNoel;

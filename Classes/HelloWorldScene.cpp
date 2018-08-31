@@ -45,14 +45,14 @@ bool HelloWorld::init()
 	addLabelTimer(this, -1, wPos8 - Vec2(0, 10.0f), anc8);
 	
 	TTFConfig ttfconfg("fonts/xenosphere.ttf", 24);
-	lbl = Label::createWithTTF(ttfconfg, "");
-	lbl->setAnchorPoint(anc7);
-	lbl->setPosition(wPos7 + Vec2(20, -20));
-	this->addChild(lbl);
+	lbl_PosX = Label::createWithTTF(ttfconfg, "");
+	lbl_PosX->setAnchorPoint(anc7);
+	lbl_PosX->setPosition(wPos7 + Vec2(20, -20));
+	this->addChild(lbl_PosX);
 
-	lbl2 = Label::createWithTTF(ttfconfg, "");
-	lbl2->setPosition(Vec2(playerBox->getContentSize().width / 2, playerBox->getContentSize().height + 30.0f));
-	playerBox->addChild(lbl2);
+	lbl_shootingCooldown = Label::createWithTTF(ttfconfg, "");
+	lbl_shootingCooldown->setPosition(Vec2(playerBox->getContentSize().width / 2, playerBox->getContentSize().height + 30.0f));
+	playerBox->addChild(lbl_shootingCooldown);
 			
 	//============================================================
 
@@ -125,9 +125,6 @@ void HelloWorld::callEveryFrame(float f)
 					if (sPlayer->isFlippedX())
 						sPlayer->setFlippedX(false);
 				}
-
-
-
 				/*if (isLeft && playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
 					playerBox->setPosition(playerBox->getPosition() + Vec2(5.0f, 0));
 				else if (!isLeft && playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
@@ -168,7 +165,7 @@ void HelloWorld::callEveryFrame(float f)
 		else if (maxX2 < wSizeX && maxX1 < 0) bgSprite[0]->setPositionX(bgSprite[0]->getPositionX() + wSizeX * 2);
 	}
 
-	lbl->setString(StringUtils::format("Pos X : %d", (int)-bgLayer->getPositionX()));
+	lbl_PosX->setString(StringUtils::format("Pos X : %d", (int)-bgLayer->getPositionX()));
 
 
 	if (!setNoel.isShooting() && isPressSPC)
@@ -178,9 +175,9 @@ void HelloWorld::callEveryFrame(float f)
 		setNoel.runShootingCooldown();
 
 	if(setNoel.isShooting())
-		lbl2->setString(StringUtils::format("%d", setNoel.getShootingCooldown()));
-	else if (lbl2->getString() != "")
-		lbl2->setString("");
+		lbl_shootingCooldown->setString(StringUtils::format("%d", setNoel.getShootingCooldown()));
+	else if (lbl_shootingCooldown->getString() != "")
+		lbl_shootingCooldown->setString("");
 }
 
 void HelloWorld::addLabelTimer(cocos2d::Node* pParent, int nTime, const cocos2d::Vec2& pos, const cocos2d::Vec2& anc)

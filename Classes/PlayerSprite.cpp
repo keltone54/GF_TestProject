@@ -33,29 +33,22 @@ PlayerSprite::PlayerSprite()
 
 void PlayerSprite::initValue()
 {
-	m_name.push_back("wait");
-	m_name.push_back("move");
-	m_name.push_back("attack");
-	m_name.push_back("die");
-	m_name.push_back("victory");
-	m_name.push_back("victoryloop");
-
-	m_maxFrame.push_back(40);
-	m_maxFrame.push_back(24);
-	m_maxFrame.push_back(20);
-	m_maxFrame.push_back(51);
-	m_maxFrame.push_back(140);
-	m_maxFrame.push_back(40);
-
-	m_anchor.push_back(Vec2(91, 25));
-	m_anchor.push_back(Vec2(82, 26));
-	m_anchor.push_back(Vec2(101, 25));
-	m_anchor.push_back(Vec2(211, 70));
-	m_anchor.push_back(Vec2(131, 34));
-	m_anchor.push_back(Vec2(94, 25));
+	addAnimInfo("wait",			40,	 Vec2(91, 25));
+	addAnimInfo("move",			24,	 Vec2(82, 26));
+	addAnimInfo("attack",		20,	 Vec2(101, 25));
+	addAnimInfo("die",			51,	 Vec2(211, 70));
+	addAnimInfo("victory",		140, Vec2(131, 34));
+	addAnimInfo("victoryloop",	40,	 Vec2(94, 25));
 
 	ShootingCooldown = SHOOTING_COOLDOWN;
 	isShootingCooldown = false;
+}
+
+void PlayerSprite::addAnimInfo(std::string _name, int _maxFrame, Vec2 _anchor)
+{
+	m_name.push_back(_name);
+	m_maxFrame.push_back(_maxFrame);
+	m_anchor.push_back(_anchor);
 }
 
 std::string PlayerSprite::getTypeName(int _type)

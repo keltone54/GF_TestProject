@@ -42,16 +42,16 @@ bool HelloWorld::init()
 	initCharacter();
 	initPlayerBox();
 
-	addLabelTimer(this, 10, wPos8 - Vec2(0, 10.0f), anc8);
+	addLabelTimer(this, -1, wPos8 - Vec2(0, 10.0f), anc8);
 	
-	TTFConfig ttfconfg("fonts/xenosphere.ttf", 32);
+	TTFConfig ttfconfg("fonts/xenosphere.ttf", 24);
 	lbl = Label::createWithTTF(ttfconfg, "");
 	lbl->setAnchorPoint(anc7);
 	lbl->setPosition(wPos7 + Vec2(20, -20));
 	this->addChild(lbl);
 
 	lbl2 = Label::createWithTTF(ttfconfg, "");
-	lbl2->setPosition(Vec2(playerBox->getContentSize().width / 2, playerBox->getContentSize().height + 50.0f));
+	lbl2->setPosition(Vec2(playerBox->getContentSize().width / 2, playerBox->getContentSize().height + 30.0f));
 	playerBox->addChild(lbl2);
 			
 	//============================================================
@@ -83,6 +83,8 @@ void HelloWorld::initValue()
 	isPressDown = false;
 
 	isPressSPC = false;
+
+	isCanMove = true;
 }
 
 void HelloWorld::onEnter()
@@ -97,38 +99,61 @@ void HelloWorld::onExit()
 
 void HelloWorld::callEveryFrame(float f)
 {
-	if (isPressedLR || isPressedUD)
+	if (!setNoel.isShooting() && !isPressSPC)
 	{
-		if (isPressedLR)
+		if (isPressedLR || isPressedUD)
 		{
-			if (isLeft)
+			if (isPressedLR)
 			{
-				if (playerBox->getPositionX() > 300.0f)
-					playerBox->setPositionX(playerBox->getPositionX() - PLAYER_SPEED);
-				else
-					bgLayer->setPositionX(bgLayer->getPositionX() + PLAYER_SPEED);
+				if (isLeft)
+				{
+					if (playerBox->getPositionX() > 300.0f)
+						playerBox->setPositionX(playerBox->getPositionX() - PLAYER_SPEED);
+					else
+						bgLayer->setPositionX(bgLayer->getPositionX() + PLAYER_SPEED);
 
+					if (!sPlayer->isFlippedX())
+						sPlayer->setFlippedX(true);
+				}
+				else if (!isLeft)
+				{
+					if (playerBox->getPositionX() < wSizeX - 300.0f)
+						playerBox->setPositionX(playerBox->getPositionX() + PLAYER_SPEED);
+					else
+						bgLayer->setPositionX(bgLayer->getPositionX() - PLAYER_SPEED);
+
+					if (sPlayer->isFlippedX())
+						sPlayer->setFlippedX(false);
+				}
+
+
+
+				/*if (isLeft && playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
+					playerBox->setPosition(playerBox->getPosition() + Vec2(5.0f, 0));
+				else if (!isLeft && playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
+					playerBox->setPosition(playerBox->getPosition() + Vec2(-5.0f, 0));*/
 			}
-			else if (!isLeft)
+			if (isPressedUD)
 			{
-				if (playerBox->getPositionX() < wSizeX - 300.0f)
-					playerBox->setPositionX(playerBox->getPositionX() + PLAYER_SPEED);
-				else
-					bgLayer->setPositionX(bgLayer->getPositionX() - PLAYER_SPEED);
+				if (isUp)
+					playerBox->setPosition(playerBox->getPosition() + Vec2(0, PLAYER_SPEED / 2));
+				else if (!isUp)
+					playerBox->setPosition(playerBox->getPosition() + Vec2(0, -PLAYER_SPEED / 2));
 			}
-			/*if (isLeft && playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
-				playerBox->setPosition(playerBox->getPosition() + Vec2(5.0f, 0));
-			else if (!isLeft && playerBox->getBoundingBox().intersectsRect(monsterBox->getBoundingBox()))
-				playerBox->setPosition(playerBox->getPosition() + Vec2(-5.0f, 0));*/
+
+			if (!isCanMove)
+			{
+				if (isPressedLR || isPressedUD)
+					setNoel.setAnimation(sPlayer, actList::Move);
+				else
+					setNoel.setAnimation(sPlayer, actList::Wait);
+
+				isCanMove = true;
+			}
 		}
-		if (isPressedUD)
-		{
-			if (isUp)
-				playerBox->setPosition(playerBox->getPosition() + Vec2(0, PLAYER_SPEED / 2));
-			else if (!isUp)
-				playerBox->setPosition(playerBox->getPosition() + Vec2(0, -PLAYER_SPEED / 2));
-		}
-	}	
+	}
+
+	//
 
 	{
 		float minX1 = bgLayer->getPositionX() + (bgSprite[0]->getPositionX() - bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX() / 2);
@@ -143,7 +168,7 @@ void HelloWorld::callEveryFrame(float f)
 		else if (maxX2 < wSizeX && maxX1 < 0) bgSprite[0]->setPositionX(bgSprite[0]->getPositionX() + wSizeX * 2);
 	}
 
-	lbl->setString(StringUtils::format("Pos_X : %d", (int)-bgLayer->getPositionX()));
+	lbl->setString(StringUtils::format("Pos X : %d", (int)-bgLayer->getPositionX()));
 
 
 	if (!setNoel.isShooting() && isPressSPC)
@@ -178,13 +203,11 @@ void HelloWorld::updateLabel(cocos2d::Label* pLabel)
 {
 	if (pLabel)
 	{
-		int userTime = (int)(pLabel->getUserData()) - 1;
-		pLabel->setString(StringUtils::format("Noel Vermillion - %d", userTime));
+		int userTime = (int)(pLabel->getUserData()) + 1;
+		pLabel->setString(StringUtils::format("TIME\n%3d", userTime));
 
-		if (userTime <= 0)
+		if (userTime < 0)
 		{
-			//이 구간에는, 시간이 0이 되었을때의 동작내용을 구현합니다.
-
 			pLabel->stopAllActions();
 			return;
 		}
@@ -201,27 +224,31 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 	case KEY::KEY_LEFT_ARROW:
 		isLeft = true;
 		isPressLeft = true;
-		sPlayer->setFlippedX(true);
+
 		if (!isPressedLR || !isPressedUD)
 		{
-			actCharacter(actList::Move);
+			if(isCanMove)
+				actCharacter(actList::Move);
 			isPressedLR = true;
 		}
 		else if (isPressedLR && isPressedUD)
-			actCharacter(actList::Move);
+			if (isCanMove)
+				actCharacter(actList::Move);		
 		break;
 	case KEY::KEY_D: // Right
 	case KEY::KEY_RIGHT_ARROW:
 		isLeft = false;
 		isPressRight = true;
-		sPlayer->setFlippedX(false);
+
 		if (!isPressedLR || !isPressedUD)
 		{
-			actCharacter(actList::Move);
+			if (isCanMove)
+				actCharacter(actList::Move);
 			isPressedLR = true;
 		}
-		else if(isPressedLR && isPressedUD)
-			actCharacter(actList::Move);
+		else if (isPressedLR && isPressedUD)
+			if (isCanMove)
+				actCharacter(actList::Move);
 		break;
 	case KEY::KEY_W: // Up
 	case KEY::KEY_UP_ARROW:
@@ -229,7 +256,8 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 		isPressUp = true;
 		if (!isPressedLR || !isPressedUD)
 		{
-			actCharacter(actList::Move);
+			if (isCanMove)
+				actCharacter(actList::Move);
 			isPressedUD = true;
 		}
 		break;
@@ -239,19 +267,21 @@ void HelloWorld::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 		isPressDown = true;
 		if (!isPressedLR || !isPressedUD)
 		{
-			actCharacter(actList::Move);
+			if (isCanMove)
+				actCharacter(actList::Move);
 			isPressedUD = true;
 		}
 		break;
-	case KEY::KEY_1:
-		actCharacter(actList::Attack);
-		break;
-	case KEY::KEY_2:
+	case KEY::KEY_E:
 		sPlayer->isFlippedX() ? sPlayer->setFlippedX(false) : sPlayer->setFlippedX(true);
 		actCharacter(actList::Victory);
 		break;
+	case KEY::KEY_Q:
+		actCharacter(actList::Die);
+		break;
 	case KEY::KEY_SPACE:
 		isPressSPC = true;
+		isCanMove = false;
 		break;
 	case KEY::KEY_ESCAPE:
 		Director::sharedDirector()->end();
@@ -270,12 +300,12 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 		if (isPressRight)
 		{
 			isLeft = false;
-			sPlayer->setFlippedX(false);
-			actCharacter(actList::Move);
+			if (isCanMove)
+				actCharacter(actList::Move);
 		}
 		if (!isPressLeft && !isPressRight)
 		{
-			if (!isPressedUD)
+			if (!isPressedUD && isCanMove)
 				actCharacter(actList::Wait);
 			isPressedLR = false;
 		}
@@ -286,12 +316,12 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 		if (isPressLeft)
 		{
 			isLeft = true;
-			sPlayer->setFlippedX(true);
-			actCharacter(actList::Move);
+			if (isCanMove)
+				actCharacter(actList::Move);
 		}
 		if (!isPressLeft && !isPressRight)
 		{
-			if (!isPressedUD)
+			if (!isPressedUD && isCanMove)
 				actCharacter(actList::Wait);
 			isPressedLR = false;
 		}
@@ -305,7 +335,7 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 		}
 		if (!isPressUp && !isPressDown)
 		{
-			if (!isPressedLR)
+			if (!isPressedLR && isCanMove)
 				actCharacter(actList::Wait);
 			isPressedUD = false;
 		}
@@ -319,7 +349,7 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 		}
 		if (!isPressUp && !isPressDown)
 		{
-			if (!isPressedLR)
+			if (!isPressedLR && isCanMove)
 				actCharacter(actList::Wait);
 			isPressedUD = false;
 		}
@@ -333,8 +363,8 @@ void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 
 void HelloWorld::initBackground()
 {
-	bgSprite[0] = Sprite::create("GF/Bridge.jpg");
-	bgSprite[1] = Sprite::create("GF/Bridge.jpg");
+	bgSprite[0] = Sprite::create("GF/Street.jpg");
+	bgSprite[1] = Sprite::create("GF/Street.jpg");
 
 	bgSprite[0]->setPosition(wPos5);
 	bgSprite[0]->setScale(1.25f, 1.0f);

@@ -44,6 +44,8 @@ public:
 
 	bool isPressSPC;
 
+	bool isCanMove;
+
 	// ÇÔ¼ö ==============================================
 
 	void initValue();

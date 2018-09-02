@@ -35,6 +35,8 @@ private:
 	vector<int>			m_maxFrame;
 	vector<Vec2>		m_anchor;
 
+	int saveType;
+
 	void initValue();
 	void addAnimInfo(std::string _name, int _maxFrame, Vec2 _anchor);
 	std::string getTypeName(int _type);

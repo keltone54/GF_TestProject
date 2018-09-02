@@ -3,9 +3,6 @@
 
 #include "PlayerAnimation.h"
 
-USING_NS_CC;
-
-#define KEY EventKeyboard::KeyCode
 #define PLAYER_SPEED 8.0f
 
 //==========================================================
@@ -19,10 +16,10 @@ PlayerCharacter::PlayerCharacter()
 	{
 		this->schedule(schedule_selector(PlayerCharacter::callEveryFrame));
 
-		auto K_listner = EventListenerKeyboard::create();
-		K_listner->onKeyPressed = CC_CALLBACK_2(PlayerCharacter::onKeyPressed, this);
-		K_listner->onKeyReleased = CC_CALLBACK_2(PlayerCharacter::onKeyReleased, this);
-		_eventDispatcher->addEventListenerWithSceneGraphPriority(K_listner, this);
+		auto Keyboard_Listener = EventListenerKeyboard::create();
+		Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(PlayerCharacter::onKeyPressed, this);
+		Keyboard_Listener->onKeyReleased = CC_CALLBACK_2(PlayerCharacter::onKeyReleased, this);
+		_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
 	}
 }
 
@@ -71,6 +68,8 @@ void PlayerCharacter::initValue()
 	isCanMove = true;
 
 	isMoveBG = false;
+
+	isPaused = false;
 }
 
 void PlayerCharacter::debugLabel()
@@ -119,13 +118,13 @@ void PlayerCharacter::callEveryFrame(float f)
 			}
 			if (isPressedUD)
 			{
-				if (isUp)
-					bodyBox->setPosition(bodyBox->getPosition() + Vec2(0, PLAYER_SPEED / 2));
-				else if (!isUp)
-					bodyBox->setPosition(bodyBox->getPosition() + Vec2(0, -PLAYER_SPEED / 2));
+				if (isUp && (this->getPositionY() < wSizeY - 220.0f))
+					this->setPosition(this->getPosition() + Vec2(0, PLAYER_SPEED / 2));
+				else if (!isUp && (this->getPositionY() > 130.0f))
+					this->setPosition(this->getPosition() + Vec2(0, -PLAYER_SPEED / 2));
 			}
-
-			if (!isCanMove)
+			
+			if (!isCanMove && !isPaused)
 			{
 				if (isPressedLR || isPressedUD)
 					crtAnim->setAnimation(actList::Move);
@@ -136,11 +135,11 @@ void PlayerCharacter::callEveryFrame(float f)
 			}
 		}
 	}
-	else if (!crtAnim->isShooting() && isPressSPC)
+	else if (!crtAnim->isShooting() && isPressSPC && !isPaused)
 	{
 		crtAnim->setAnimation(actList::Attack);
 	}
-	else if (crtAnim->isShooting())
+	else if (crtAnim->isShooting() && !isPaused)
 	{
 		crtAnim->runShootingCooldown();
 
@@ -163,12 +162,12 @@ void PlayerCharacter::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, coco
 
 		if (!isPressedLR || !isPressedUD)
 		{
-			if (isCanMove)
+			if (isCanMove && !isPaused)
 				crtAnim->setAnimation(actList::Move);
 			isPressedLR = true;
 		}
 		else if (isPressedLR && isPressedUD)
-			if (isCanMove)
+			if (isCanMove && !isPaused)
 				crtAnim->setAnimation(actList::Move);
 		break;
 	case KEY::KEY_D: // Right
@@ -178,12 +177,12 @@ void PlayerCharacter::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, coco
 
 		if (!isPressedLR || !isPressedUD)
 		{
-			if (isCanMove)
+			if (isCanMove && !isPaused)
 				crtAnim->setAnimation(actList::Move);
 			isPressedLR = true;
 		}
 		else if (isPressedLR && isPressedUD)
-			if (isCanMove)
+			if (isCanMove && !isPaused)
 				crtAnim->setAnimation(actList::Move);
 		break;
 	case KEY::KEY_W: // Up
@@ -192,7 +191,7 @@ void PlayerCharacter::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, coco
 		isPressUp = true;
 		if (!isPressedLR || !isPressedUD)
 		{
-			if (isCanMove)
+			if (isCanMove && !isPaused)
 				crtAnim->setAnimation(actList::Move);
 			isPressedUD = true;
 		}
@@ -203,7 +202,7 @@ void PlayerCharacter::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, coco
 		isPressDown = true;
 		if (!isPressedLR || !isPressedUD)
 		{
-			if (isCanMove)
+			if (isCanMove && !isPaused)
 				crtAnim->setAnimation(actList::Move);
 			isPressedUD = true;
 		}
@@ -216,8 +215,8 @@ void PlayerCharacter::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, coco
 		crtAnim->setAnimation(actList::Die);
 		break;
 	case KEY::KEY_SPACE:
-		isPressSPC = true;
-		isCanMove = false;
+			isPressSPC = true;
+			isCanMove = false;
 		break;
 	}
 }
@@ -232,12 +231,12 @@ void PlayerCharacter::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, coc
 		if (isPressRight)
 		{
 			isLeft = false;
-			if (isCanMove)
+			if (isCanMove && !isPaused)
 				crtAnim->setAnimation(actList::Move);
 		}
 		if (!isPressLeft && !isPressRight)
 		{
-			if (!isPressedUD && isCanMove)
+			if (!isPressedUD && isCanMove && !isPaused)
 				crtAnim->setAnimation(actList::Wait);
 			isPressedLR = false;
 		}
@@ -248,12 +247,12 @@ void PlayerCharacter::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, coc
 		if (isPressLeft)
 		{
 			isLeft = true;
-			if (isCanMove)
+			if (isCanMove && !isPaused)
 				crtAnim->setAnimation(actList::Move);
 		}
 		if (!isPressLeft && !isPressRight)
 		{
-			if (!isPressedUD && isCanMove)
+			if (!isPressedUD && isCanMove && !isPaused)
 				crtAnim->setAnimation(actList::Wait);
 			isPressedLR = false;
 		}
@@ -267,7 +266,7 @@ void PlayerCharacter::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, coc
 		}
 		if (!isPressUp && !isPressDown)
 		{
-			if (!isPressedLR && isCanMove)
+			if (!isPressedLR && isCanMove && !isPaused)
 				crtAnim->setAnimation(actList::Wait);
 			isPressedUD = false;
 		}
@@ -281,13 +280,13 @@ void PlayerCharacter::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, coc
 		}
 		if (!isPressUp && !isPressDown)
 		{
-			if (!isPressedLR && isCanMove)
+			if (!isPressedLR && isCanMove && !isPaused)
 				crtAnim->setAnimation(actList::Wait);
 			isPressedUD = false;
 		}
 		break;
 	case KEY::KEY_SPACE:
-		isPressSPC = false;
+			isPressSPC = false;
 		break;
 	}
 }
@@ -309,4 +308,41 @@ float PlayerCharacter::getMoveBackground()
 		return PLAYER_SPEED;
 	else
 		return -PLAYER_SPEED;
+}
+
+void PlayerCharacter::ReleaseAllKey()
+{
+	isPressedLR = false;
+	isLeft = false;
+	isPressLeft = false;
+	isPressRight = false;
+
+	isPressedUD = false;
+	isUp = false;
+	isPressUp = false;
+	isPressDown = false;
+
+	isPressSPC = false;
+
+	isCanMove = true;
+
+	isMoveBG = false;
+
+}
+
+void PlayerCharacter::pauseAnimation()
+{
+	this->getEventDispatcher()->resumeEventListenersForTarget(this, true);
+
+	isPaused = true;
+}
+
+void PlayerCharacter::resumeAnimation()
+{
+	isPaused = false;
+
+	if (!isPressedLR && !isPressedUD && !crtAnim->isShooting())
+		crtAnim->setAnimation(actList::Wait);
+	else if ((isPressedLR || isPressedUD) && !crtAnim->isShooting())
+		crtAnim->setAnimation(actList::Move);
 }

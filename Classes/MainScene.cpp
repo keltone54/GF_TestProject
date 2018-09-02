@@ -2,12 +2,8 @@
 #include "GlobalDef.h"
 
 #include "SecondScene.h"
-#include "TestData.h"
 #include "PlayerCharacter.h"
-
-USING_NS_CC;
-
-#define KEY EventKeyboard::KeyCode
+#include "PausePopup.h"
 
 Scene* MainScene::createScene()
 {
@@ -29,17 +25,21 @@ bool MainScene::init()
 
 	//g_pTestData->init();
 
+	popup = PausePopup::create();
+	actLayer->addChild(popup);
+	popup->setVisible(false);
+	popup->setZOrder(101);
+
 	Noel = PlayerCharacter::create();
 	Noel->setPosition(wPos5);
 	actLayer->addChild(Noel);
 
 	initValue();
 	initBackground();
-
-	addLabelTimer(this, -1, wPos8 - Vec2(0, 10.0f), anc8);
-	
 	debugLabel();
-			
+
+	addLabelTimer(actLayer, -1, wPos8 - Vec2(0, 10.0f), anc8);
+
 	//============================================================
 
 	{
@@ -60,7 +60,7 @@ bool MainScene::init()
 
 void MainScene::initValue()
 {
-
+	isPaused = false;
 }
 
 void MainScene::initBackground()
@@ -79,16 +79,37 @@ void MainScene::initBackground()
 void MainScene::debugLabel()
 {
 	TTFConfig ttfconfg("fonts/xenosphere.ttf", 24);
-	lbl_PosX = Label::createWithTTF(ttfconfg, "");
-	lbl_PosX->setAnchorPoint(anc7);
-	lbl_PosX->setPosition(wPos7 + Vec2(20, -20));
-	this->addChild(lbl_PosX);
+	lblPosX = Label::createWithTTF(ttfconfg, "");
+	lblPosX->setAnchorPoint(anc7);
+	lblPosX->setPosition(wPos7 + Vec2(20, -20));
+	actLayer->addChild(lblPosX);
+
+	lblPosY = Label::createWithTTF(ttfconfg, "");
+	lblPosY->setAnchorPoint(anc7);
+	lblPosY->setPosition(lblPosX->getPosition() + Vec2(0, -30));
+	actLayer->addChild(lblPosY);
+
+	lblMemory = Label::create("", "sans", 24);
+	lblMemory->setPosition(wPos1 + Vec2(0, 70));
+	lblMemory->setAnchorPoint(anc1);
+	lblMemory->setColor(Color3B::WHITE);
+	this->addChild(lblMemory);
+}
+
+void MainScene::displayMemory()
+{
+	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, GetCurrentProcessId());
+	PROCESS_MEMORY_COUNTERS pmc;
+	GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc));
+	lblMemory->setString(StringUtils::format("Memory: %dkb", (int)pmc.WorkingSetSize / 1024));
 }
 
 //==========================================================
 
 void MainScene::callEveryFrame(float f)
 {
+	displayMemory();
+
 	if(Noel->isMoveBackground())
 		bgLayer->setPositionX(bgLayer->getPositionX() + Noel->getMoveBackground());
 
@@ -105,7 +126,8 @@ void MainScene::callEveryFrame(float f)
 		else if (maxX2 < wSizeX && maxX1 < 0) bgSprite[0]->setPositionX(bgSprite[0]->getPositionX() + wSizeX * 2);
 	}
 
-	lbl_PosX->setString(StringUtils::format("Pos X : %d", (int)-bgLayer->getPositionX()));
+	lblPosX->setString(StringUtils::format("Pos X : %d", (int)(-bgLayer->getPositionX() + Noel->getPositionX()) / 10));
+	lblPosY->setString(StringUtils::format("Pos Y : %d", (int)Noel->getPositionY() / 10));
 }
 
 //==========================================================
@@ -116,6 +138,30 @@ void MainScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::E
 	{
 	case KEY::KEY_TAB:
 		moveToSecondScene(this);
+		break;
+	case KEY::KEY_GRAVE:
+		if (!isPaused)
+		{
+			isPaused = true;
+			popup->setVisible(true);
+			popup->setOpacity(100.0f);
+
+			Director::sharedDirector()->pause();
+			Noel->pauseAnimation();
+			//popup->getEventDispatcher()->resumeEventListenersForTarget(popup, true);
+			popup->resume();
+		}
+		else
+		{
+			isPaused = false;
+			popup->setVisible(false);
+			popup->setOpacity(0.0);
+
+			Director::sharedDirector()->resume();
+			Noel->resumeAnimation();
+			//popup->getEventDispatcher()->pauseEventListenersForTarget(popup, true);
+			popup->pause();
+		}
 		break;
 	case KEY::KEY_ESCAPE:
 		Director::sharedDirector()->end();
@@ -177,8 +223,9 @@ double MainScene::getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, 
 	return t;
 }
 
-void MainScene::moveToSecondScene(Ref * pSender)
+void MainScene::moveToSecondScene(Ref* pSender)
 {
 	auto pScene = SecondScene::createScene();
-	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
+	//Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
+	Director::getInstance()->replaceScene(TransitionZoomFlipAngular::create(0.5f, pScene));
 }

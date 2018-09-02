@@ -34,6 +34,8 @@ void PlayerAnimation::initValue()
 
 	ShootingCooldown = 0;
 	isShootingCooldown = false;
+
+	saveType = -1;
 }
 
 void PlayerAnimation::addAnimInfo(std::string _name, int _maxFrame, Vec2 _anchor)
@@ -60,64 +62,69 @@ Vec2 PlayerAnimation::getAnchor(int _type)
 
 void PlayerAnimation::setAnimation(int _type)
 {
-	this->stopAllActions();
-
-	Vector<SpriteFrame*> animFrames;
-
-	for (int i = 0; i < anime[_type].maxFrame; i++)
+	if (saveType != _type)
 	{
+		saveType = _type;
+
+		this->stopAllActions();
+
+		Vector<SpriteFrame*> animFrames;
+
+		for (int i = 0; i < anime[_type].maxFrame; i++)
+		{
+			char fileName[30];
+			sprintf(fileName, "BB_Noel-%s-%03d.png", anime[_type].name.c_str(), i);
+			SpriteFrame* frame = anime[_type].texture->getSpriteFrameByName(fileName);
+			animFrames.pushBack(frame);
+		}
+
 		char fileName[30];
-		sprintf(fileName, "BB_Noel-%s-%03d.png", anime[_type].name.c_str(), i);
-		SpriteFrame* frame = anime[_type].texture->getSpriteFrameByName(fileName);
-		animFrames.pushBack(frame);
-	}
+		sprintf(fileName, "BB_Noel-%s-000.png", anime[_type].name.c_str());
+		bool saveFlip = this->isFlippedX();
+		this->initWithSpriteFrameName(fileName);
+		this->setFlippedX(saveFlip);
 
-	char fileName[30];
-	sprintf(fileName, "BB_Noel-%s-000.png", anime[_type].name.c_str());
-	bool saveFlip = this->isFlippedX();
-	this->initWithSpriteFrameName(fileName);
-	this->setFlippedX(saveFlip);
+		float wW = this->getContentSize().width;
+		float wH = this->getContentSize().height;
 
-	float wW = this->getContentSize().width;
-	float wH = this->getContentSize().height;
+		float aX = anime[_type].anchor.x / wW;
+		float aY = anime[_type].anchor.y / wH;
+		float faX = (wW - anime[_type].anchor.x) / wW;
 
-	float aX = anime[_type].anchor.x / wW;
-	float aY = anime[_type].anchor.y / wH;
-	float faX = (wW - anime[_type].anchor.x) / wW;
+		if (!this->isFlippedX())
+			this->setAnchorPoint(Vec2(aX, aY));
+		else
+			this->setAnchorPoint(Vec2(faX, aY));
 
-	if (!this->isFlippedX())
-		this->setAnchorPoint(Vec2(aX, aY));
-	else
-		this->setAnchorPoint(Vec2(faX, aY));
+		auto animation = Animation::createWithSpriteFrames(animFrames, 0.025f);
+		auto animate = Animate::create(animation);
+		auto rep = RepeatForever::create(animate);
 
-	auto animation = Animation::createWithSpriteFrames(animFrames, 0.025f);
-	auto animate = Animate::create(animation);
-	auto rep = RepeatForever::create(animate);
-		
-	if (_type == actList::Wait || _type == actList::Move || _type == actList::VictoryLoop)
-		this->runAction(rep);
-	else if (_type == actList::Attack)
-	{
-		ShootingCooldown = true;
-		
-		auto seq = Sequence::create(
-			CallFunc::create(CC_CALLBACK_0(PlayerAnimation::setShootingCooldown, this)),
-			animate, 
-			CallFunc::create(CC_CALLBACK_0(PlayerAnimation::setAnimation, this, actList::Wait)),
-			nullptr);
-		this->runAction(seq);
-	}
-	else if (_type == actList::Victory)
-	{
-		auto seq = Sequence::create(
-			animate,
-			CallFunc::create(CC_CALLBACK_0(PlayerAnimation::setAnimation, this, actList::VictoryLoop)),
-			nullptr);
-		this->runAction(seq);
-	}
-	else if (_type == Die)
-	{
-		this->runAction(animate);
+		if (_type == actList::Wait || _type == actList::Move || _type == actList::VictoryLoop)
+			this->runAction(rep);
+		else if (_type == actList::Attack)
+		{
+			ShootingCooldown = true;
+
+			auto seq = Sequence::create(
+				CallFunc::create(CC_CALLBACK_0(PlayerAnimation::setShootingCooldown, this)),
+				animate,
+				CallFunc::create(CC_CALLBACK_0(PlayerAnimation::setAnimation, this, actList::Wait)),
+				nullptr);
+			this->runAction(seq);
+		}
+		else if (_type == actList::Victory)
+		{
+			auto seq = Sequence::create(
+				animate,
+				CallFunc::create(CC_CALLBACK_0(PlayerAnimation::setAnimation, this, actList::VictoryLoop)),
+				nullptr);
+			this->runAction(seq);
+		}
+		else if (_type == Die)
+		{
+			this->runAction(animate);
+		}
 	}
 }
 

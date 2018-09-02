@@ -2,11 +2,7 @@
 #include "GlobalDef.h"
 
 #include "MainScene.h"
-#include "TestData.h"
 
-USING_NS_CC;
-
-#define KEYCODE EventKeyboard::KeyCode
 
 Scene* SecondScene::createScene()
 {
@@ -28,6 +24,7 @@ bool SecondScene::init()
 
 	initValue();
 	initBackground();
+	debugLabel();
 
 	//============================================================
 
@@ -62,41 +59,60 @@ void SecondScene::initBackground()
 	bgLayer->addChild(bgSprite);
 }
 
+void SecondScene::debugLabel()
+{
+	lblMemory = Label::create("", "sans", 24);
+	lblMemory->setPosition(wPos1 + Vec2(0, 70));
+	lblMemory->setAnchorPoint(anc1);
+	lblMemory->setColor(Color3B::WHITE);
+	this->addChild(lblMemory);
+}
+
+void SecondScene::displayMemory()
+{
+	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, GetCurrentProcessId());
+	PROCESS_MEMORY_COUNTERS pmc;
+	GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc));
+	lblMemory->setString(StringUtils::format("Memory: %dkb", (int)pmc.WorkingSetSize / 1024));
+}
+
 void SecondScene::callEveryFrame(float f)
 {
+	
+	displayMemory();
 
 }
 
 //==========================================================
 
-bool SecondScene::onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * event)
+bool SecondScene::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event)
 {
 	return true;
 }
 
-void SecondScene::onTouchMoved(cocos2d::Touch * touch, cocos2d::Event * event)
+void SecondScene::onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event)
 {
 }
 
-void SecondScene::onTouchEnded(cocos2d::Touch * touch, cocos2d::Event * event)
+void SecondScene::onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 {
 
 }
 
-void SecondScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event * event)
+void SecondScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event)
 {
 	switch (keyCode)
 	{
-	case KEYCODE::KEY_TAB:
+	case KEY::KEY_TAB:
 		MoveToMainScene(this);
 		break;
-	case KEYCODE::KEY_ESCAPE:
+	case KEY::KEY_ESCAPE:
 		Director::getInstance()->end();
 		break;
 	}
 }
 
-void SecondScene::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event * event)
+void SecondScene::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event)
 {
 	switch (keyCode)
 	{
@@ -109,5 +125,6 @@ void SecondScene::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d
 void SecondScene::MoveToMainScene(Ref* pSender)
 {
 	auto pScene = MainScene::createScene();
-	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
+	//Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
+	Director::getInstance()->replaceScene(TransitionZoomFlipAngular::create(0.5f, pScene));
 }

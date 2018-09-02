@@ -31,6 +31,8 @@ private:
 
 	bool isMoveBG;
 
+	bool isPaused;
+
 	void initValue();
 	void initCharacter();
 	void debugLabel();
@@ -46,6 +48,10 @@ public:
 
 	bool isMoveBackground();
 	float getMoveBackground();
+	
+	void ReleaseAllKey();
+	void pauseAnimation();
+	void resumeAnimation();
 
 	CREATE_FUNC(PlayerCharacter);
 };

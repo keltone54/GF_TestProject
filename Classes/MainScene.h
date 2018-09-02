@@ -1,5 +1,5 @@
-#ifndef __MainScene_SCENE_H__
-#define __MainScene_SCENE_H__
+#ifndef __MainScene__
+#define __MainScene__
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #pragma execution_character_set("utf-8")
@@ -10,6 +10,7 @@
 USING_NS_CC;
 
 class PlayerCharacter;
+class PausePopup;
 
 class MainScene : public cocos2d::Scene
 {
@@ -22,18 +23,22 @@ private:
 
 	Layer* actLayer;
 	Layer* bgLayer;
+	PausePopup* popup;
 
 	//=======================================
 
-	Label* lbl_PosX;
+	Label* lblMemory;
+	Label* lblPosX;
+	Label* lblPosY;
 
 	//=======================================
 
 	PlayerCharacter* Noel;
+	Sprite* bgSprite[2];
 
 	//=======================================
 
-	Sprite* bgSprite[2];
+	bool isPaused;
 
 	//=======================================
 
@@ -44,6 +49,7 @@ public:
 	void initValue();
 	void initBackground();
 	void debugLabel();
+	void displayMemory();
 
 	//====================================================
 

@@ -1,3 +1,10 @@
+#include <Psapi.h>
+#include "TestData.h"
+
+USING_NS_CC;
+
+#define KEY EventKeyboard::KeyCode
+
 
 const short wSizeX = 1280;
 const short wSizeY = 720;

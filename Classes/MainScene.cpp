@@ -1,5 +1,6 @@
 #include "MainScene.h"
 #include "GlobalDef.h"
+
 #include "SecondScene.h"
 #include "TestData.h"
 #include "PlayerCharacter.h"
@@ -8,8 +9,6 @@ USING_NS_CC;
 
 #define KEY EventKeyboard::KeyCode
 
-
-
 Scene* MainScene::createScene()
 {
 	return MainScene::create();
@@ -17,13 +16,14 @@ Scene* MainScene::createScene()
 
 bool MainScene::init()
 {
-	{
-		if (!Scene::init()) return false;
-		bgLayer = Layer::create();
-		this->addChild(bgLayer);
-		actLayer = Layer::create();
-		this->addChild(actLayer);
-	}
+	if (!Scene::init()) return false;
+
+	// 레이어 ====================================================
+
+	bgLayer = Layer::create();
+	this->addChild(bgLayer);
+	actLayer = Layer::create();
+	this->addChild(actLayer);
 
 	// 내용 ======================================================
 
@@ -42,13 +42,13 @@ bool MainScene::init()
 			
 	//============================================================
 
-	this->schedule(schedule_selector(MainScene::callEveryFrame));
-
 	{
-		auto K_listner = EventListenerKeyboard::create();
-		K_listner->onKeyPressed = CC_CALLBACK_2(MainScene::onKeyPressed, this);
-		K_listner->onKeyReleased = CC_CALLBACK_2(MainScene::onKeyReleased, this);
-		_eventDispatcher->addEventListenerWithSceneGraphPriority(K_listner, this);
+		this->schedule(schedule_selector(MainScene::callEveryFrame));
+
+		auto Keyboard_Listener = EventListenerKeyboard::create();
+		Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(MainScene::onKeyPressed, this);
+		Keyboard_Listener->onKeyReleased = CC_CALLBACK_2(MainScene::onKeyReleased, this);
+		_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
 	}
 
 	//============================================================
@@ -61,6 +61,19 @@ bool MainScene::init()
 void MainScene::initValue()
 {
 
+}
+
+void MainScene::initBackground()
+{
+	bgSprite[0] = Sprite::create("GF/Street.jpg");
+	bgSprite[1] = Sprite::create("GF/Street.jpg");
+
+	bgSprite[0]->setPosition(wPos5);
+	bgSprite[0]->setScale(1.25f, 1.0f);
+	bgSprite[1]->setPosition(wPos5 + Vec2(bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX(), 0));
+	bgSprite[1]->setScale(1.25f, 1.0f);
+	bgLayer->addChild(bgSprite[0]);
+	bgLayer->addChild(bgSprite[1]);
 }
 
 void MainScene::debugLabel()
@@ -101,6 +114,9 @@ void MainScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::E
 {
 	switch (keyCode)
 	{
+	case KEY::KEY_TAB:
+		moveToSecondScene(this);
+		break;
 	case KEY::KEY_ESCAPE:
 		Director::sharedDirector()->end();
 		//g_pTestData->DeleteMemory();
@@ -114,7 +130,6 @@ void MainScene::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 	{
 	
 	}
-
 }
 
 //==========================================================
@@ -154,21 +169,6 @@ void MainScene::updateLabel(cocos2d::Label* pLabel)
 
 //==========================================================
 
-void MainScene::initBackground()
-{
-	bgSprite[0] = Sprite::create("GF/Street.jpg");
-	bgSprite[1] = Sprite::create("GF/Street.jpg");
-
-	bgSprite[0]->setPosition(wPos5);
-	bgSprite[0]->setScale(1.25f, 1.0f);
-	bgSprite[1]->setPosition(wPos5 + Vec2(bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX(), 0));
-	bgSprite[1]->setScale(1.25f, 1.0f);
-	bgLayer->addChild(bgSprite[0]);
-	bgLayer->addChild(bgSprite[1]);
-}
-
-//==========================================================
-
 double MainScene::getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, int _magni)
 {
 	double c = sqrt(((p1.x - p2.x) * (p1.x - p2.x)) + ((p1.y - p2.y) * (p1.y - p2.y)));
@@ -177,4 +177,8 @@ double MainScene::getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, 
 	return t;
 }
 
-//==========================================================
+void MainScene::moveToSecondScene(Ref * pSender)
+{
+	auto pScene = SecondScene::createScene();
+	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
+}

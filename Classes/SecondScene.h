@@ -1,36 +1,51 @@
 #ifndef __SecondScene__
 #define __SecondScene__
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+#pragma execution_character_set("utf-8")
+#endif
+
 #include "cocos2d.h"
+
+USING_NS_CC;
 
 class SecondScene : public cocos2d::Scene
 {
 public: static cocos2d::Scene* createScene();
+		virtual bool init();
 
 private:
 
-	// 변수 ==========================================================
+	//====================================================
 
-	cocos2d::Layer* popLayer;
+	Layer* bgLayer;
+	Layer* actLayer;
 
-	//================================================================
+	//====================================================
 
 public:
-	virtual bool init();
 
-	// 함수 ==========================================================
+	//====================================================
 
-	void MoveToHelloWorldScene(Ref* pSender);
+	void initValue();
+	void initBackground();
+	void callEveryFrame(float f);
 
-	//================================================================
+	//====================================================
 
 	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
 	void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event);
 	void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
 
 	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 
-	//================================================================
+	//====================================================
+
+	void MoveToMainScene(Ref* pSender);
+
+	//====================================================
+
 
 	CREATE_FUNC(SecondScene);
 

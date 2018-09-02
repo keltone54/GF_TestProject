@@ -13,10 +13,10 @@ class PlayerCharacter;
 
 class MainScene : public cocos2d::Scene
 {
-public:
-	static cocos2d::Scene* createScene();
+public: static cocos2d::Scene* createScene();
+		virtual bool init();
 
-	virtual bool init();
+private:
 
 	// 변수 ==============================================
 
@@ -37,24 +37,31 @@ public:
 
 	//=======================================
 
-	
+public:
 
 	// 함수 ==============================================
 
 	void initValue();
+	void initBackground();
 	void debugLabel();
 
+	//====================================================
+
 	void callEveryFrame(float f);
+
+	//====================================================
 
 	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 
+	//====================================================
+
 	void addLabelTimer(cocos2d::Node* pParent, int nTime, const cocos2d::Vec2& pos, const cocos2d::Vec2& anc);
 	void updateLabel(cocos2d::Label* pLabel);
 
-	void initBackground();
-
 	double getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, int _magni);
+
+	void moveToSecondScene(Ref* pSender);
 
 	//====================================================
 

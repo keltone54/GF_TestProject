@@ -1,5 +1,5 @@
 #include "SecondScene.h"
-#include "HelloWorldScene.h"
+#include "MainScene.h"
 #include "TestData.h"
 
 USING_NS_CC;
@@ -39,7 +39,7 @@ bool SecondScene::init()
 
 void SecondScene::MoveToHelloWorldScene(Ref* pSender)
 {
-	auto pScene = HelloWorld::createScene();
+	auto pScene = MainScene::createScene();
 	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
 }
 

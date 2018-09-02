@@ -36,16 +36,19 @@
     <ClCompile Include="..\Classes\Officer_Data.cpp">
       <Filter>src\Data</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\HelloWorldScene.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SecondScene.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\AppDelegate.cpp">
       <Filter>src\ETC</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\PlayerSprite.cpp">
+    <ClCompile Include="..\Classes\MainScene.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\PlayerCharacter.cpp">
+      <Filter>src\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\PlayerAnimation.cpp">
       <Filter>src\Manager</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,17 +65,23 @@
     <ClInclude Include="..\Classes\Officer_Data.h">
       <Filter>src\Data</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\HelloWorldScene.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SecondScene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\AppDelegate.h">
       <Filter>src\ETC</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\PlayerSprite.h">
+    <ClInclude Include="..\Classes\MainScene.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PlayerCharacter.h">
       <Filter>src\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PlayerAnimation.h">
+      <Filter>src\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GlobalDef.h">
+      <Filter>src\ETC</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

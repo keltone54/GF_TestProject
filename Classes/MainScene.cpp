@@ -21,18 +21,19 @@ bool MainScene::init()
 	actLayer = Layer::create();
 	this->addChild(actLayer);
 
-	// 내용 ======================================================
+	// 초기화 ====================================================
 
 	//g_pTestData->init();
-
-	Noel = PlayerCharacter::create();
-	Noel->setPosition(wPos5);
-	actLayer->addChild(Noel);
-
 
 	initValue();
 	initBackground();
 	debugLabel();
+
+	// 내용 ======================================================
+
+	Noel = PlayerCharacter::create();
+	Noel->setPosition(wPos5);
+	actLayer->addChild(Noel);
 
 	addLabelTimer(actLayer, -1, wPos8 - Vec2(0, 10.0f), anc8);
 
@@ -43,7 +44,6 @@ bool MainScene::init()
 
 		auto Keyboard_Listener = EventListenerKeyboard::create();
 		Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(MainScene::onKeyPressed, this);
-		Keyboard_Listener->onKeyReleased = CC_CALLBACK_2(MainScene::onKeyReleased, this);
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
 	}
 
@@ -155,17 +155,6 @@ void MainScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::E
 			Director::sharedDirector()->end();
 			//g_pTestData->DeleteMemory();
 			break;
-		}
-	}
-}
-
-void MainScene::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event)
-{
-	if (!bPaused)
-	{
-		switch (keyCode)
-		{
-
 		}
 	}
 }

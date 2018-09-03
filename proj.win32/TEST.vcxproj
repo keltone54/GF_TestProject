@@ -157,6 +157,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\PopLayer.cpp" />
     <ClCompile Include="..\Classes\SecondScene.cpp" />
     <ClCompile Include="..\Classes\Soldier_Data.cpp" />
+    <ClCompile Include="..\Classes\StartScene.cpp" />
     <ClCompile Include="..\Classes\TestData.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -170,6 +171,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\PopLayer.h" />
     <ClInclude Include="..\Classes\SecondScene.h" />
     <ClInclude Include="..\Classes\Soldier_Data.h" />
+    <ClInclude Include="..\Classes\StartScene.h" />
     <ClInclude Include="..\Classes\TestData.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

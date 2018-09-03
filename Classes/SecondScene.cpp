@@ -20,11 +20,15 @@ bool SecondScene::init()
 	actLayer = Layer::create();
 	this->addChild(actLayer);
 
-	// 내용 ======================================================
+	// 초기화 ====================================================
 
 	initValue();
 	initBackground();
 	debugLabel();
+
+	// 내용 ======================================================
+
+	
 
 	//============================================================
 
@@ -65,7 +69,7 @@ void SecondScene::debugLabel()
 	lblMemory->setPosition(wPos1 + Vec2(0, 70));
 	lblMemory->setAnchorPoint(anc1);
 	lblMemory->setColor(Color3B::WHITE);
-	this->addChild(lblMemory);
+	this->addChild(lblMemory, 101);
 }
 
 void SecondScene::displayMemory()
@@ -85,21 +89,21 @@ void SecondScene::callEveryFrame(float f)
 
 //==========================================================
 
-bool SecondScene::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event)
+bool SecondScene::onTouchBegan(Touch* touch, Event* event)
 {
 	return true;
 }
 
-void SecondScene::onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event)
+void SecondScene::onTouchMoved(Touch* touch, Event* event)
 {
 }
 
-void SecondScene::onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
+void SecondScene::onTouchEnded(Touch* touch, Event* event)
 {
 
 }
 
-void SecondScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event)
+void SecondScene::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 {
 	switch (keyCode)
 	{
@@ -112,7 +116,7 @@ void SecondScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 	}
 }
 
-void SecondScene::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event)
+void SecondScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
 {
 	switch (keyCode)
 	{

@@ -21,13 +21,6 @@ bool MainScene::init()
 	actLayer = Layer::create();
 	this->addChild(actLayer);
 
-	popLayer = PopLayer::create();
-	actLayer->addChild(popLayer);
-	popLayer->setBoxSize(100, 150);
-	popLayer->setBoxPosition(wPos8 + Vec2(0, -100));
-	popLayer->setZOrder(101);
-	popLayer->setVisible(false);
-
 	// ³»¿ë ======================================================
 
 	//g_pTestData->init();
@@ -35,6 +28,7 @@ bool MainScene::init()
 	Noel = PlayerCharacter::create();
 	Noel->setPosition(wPos5);
 	actLayer->addChild(Noel);
+
 
 	initValue();
 	initBackground();
@@ -47,11 +41,14 @@ bool MainScene::init()
 	{
 		this->schedule(schedule_selector(MainScene::callEveryFrame));
 
-		Keyboard_Listener = EventListenerKeyboard::create();
+		auto Keyboard_Listener = EventListenerKeyboard::create();
 		Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(MainScene::onKeyPressed, this);
 		Keyboard_Listener->onKeyReleased = CC_CALLBACK_2(MainScene::onKeyReleased, this);
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
 	}
+
+	NotificationCenter::sharedNotificationCenter()->
+		addObserver(this, callfuncO_selector(MainScene::doNotification), "popup", NULL);
 
 	//============================================================
 
@@ -62,7 +59,7 @@ bool MainScene::init()
 
 void MainScene::initValue()
 {
-
+	bPaused = false;
 }
 
 void MainScene::initBackground()
@@ -91,11 +88,11 @@ void MainScene::debugLabel()
 	lblPosY->setPosition(lblPosX->getPosition() + Vec2(0, -30));
 	actLayer->addChild(lblPosY);
 
-	lblMemory = Label::create("", "sans", 24);
+	lblMemory = Label::create("", "", 24);
 	lblMemory->setPosition(wPos1 + Vec2(0, 70));
 	lblMemory->setAnchorPoint(anc1);
 	lblMemory->setColor(Color3B::WHITE);
-	this->addChild(lblMemory);
+	this->addChild(lblMemory, 101);
 }
 
 void MainScene::displayMemory()
@@ -110,9 +107,14 @@ void MainScene::displayMemory()
 
 void MainScene::callEveryFrame(float f)
 {
+	if (bPaused)
+	{
+		bPaused = false;
+	}
+
 	displayMemory();
 
-	if(Noel->isMoveBackground())
+	if (Noel->isMoveBackground())
 		bgLayer->setPositionX(bgLayer->getPositionX() + Noel->getMoveBackground());
 
 	{
@@ -136,28 +138,35 @@ void MainScene::callEveryFrame(float f)
 
 void MainScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event)
 {
-	switch (keyCode)
+	if (!bPaused)
 	{
-	case KEY::KEY_TAB:
-		moveToSecondScene(this);
-		break;
-	case KEY::KEY_GRAVE:
-		popLayer->isVisible() ? popLayer->setVisible(false) : popLayer->setVisible(true);
-		Director::getInstance()->isPaused() ? Director::getInstance()->resume() : Director::getInstance()->pause();
-		Noel->isAnimationPaused() ? Noel->resumeAnimation() : Noel->pauseAnimation();
-		break;
-	case KEY::KEY_ESCAPE:
-		Director::sharedDirector()->end();
-		//g_pTestData->DeleteMemory();
-		break;
+		switch (keyCode)
+		{
+		case KEY::KEY_Z:
+			log("PRESSED 'Z'");
+			break;
+		case KEY::KEY_TAB:
+			moveToSecondScene(this);
+			break;
+		case KEY::KEY_GRAVE:
+			doPop(this);
+			break;
+		case KEY::KEY_ESCAPE:
+			Director::sharedDirector()->end();
+			//g_pTestData->DeleteMemory();
+			break;
+		}
 	}
 }
 
 void MainScene::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event)
 {
-	switch (keyCode)
+	if (!bPaused)
 	{
-	
+		switch (keyCode)
+		{
+
+		}
 	}
 }
 
@@ -202,13 +211,46 @@ double MainScene::getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, 
 {
 	double c = sqrt(((p1.x - p2.x) * (p1.x - p2.x)) + ((p1.y - p2.y) * (p1.y - p2.y)));
 	double t = c / _magni;
-	
+
 	return t;
 }
 
 void MainScene::moveToSecondScene(Ref* pSender)
 {
+	_eventDispatcher->removeAllEventListeners();
+	NotificationCenter::sharedNotificationCenter()->removeAllObservers(this);
 	auto pScene = SecondScene::createScene();
-	//Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
-	Director::getInstance()->replaceScene(TransitionZoomFlipAngular::create(0.5f, pScene));
+	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
+	//Director::getInstance()->replaceScene(TransitionZoomFlipAngular::create(0.5f, pScene));
+	//this->removeFromParentAndCleanup(true);
 }
+
+//==========================================================
+
+void MainScene::doPop(Ref* pSender)
+{
+	auto pScene = PopLayer::create();
+	this->addChild(pScene, 100);
+}
+
+void MainScene::doNotification(Object* obj)
+{
+	auto pParam = (String*)obj;
+
+	if (pParam->intValue() == 1)
+	{
+		Noel->resumeAnimation();
+		log("resume");
+		Director::sharedDirector()->resume();
+	}
+	else
+	{
+		Noel->pauseAnimation();
+		bPaused = true;
+		log("pause");
+		//auto childs = this->getChildren();
+		Director::sharedDirector()->pause();
+	}
+}
+
+//==========================================================

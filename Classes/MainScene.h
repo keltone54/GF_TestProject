@@ -23,7 +23,6 @@ private:
 
 	Layer* actLayer;
 	Layer* bgLayer;
-	PopLayer* popLayer;
 
 	//=======================================
 
@@ -38,7 +37,7 @@ private:
 
 	//=======================================
 
-	EventListenerKeyboard* Keyboard_Listener;
+	bool bPaused;
 
 	//=======================================
 
@@ -68,6 +67,11 @@ public:
 	double getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, int _magni);
 
 	void moveToSecondScene(Ref* pSender);
+
+	//====================================================
+
+	void doPop(Ref* pSender);
+	void doNotification(Object* obj);
 
 	//====================================================
 

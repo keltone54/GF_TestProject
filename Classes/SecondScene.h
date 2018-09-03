@@ -17,7 +17,7 @@ public: static cocos2d::Scene* createScene();
 private:
 
 	//====================================================
-
+	
 	Layer* bgLayer;
 	Layer* actLayer;
 

@@ -13,11 +13,15 @@ bool PopLayer::init()
 	this->setOpacity(100.0f);
 
 
+	auto popParam = String::create("0");
+	NotificationCenter::sharedNotificationCenter()->postNotification("popup", popParam);
+
+
 	auto Keyboard_Listener = EventListenerKeyboard::create();
 	Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(PopLayer::onKeyPressed, this);
 	Keyboard_Listener->onKeyReleased = CC_CALLBACK_2(PopLayer::onKeyReleased, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
-	
+
 	//============================================================
 
 	return true;
@@ -49,12 +53,23 @@ void PopLayer::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Ev
 {
 	switch (keyCode)
 	{
-	case KEY::KEY_SPACE:
-		Director::sharedDirector()->end();
+	case KEY::KEY_GRAVE:
+		doClose(this);
+		break;
+	case KEY::KEY_ESCAPE:
+		//Director::sharedDirector()->end();
 		break;
 	}
 }
 
 void PopLayer::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event * event)
 {
+
+}
+
+void PopLayer::doClose(Object* obj)
+{
+	auto popParam = String::create("1");
+	NotificationCenter::sharedNotificationCenter()->postNotification("popup", popParam);
+	this->removeFromParentAndCleanup(true);
 }

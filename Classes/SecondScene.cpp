@@ -61,7 +61,7 @@ void SecondScene::initBackground()
 
 void SecondScene::debugLabel()
 {
-	lblMemory = Label::create("", "sans", 24);
+	lblMemory = Label::create("", "", 24);
 	lblMemory->setPosition(wPos1 + Vec2(0, 70));
 	lblMemory->setAnchorPoint(anc1);
 	lblMemory->setColor(Color3B::WHITE);
@@ -124,7 +124,9 @@ void SecondScene::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d
 
 void SecondScene::MoveToMainScene(Ref* pSender)
 {
+	_eventDispatcher->removeAllEventListeners();
 	auto pScene = MainScene::createScene();
-	//Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
-	Director::getInstance()->replaceScene(TransitionZoomFlipAngular::create(0.5f, pScene));
+	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
+	//Director::getInstance()->replaceScene(TransitionZoomFlipAngular::create(0.5f, pScene));
+	//this->removeFromParentAndCleanup(true);
 }

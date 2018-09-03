@@ -8,15 +8,7 @@ using namespace std;
 
 #define MAX_ANIM 6
 
-enum actList
-{
-	Wait,
-	Move,
-	Attack,
-	Die,
-	Victory,
-	VictoryLoop
-};
+
 
 class PlayerAnimation : public cocos2d::Sprite
 {
@@ -48,7 +40,7 @@ private:
 	void setShootingCooldown();
 
 public:
-	PlayerAnimation();
+	virtual bool init();
 
 	void setAnimation(int _type);
 

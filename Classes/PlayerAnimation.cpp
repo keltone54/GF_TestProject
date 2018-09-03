@@ -5,8 +5,13 @@ USING_NS_CC;
 
 #define SHOOTING_COOLDOWN 20
 
-PlayerAnimation::PlayerAnimation()
+
+bool PlayerAnimation::init()
 {
+	if (!Sprite::init()) return false;
+
+	//============================================================
+
 	initValue();
 
 	for (int i = 0; i < MAX_ANIM; i++)
@@ -21,7 +26,11 @@ PlayerAnimation::PlayerAnimation()
 		anime[i].anchor = getAnchor(i);
 	}
 
+	//============================================================
+
+	return true;
 }
+
 
 void PlayerAnimation::initValue()
 {

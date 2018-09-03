@@ -7,11 +7,17 @@
 
 //==========================================================
 
-PlayerCharacter::PlayerCharacter()
+bool PlayerCharacter::init()
 {
+	if (!Node::init()) false;
+
+	//============================================================
+
 	initCharacter();
 	initValue();
 	debugLabel();
+
+	//============================================================
 
 	{
 		this->schedule(schedule_selector(PlayerCharacter::callEveryFrame));
@@ -21,6 +27,10 @@ PlayerCharacter::PlayerCharacter()
 		Keyboard_Listener->onKeyReleased = CC_CALLBACK_2(PlayerCharacter::onKeyReleased, this);
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
 	}
+
+	//============================================================
+
+	return true;
 }
 
 //==========================================================
@@ -345,4 +355,9 @@ void PlayerCharacter::resumeAnimation()
 		crtAnim->setAnimation(actList::Wait);
 	else if ((isPressedLR || isPressedUD) && !crtAnim->isShooting())
 		crtAnim->setAnimation(actList::Move);
+}
+
+bool PlayerCharacter::isAnimationPaused()
+{
+	return isPaused;
 }

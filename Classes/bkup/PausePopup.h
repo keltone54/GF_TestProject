@@ -5,19 +5,32 @@
 
 USING_NS_CC;
 
+class PlayerCharacter;
+
 class PausePopup : public cocos2d::LayerColor
 {
 private:
+
 	Sprite* box;
 	Sprite* sdNoel;
 
+	void initMenuBox();
+	void menuResume(Ref* pSender);
+	void menuSceneMove(Ref* pSender);
+	void menuVoid(Ref* pSender);
+
+	PlayerCharacter* m_pCharacter;
+
 public:
 	PausePopup();
+	virtual bool init();
 
 	void callEveryFrame(float f);
 
 	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+
+	void setPopupPause(PlayerCharacter* _Character);
 
 	void moveToSecondScene(Ref* pSender);
 

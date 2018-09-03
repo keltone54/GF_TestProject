@@ -41,8 +41,8 @@ private:
 	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 
-public:
-	PlayerCharacter();
+public:	
+	virtual bool init();
 
 	//====================================================
 
@@ -52,6 +52,7 @@ public:
 	void ReleaseAllKey();
 	void pauseAnimation();
 	void resumeAnimation();
+	bool isAnimationPaused();
 
 	CREATE_FUNC(PlayerCharacter);
 };

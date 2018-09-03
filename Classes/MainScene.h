@@ -10,7 +10,7 @@
 USING_NS_CC;
 
 class PlayerCharacter;
-class PausePopup;
+class PopLayer;
 
 class MainScene : public cocos2d::Scene
 {
@@ -23,7 +23,7 @@ private:
 
 	Layer* actLayer;
 	Layer* bgLayer;
-	PausePopup* popup;
+	PopLayer* popLayer;
 
 	//=======================================
 
@@ -38,7 +38,7 @@ private:
 
 	//=======================================
 
-	bool isPaused;
+	EventListenerKeyboard* Keyboard_Listener;
 
 	//=======================================
 

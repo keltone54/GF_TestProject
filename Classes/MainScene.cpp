@@ -3,7 +3,7 @@
 
 #include "SecondScene.h"
 #include "PlayerCharacter.h"
-#include "PausePopup.h"
+#include "PopLayer.h"
 
 Scene* MainScene::createScene()
 {
@@ -21,14 +21,16 @@ bool MainScene::init()
 	actLayer = Layer::create();
 	this->addChild(actLayer);
 
+	popLayer = PopLayer::create();
+	actLayer->addChild(popLayer);
+	popLayer->setBoxSize(100, 150);
+	popLayer->setBoxPosition(wPos8 + Vec2(0, -100));
+	popLayer->setZOrder(101);
+	popLayer->setVisible(false);
+
 	// ³»¿ë ======================================================
 
 	//g_pTestData->init();
-
-	popup = PausePopup::create();
-	actLayer->addChild(popup);
-	popup->setVisible(false);
-	popup->setZOrder(101);
 
 	Noel = PlayerCharacter::create();
 	Noel->setPosition(wPos5);
@@ -45,7 +47,7 @@ bool MainScene::init()
 	{
 		this->schedule(schedule_selector(MainScene::callEveryFrame));
 
-		auto Keyboard_Listener = EventListenerKeyboard::create();
+		Keyboard_Listener = EventListenerKeyboard::create();
 		Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(MainScene::onKeyPressed, this);
 		Keyboard_Listener->onKeyReleased = CC_CALLBACK_2(MainScene::onKeyReleased, this);
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
@@ -60,7 +62,7 @@ bool MainScene::init()
 
 void MainScene::initValue()
 {
-	isPaused = false;
+
 }
 
 void MainScene::initBackground()
@@ -140,28 +142,9 @@ void MainScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::E
 		moveToSecondScene(this);
 		break;
 	case KEY::KEY_GRAVE:
-		if (!isPaused)
-		{
-			isPaused = true;
-			popup->setVisible(true);
-			popup->setOpacity(100.0f);
-
-			Director::sharedDirector()->pause();
-			Noel->pauseAnimation();
-			//popup->getEventDispatcher()->resumeEventListenersForTarget(popup, true);
-			popup->resume();
-		}
-		else
-		{
-			isPaused = false;
-			popup->setVisible(false);
-			popup->setOpacity(0.0);
-
-			Director::sharedDirector()->resume();
-			Noel->resumeAnimation();
-			//popup->getEventDispatcher()->pauseEventListenersForTarget(popup, true);
-			popup->pause();
-		}
+		popLayer->isVisible() ? popLayer->setVisible(false) : popLayer->setVisible(true);
+		Director::getInstance()->isPaused() ? Director::getInstance()->resume() : Director::getInstance()->pause();
+		Noel->isAnimationPaused() ? Noel->resumeAnimation() : Noel->pauseAnimation();
 		break;
 	case KEY::KEY_ESCAPE:
 		Director::sharedDirector()->end();

@@ -30,3 +30,13 @@ const short wCenterY = wSizeY / 2;
 #define anc7 Vec2(0.0f, 1.0f)
 #define anc8 Vec2(0.5f, 1.0f)
 #define anc9 Vec2(1.0f, 1.0f)
+
+enum actList
+{
+	Wait,
+	Move,
+	Attack,
+	Die,
+	Victory,
+	VictoryLoop
+};

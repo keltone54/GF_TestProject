@@ -22,7 +22,7 @@
     <Filter Include="src\ETC">
       <UniqueIdentifier>{1282dbb0-8590-485b-986d-f0cde15f47f9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Popup">
+    <Filter Include="src\Layer">
       <UniqueIdentifier>{37ffd3ca-b4bb-4ef2-a1cd-94dd1a5728b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -54,8 +54,8 @@
     <ClCompile Include="..\Classes\PlayerAnimation.cpp">
       <Filter>src\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\PausePopup.cpp">
-      <Filter>src\Popup</Filter>
+    <ClCompile Include="..\Classes\PopLayer.cpp">
+      <Filter>src\Layer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,8 +89,8 @@
     <ClInclude Include="..\Classes\GlobalDef.h">
       <Filter>src\ETC</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\PausePopup.h">
-      <Filter>src\Popup</Filter>
+    <ClInclude Include="..\Classes\PopLayer.h">
+      <Filter>src\Layer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

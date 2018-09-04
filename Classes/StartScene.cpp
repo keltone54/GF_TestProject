@@ -38,17 +38,17 @@ bool StartScene::init()
 
 	//============================================================
 
-	{
-		this->schedule(schedule_selector(StartScene::callEveryFrame));
-
-		auto Keyboard_Listener = EventListenerKeyboard::create();
-		Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(StartScene::onKeyPressed, this);
-		_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
-	}
-
-	//============================================================
-
+	initListener();
 	return true;
+}
+
+void StartScene::initListener()
+{
+	this->schedule(schedule_selector(StartScene::callEveryFrame));
+
+	auto Keyboard_Listener = EventListenerKeyboard::create();
+	Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(StartScene::onKeyPressed, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
 }
 
 void StartScene::initValue()

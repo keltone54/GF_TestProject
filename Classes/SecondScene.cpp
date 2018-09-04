@@ -30,23 +30,24 @@ bool SecondScene::init()
 
 	
 
-	//============================================================
-
-	{
-		this->schedule(schedule_selector(SecondScene::callEveryFrame));
-
-		auto Keyboard_Listener = EventListenerKeyboard::create();
-		Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(SecondScene::onKeyPressed, this);
-		Keyboard_Listener->onKeyReleased = CC_CALLBACK_2(SecondScene::onKeyReleased, this);
-		_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
-	}
 
 	//============================================================
-
+	
+	initListener();
 	return true;
 }
 
 //==========================================================
+
+void SecondScene::initListener()
+{
+	this->schedule(schedule_selector(SecondScene::callEveryFrame));
+
+	auto Keyboard_Listener = EventListenerKeyboard::create();
+	Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(SecondScene::onKeyPressed, this);
+	Keyboard_Listener->onKeyReleased = CC_CALLBACK_2(SecondScene::onKeyReleased, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
+}
 
 void SecondScene::initValue()
 {

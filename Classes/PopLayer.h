@@ -12,6 +12,8 @@ private:
 
 public:
 	virtual bool init();
+	
+	void initListener();
 
 	void setBoxSize(float _width, float _height);
 	void setBoxSize(Size _size);

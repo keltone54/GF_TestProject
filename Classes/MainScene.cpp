@@ -37,25 +37,26 @@ bool MainScene::init()
 
 	addLabelTimer(actLayer, -1, wPos8 - Vec2(0, 10.0f), anc8);
 
-	//============================================================
-
-	{
-		this->schedule(schedule_selector(MainScene::callEveryFrame));
-
-		auto Keyboard_Listener = EventListenerKeyboard::create();
-		Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(MainScene::onKeyPressed, this);
-		_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
-	}
-
-	NotificationCenter::sharedNotificationCenter()->
-		addObserver(this, callfuncO_selector(MainScene::doNotification), "popup", NULL);
 
 	//============================================================
-
+	
+	initListener();
 	return true;
 }
 
 //==========================================================
+
+void MainScene::initListener()
+{
+	this->schedule(schedule_selector(MainScene::callEveryFrame));
+
+	auto Keyboard_Listener = EventListenerKeyboard::create();
+	Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(MainScene::onKeyPressed, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
+
+	NotificationCenter::sharedNotificationCenter()->
+		addObserver(this, callfuncO_selector(MainScene::doNotification), "popup", NULL);
+}
 
 void MainScene::initValue()
 {

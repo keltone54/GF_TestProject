@@ -34,6 +34,7 @@ public:
 
 	//====================================================
 
+	void initListener();
 	void initValue();
 	void initBackground();
 	void debugLabel();

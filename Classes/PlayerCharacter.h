@@ -33,6 +33,7 @@ private:
 
 	bool isPaused;
 
+	void initListener();
 	void initValue();
 	void initCharacter();
 	void debugLabel();

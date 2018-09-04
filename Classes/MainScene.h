@@ -45,6 +45,7 @@ public:
 
 	// ÇÔ¼ö ==============================================
 
+	void initListener();
 	void initValue();
 	void initBackground();
 	void debugLabel();

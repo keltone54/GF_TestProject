@@ -7,29 +7,37 @@ bool PopLayer::init()
 
 	//============================================================
 
-	auto sd_noel = Sprite::create("GF/sd_noel.png");
+	this->setOpacity(100.0f);
+
+	/*auto sd_noel = Sprite::create("GF/sd_noel.png");
 	sd_noel->setScale(0.5f);
 	sd_noel->setPosition(wPos4 + Vec2(300, 0));
-	this->addChild(sd_noel);
+	this->addChild(sd_noel);*/
 
 	box = Sprite::create();
 	this->addChild(box);
-	box->setColor(Color3B::BLACK);
-	this->setOpacity(100.0f);
+	box->setColor(Color3B::ORANGE);
+	box->setPosition(wPos5);
 
-	{
-		auto popParam = String::create("0");
-		NotificationCenter::sharedNotificationCenter()->postNotification("popup", popParam);
+	
 
-		auto Keyboard_Listener = EventListenerKeyboard::create();
-		Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(PopLayer::onKeyPressed, this);
-		Keyboard_Listener->onKeyReleased = CC_CALLBACK_2(PopLayer::onKeyReleased, this);
-		_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
-	}
+
 
 	//============================================================
-
+	
+	initListener();
 	return true;
+}
+
+void PopLayer::initListener()
+{
+	auto popParam = String::create("0");
+	NotificationCenter::sharedNotificationCenter()->postNotification("popup", popParam);
+
+	auto Keyboard_Listener = EventListenerKeyboard::create();
+	Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(PopLayer::onKeyPressed, this);
+	Keyboard_Listener->onKeyReleased = CC_CALLBACK_2(PopLayer::onKeyReleased, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
 }
 
 void PopLayer::setBoxSize(float _width, float _height)

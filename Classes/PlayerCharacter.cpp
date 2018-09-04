@@ -19,17 +19,7 @@ bool PlayerCharacter::init()
 
 	//============================================================
 
-	{
-		this->schedule(schedule_selector(PlayerCharacter::callEveryFrame));
-
-		auto Keyboard_Listener = EventListenerKeyboard::create();
-		Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(PlayerCharacter::onKeyPressed, this);
-		Keyboard_Listener->onKeyReleased = CC_CALLBACK_2(PlayerCharacter::onKeyReleased, this);
-		_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
-	}
-
-	//============================================================
-
+	initListener();
 	return true;
 }
 
@@ -59,6 +49,16 @@ void PlayerCharacter::initCharacter()
 	chkpos->setColor((Color3B::RED));
 	chkpos->setPosition(playerBox->getContentSize() / 2);
 	playerBox->addChild(chkpos);*/
+}
+
+void PlayerCharacter::initListener()
+{
+	this->schedule(schedule_selector(PlayerCharacter::callEveryFrame));
+
+	auto Keyboard_Listener = EventListenerKeyboard::create();
+	Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(PlayerCharacter::onKeyPressed, this);
+	Keyboard_Listener->onKeyReleased = CC_CALLBACK_2(PlayerCharacter::onKeyReleased, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
 }
 
 void PlayerCharacter::initValue()

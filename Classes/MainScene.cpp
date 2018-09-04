@@ -239,21 +239,22 @@ void MainScene::doNotification(Object* obj)
 	if (pParam->intValue() == 0) // Create
 	{
 		Noel->pauseAnimation();
-		Noel->pauseSchedulerAndActions();
+		Noel->pause();
+		Noel->getEventDispatcher()->resumeEventListenersForTarget(Noel, true);
 		bPaused = true;
 		log("pause");
 		//Director::sharedDirector()->pause();
 		this->pauseSchedulerAndActions();
-		this->getEventDispatcher()->pauseEventListenersForTarget(actLayer, true);
+		//this->getEventDispatcher()->pauseEventListenersForTarget(actLayer, true);
 	}
 	else if (pParam->intValue() == 1) // Close
 	{
+		Noel->resume();
 		Noel->resumeAnimation();
-		Noel->resumeSchedulerAndActions();
 		log("resume");
 		//Director::sharedDirector()->resume();
 		this->resumeSchedulerAndActions();
-		this->getEventDispatcher()->resumeEventListenersForTarget(actLayer, true);
+		//this->getEventDispatcher()->resumeEventListenersForTarget(actLayer, true);
 		
 	}
 	else if (pParam->intValue() == 2) // Move Scene

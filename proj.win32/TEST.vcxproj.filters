@@ -25,6 +25,9 @@
     <Filter Include="src\Layer">
       <UniqueIdentifier>{37ffd3ca-b4bb-4ef2-a1cd-94dd1a5728b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Test">
+      <UniqueIdentifier>{0f2b5af2-d2cc-4507-821e-5629e99544ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -59,6 +62,12 @@
     </ClCompile>
     <ClCompile Include="..\Classes\StartScene.cpp">
       <Filter>src\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TestScene.cpp">
+      <Filter>src\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TestObject.cpp">
+      <Filter>src\Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +106,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\StartScene.h">
       <Filter>src\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TestScene.h">
+      <Filter>src\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TestObject.h">
+      <Filter>src\Test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

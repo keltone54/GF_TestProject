@@ -9,7 +9,7 @@
 
 bool PlayerCharacter::init()
 {
-	if (!Node::init()) false;
+	if (!Node::init()) return false;
 
 	//============================================================
 
@@ -342,13 +342,15 @@ void PlayerCharacter::ReleaseAllKey()
 
 void PlayerCharacter::pauseAnimation()
 {
-	this->getEventDispatcher()->resumeEventListenersForTarget(this, true);
+	crtAnim->pause();
 
 	isPaused = true;
 }
 
 void PlayerCharacter::resumeAnimation()
 {
+	crtAnim->resume();
+
 	isPaused = false;
 
 	if (!isPressedLR && !isPressedUD && !crtAnim->isShooting())

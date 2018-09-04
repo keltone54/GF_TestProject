@@ -31,6 +31,16 @@ const short wCenterY = wSizeY / 2;
 #define anc8 Vec2(0.5f, 1.0f)
 #define anc9 Vec2(1.0f, 1.0f)
 
+#define pPos1(_parent_) Vec2(0, 0)
+#define pPos2(_parent_) Vec2(_parent_->getContentSize().width / 2, 0)
+#define pPos3(_parent_) Vec2(_parent_->getContentSize().width, 0)
+#define pPos4(_parent_) Vec2(0, _parent_->getContentSize().height / 2)
+#define pPos5(_parent_) Vec2(_parent_->getContentSize().width / 2, _parent_->getContentSize().height / 2)
+#define pPos6(_parent_) Vec2(_parent_->getContentSize().width, _parent_->getContentSize().height / 2)
+#define pPos7(_parent_) Vec2(0, _parent_->getContentSize().height)
+#define pPos8(_parent_) Vec2(_parent_->getContentSize().width / 2, _parent_->getContentSize().height)
+#define pPos9(_parent_) Vec2(_parent_->getContentSize().width, _parent_->getContentSize().height)
+
 enum actList
 {
 	Wait,

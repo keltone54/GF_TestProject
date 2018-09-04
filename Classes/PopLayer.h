@@ -15,7 +15,7 @@ private:
 
 	Sprite* btn[4];
 	Label* btntxt[4];
-
+	
 	int nSelected;
 	bool bPressed;
 
@@ -24,13 +24,6 @@ public:
 	
 	void initListener();
 	void initValue();
-
-	void callEveryFrame(float f);
-
-	void setBoxSize(float _width, float _height);
-	void setBoxSize(Size _size);
-	void setBoxSize(Vec2 _vec2);
-	void setBoxPosition(Vec2 _pos);
 
 	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 	void buttonSelect();

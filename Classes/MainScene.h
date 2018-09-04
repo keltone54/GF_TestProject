@@ -73,6 +73,7 @@ public:
 
 	void doPop(Ref* pSender);
 	void doNotification(Object* obj);
+	void testAnim();
 
 	//====================================================
 

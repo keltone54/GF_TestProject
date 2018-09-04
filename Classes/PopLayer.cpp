@@ -21,7 +21,6 @@ bool PopLayer::init()
 	box->setScale(0.5f);
 	box->setPosition(wPos5);
 
-
 	btnImage = Director::getInstance()->getTextureCache()->addImage("btn1.png");
 	
 	TTFConfig ttfconfg("fonts/xenosphere.ttf", 32);
@@ -49,11 +48,12 @@ bool PopLayer::init()
 	btntxt[3]->setString("EXIT");
 
 	btn[0]->setColor(Color3B(255, 150, 50));
-
+	
 
 	//============================================================
 	
 	initListener();
+
 	return true;
 }
 
@@ -61,8 +61,6 @@ void PopLayer::initListener()
 {
 	auto popParam = String::create("0");
 	NotificationCenter::sharedNotificationCenter()->postNotification("popup", popParam);
-
-	this->schedule(schedule_selector(PopLayer::callEveryFrame));
 
 	auto Keyboard_Listener = EventListenerKeyboard::create();
 	Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(PopLayer::onKeyPressed, this);
@@ -75,34 +73,7 @@ void PopLayer::initValue()
 	bPressed = false;
 }
 
-void PopLayer::callEveryFrame(float f)
-{
-	
-}
-
-void PopLayer::setBoxSize(float _width, float _height)
-{
-	box->setTextureRect(Rect(0, 0, _width, _height));
-}
-
-void PopLayer::setBoxSize(Size _size)
-{
-	box->setTextureRect(Rect(0, 0, _size.width, _size.height));
-
-}
-
-void PopLayer::setBoxSize(Vec2 _vec2)
-{
-	box->setTextureRect(Rect(0, 0, _vec2.x, _vec2.y));
-
-}
-
-void PopLayer::setBoxPosition(Vec2 _pos)
-{
-	box->setPosition(_pos);
-}
-
-void PopLayer::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event * event)
+void PopLayer::onKeyPressed(EventKeyboard::KeyCode keyCode, Event * event)
 {
 	switch (keyCode)
 	{
@@ -140,6 +111,9 @@ void PopLayer::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Ev
 		}
 		break;
 
+	case KEY::KEY_V:
+		
+		break;
 	case KEY::KEY_GRAVE:
 		doClose(this);
 		break;

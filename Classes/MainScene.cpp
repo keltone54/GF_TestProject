@@ -38,6 +38,7 @@ bool MainScene::init()
 
 	addLabelTimer(actLayer, -1, wPos8 - Vec2(0, 10.0f), anc8);
 
+	testAnim();
 
 	//============================================================
 	
@@ -178,7 +179,7 @@ void MainScene::addLabelTimer(cocos2d::Node* pParent, int nTime, const cocos2d::
 
 void MainScene::updateLabel(cocos2d::Label* pLabel)
 {
-	if (pLabel)
+	if (pLabel && !bPaused)
 	{
 		int userTime = (int)(pLabel->getUserData()) + 1;
 		pLabel->setString(StringUtils::format("TIME\n%3d", userTime));
@@ -229,35 +230,56 @@ void MainScene::doPop(Ref* pSender)
 {
 	auto pPop = PopLayer::create();
 	this->addChild(pPop, 100);
-
 }
 
 void MainScene::doNotification(Object* obj)
 {
 	auto pParam = (String*)obj;
 
-	if (pParam->intValue() == 0)
+	if (pParam->intValue() == 0) // Create
 	{
 		Noel->pauseAnimation();
+		Noel->pauseSchedulerAndActions();
 		bPaused = true;
 		log("pause");
-		//auto childs = this->getChildren();
-		Director::sharedDirector()->pause();
+		//Director::sharedDirector()->pause();
+		this->pauseSchedulerAndActions();
+		this->getEventDispatcher()->pauseEventListenersForTarget(actLayer, true);
 	}
-	else if (pParam->intValue() == 1)
+	else if (pParam->intValue() == 1) // Close
 	{
 		Noel->resumeAnimation();
+		Noel->resumeSchedulerAndActions();
 		log("resume");
-		Director::sharedDirector()->resume();
+		//Director::sharedDirector()->resume();
+		this->resumeSchedulerAndActions();
+		this->getEventDispatcher()->resumeEventListenersForTarget(actLayer, true);
+		
 	}
-	else if (pParam->intValue() == 2)
+	else if (pParam->intValue() == 2) // Move Scene
 	{
 		Noel->resumeAnimation();
 		log("move to startscene");
-		Director::sharedDirector()->resume();
+		//Director::sharedDirector()->resume();
 		moveToStartScene(this);
 	}
+	
+}
 
+void MainScene::testAnim()
+{
+	auto z = Sprite::create();
+	z->setTextureRect(Rect(0, 0, 50, 50));
+	z->setColor(Color3B::ORANGE);
+	z->setOpacity(100);
+	this->addChild(z);
+	z->setPosition(wPos4 + Vec2(300,0));
+
+	auto anim = MoveBy::create(1, Vec2(200,0));
+	auto anim2 = anim->reverse();
+	auto seq = Sequence::create(anim, anim2, nullptr);
+	auto rep = RepeatForever::create(seq);
+	z->runAction(rep);
 }
 
 //==========================================================

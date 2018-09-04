@@ -38,8 +38,6 @@ bool MainScene::init()
 
 	addLabelTimer(actLayer, -1, wPos8 - Vec2(0, 10.0f), anc8);
 
-	testAnim();
-
 	//============================================================
 	
 	initListener();
@@ -249,13 +247,7 @@ void MainScene::doNotification(Object* obj)
 	}
 	else if (pParam->intValue() == 1) // Close
 	{
-		Noel->resume();
-		Noel->resumeAnimation();
-		log("resume");
-		//Director::sharedDirector()->resume();
-		this->resumeSchedulerAndActions();
-		//this->getEventDispatcher()->resumeEventListenersForTarget(actLayer, true);
-		
+		resumeDelay();
 	}
 	else if (pParam->intValue() == 2) // Move Scene
 	{
@@ -267,20 +259,49 @@ void MainScene::doNotification(Object* obj)
 	
 }
 
-void MainScene::testAnim()
+void MainScene::resumeDelay()
 {
-	auto z = Sprite::create();
-	z->setTextureRect(Rect(0, 0, 50, 50));
-	z->setColor(Color3B::ORANGE);
-	z->setOpacity(100);
-	this->addChild(z);
-	z->setPosition(wPos4 + Vec2(300,0));
+	TTFConfig ttfconfg("fonts/xenosphere.ttf", 128);
+	auto n3 = Label::createWithTTF(ttfconfg, "3");
+	auto n2 = Label::createWithTTF(ttfconfg, "2");
+	auto n1 = Label::createWithTTF(ttfconfg, "1");
+	this->addChild(n3);
+	this->addChild(n2);
+	this->addChild(n1);
+	n3->setPosition(wPos5);
+	n2->setPosition(wPos5);
+	n1->setPosition(wPos5);
+	n3->setVisible(false);
+	n2->setVisible(false);
+	n1->setVisible(false);
 
-	auto anim = MoveBy::create(1, Vec2(200,0));
-	auto anim2 = anim->reverse();
-	auto seq = Sequence::create(anim, anim2, nullptr);
-	auto rep = RepeatForever::create(seq);
-	z->runAction(rep);
+	auto spawn = Spawn::create(
+		Show::create(),
+		FadeOut::create(0.3),
+		ScaleBy::create(0.3, 1.5),
+		nullptr);
+	auto seq3 = Sequence::create(spawn,
+		RemoveSelf::create(true), nullptr);
+	auto seq2 = Sequence::create(DelayTime::create(0.3),
+		spawn,
+		RemoveSelf::create(true), nullptr);
+	auto seq1 = Sequence::create(DelayTime::create(0.6),
+		spawn,
+		CallFunc::create(CC_CALLBACK_0(MainScene::resumeAction, this)),
+		RemoveSelf::create(true), nullptr);
+	n3->runAction(seq3);
+	n2->runAction(seq2);
+	n1->runAction(seq1);
+}
+
+void MainScene::resumeAction()
+{
+	Noel->resume();
+	Noel->resumeAnimation();
+	log("resume");
+	//Director::sharedDirector()->resume();
+	this->resumeSchedulerAndActions();
+	//this->getEventDispatcher()->resumeEventListenersForTarget(actLayer, true);
 }
 
 //==========================================================

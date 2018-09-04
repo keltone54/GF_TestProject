@@ -49,8 +49,7 @@ public:
 
 	bool isMoveBackground();
 	float getMoveBackground();
-	
-	void ReleaseAllKey();
+
 	void pauseAnimation();
 	void resumeAnimation();
 	bool isAnimationPaused();

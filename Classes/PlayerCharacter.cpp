@@ -320,26 +320,6 @@ float PlayerCharacter::getMoveBackground()
 		return -PLAYER_SPEED;
 }
 
-void PlayerCharacter::ReleaseAllKey()
-{
-	isPressedLR = false;
-	isLeft = false;
-	isPressLeft = false;
-	isPressRight = false;
-
-	isPressedUD = false;
-	isUp = false;
-	isPressUp = false;
-	isPressDown = false;
-
-	isPressSPC = false;
-
-	isCanMove = true;
-
-	isMoveBG = false;
-
-}
-
 void PlayerCharacter::pauseAnimation()
 {
 	crtAnim->pause();

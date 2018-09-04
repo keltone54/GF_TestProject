@@ -25,16 +25,31 @@ bool StartScene::init()
 
 	// ³»¿ë ======================================================
 
-	bt_start = MenuItemImage::create("Karen.png", "Karen.png");
-	bt_exit = MenuItemImage::create("Tsukihi.png", "Tsukihi.png");
+	btnImage = Director::getInstance()->getTextureCache()->addImage("btn1.png");
 
-	bt_start->setScale(0.125f);
-	bt_exit->setScale(0.125f);
+	bt_start = Sprite::createWithTexture(btnImage);
+	bt_exit = Sprite::createWithTexture(btnImage);
 
-	auto menu = Menu::create(bt_start, bt_exit, nullptr);
-	menu->alignItemsVerticallyWithPadding(50.0f);
-	menu->setPosition(wPos5 + Vec2(0, -200));
-	this->addChild(menu);
+	bt_start->setScale(0.8);
+	bt_exit->setScale(0.8);
+
+	bt_start->setPosition(wPos2 + Vec2(0, 170));
+	bt_exit->setPosition(bt_start->getPosition() + Vec2(0, -70));
+
+	this->addChild(bt_start);
+	this->addChild(bt_exit);
+
+	TTFConfig ttfconfg("fonts/xenosphere.ttf", 32);
+	auto btntxt1 = Label::createWithTTF(ttfconfg, "START");
+	auto btntxt2 = Label::createWithTTF(ttfconfg, "EXIT");
+	btntxt1->setPosition(bt_start->getContentSize() / 2);
+	btntxt2->setPosition(bt_exit->getContentSize() / 2);
+	btntxt1->setColor(Color3B(50, 50, 50));
+	btntxt2->setColor(Color3B(50, 50, 50));
+	bt_start->addChild(btntxt1);
+	bt_exit->addChild(btntxt2);
+
+
 
 	//============================================================
 
@@ -88,19 +103,13 @@ void StartScene::callEveryFrame(float f)
 	{
 		if (nSelected == 0)
 		{
-			bt_start->setOpacity(255);
-			bt_exit->setOpacity(128);
-			
-			bt_start->setScale(0.2);
-			bt_exit->setScale(0.125);
+			bt_start->setColor(Color3B(255, 150, 50));
+			bt_exit->setColor(Color3B::WHITE);
 		}
 		else if (nSelected == 1)
 		{
-			bt_exit->setOpacity(255);
-			bt_start->setOpacity(128);
-
-			bt_exit->setScale(0.2);
-			bt_start->setScale(0.125);
+			bt_exit->setColor(Color3B(255, 150, 50));
+			bt_start->setColor(Color3B::WHITE);
 		}
 		
 		bPressed = false;
@@ -149,7 +158,7 @@ void StartScene::MoveToMainScene(Ref * pSender)
 {
 	_eventDispatcher->removeAllEventListeners();
 	auto pScene = MainScene::createScene();
-	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
-	//Director::getInstance()->replaceScene(TransitionZoomFlipAngular::create(0.5f, pScene));
+	//Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
+	Director::getInstance()->replaceScene(TransitionZoomFlipAngular::create(0.5f, pScene));
 	this->removeFromParentAndCleanup(true);
 }

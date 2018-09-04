@@ -2,6 +2,7 @@
 #include "GlobalDef.h"
 
 #include "SecondScene.h"
+#include "StartScene.h"
 #include "PlayerCharacter.h"
 #include "PopLayer.h"
 
@@ -143,9 +144,6 @@ void MainScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::E
 	{
 		switch (keyCode)
 		{
-		case KEY::KEY_Z:
-			log("PRESSED 'Z'");
-			break;
 		case KEY::KEY_TAB:
 			moveToSecondScene(this);
 			break;
@@ -210,30 +208,35 @@ void MainScene::moveToSecondScene(Ref* pSender)
 	_eventDispatcher->removeAllEventListeners();
 	NotificationCenter::sharedNotificationCenter()->removeAllObservers(this);
 	auto pScene = SecondScene::createScene();
-	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
-	//Director::getInstance()->replaceScene(TransitionZoomFlipAngular::create(0.5f, pScene));
-	//this->removeFromParentAndCleanup(true);
+	//Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
+	Director::getInstance()->replaceScene(TransitionZoomFlipAngular::create(0.5f, pScene));
+	this->removeFromParentAndCleanup(true);
+}
+
+void MainScene::moveToStartScene(Ref* pSender)
+{
+	_eventDispatcher->removeAllEventListeners();
+	NotificationCenter::sharedNotificationCenter()->removeAllObservers(this);
+	auto pScene = StartScene::createScene();
+	//Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
+	Director::getInstance()->replaceScene(TransitionZoomFlipAngular::create(0.5f, pScene));
+	this->removeFromParentAndCleanup(true);
 }
 
 //==========================================================
 
 void MainScene::doPop(Ref* pSender)
 {
-	auto pScene = PopLayer::create();
-	this->addChild(pScene, 100);
+	auto pPop = PopLayer::create();
+	this->addChild(pPop, 100);
+
 }
 
 void MainScene::doNotification(Object* obj)
 {
 	auto pParam = (String*)obj;
 
-	if (pParam->intValue() == 1)
-	{
-		Noel->resumeAnimation();
-		log("resume");
-		Director::sharedDirector()->resume();
-	}
-	else
+	if (pParam->intValue() == 0)
 	{
 		Noel->pauseAnimation();
 		bPaused = true;
@@ -241,6 +244,20 @@ void MainScene::doNotification(Object* obj)
 		//auto childs = this->getChildren();
 		Director::sharedDirector()->pause();
 	}
+	else if (pParam->intValue() == 1)
+	{
+		Noel->resumeAnimation();
+		log("resume");
+		Director::sharedDirector()->resume();
+	}
+	else if (pParam->intValue() == 2)
+	{
+		Noel->resumeAnimation();
+		log("move to startscene");
+		Director::sharedDirector()->resume();
+		moveToStartScene(this);
+	}
+
 }
 
 //==========================================================

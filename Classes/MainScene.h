@@ -67,6 +67,7 @@ public:
 	double getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, int _magni);
 
 	void moveToSecondScene(Ref* pSender);
+	void moveToStartScene(Ref* pSender);
 
 	//====================================================
 

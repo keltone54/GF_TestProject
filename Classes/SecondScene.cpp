@@ -131,7 +131,7 @@ void SecondScene::MoveToMainScene(Ref* pSender)
 {
 	_eventDispatcher->removeAllEventListeners();
 	auto pScene = MainScene::createScene();
-	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
-	//Director::getInstance()->replaceScene(TransitionZoomFlipAngular::create(0.5f, pScene));
-	//this->removeFromParentAndCleanup(true);
+	//Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
+	Director::getInstance()->replaceScene(TransitionZoomFlipAngular::create(0.5f, pScene));
+	this->removeFromParentAndCleanup(true);
 }

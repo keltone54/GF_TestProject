@@ -18,8 +18,10 @@ private:
 
 	//====================================================
 
-	MenuItemImage* bt_start;
-	MenuItemImage* bt_exit;
+	Texture2D * btnImage;
+
+	Sprite* bt_start;
+	Sprite* bt_exit;
 
 	int nSelected;
 	bool bPressed;

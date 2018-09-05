@@ -24,12 +24,10 @@ bool MainScene::init()
 
 	// 초기화 ====================================================
 
-	//g_pTestData->init();
-
 	initValue();
 	initBackground();
 	debugLabel();
-
+	
 	// 내용 ======================================================
 
 	Noel = PlayerCharacter::create();
@@ -39,7 +37,7 @@ bool MainScene::init()
 	addLabelTimer(actLayer, -1, wPos8 - Vec2(0, 10.0f), anc8);
 
 	//============================================================
-	
+	createNoti(MainScene, "popup", notiAction, this);
 	initListener();
 	return true;
 }
@@ -53,9 +51,6 @@ void MainScene::initListener()
 	auto Keyboard_Listener = EventListenerKeyboard::create();
 	Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(MainScene::onKeyPressed, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
-
-	NotificationCenter::sharedNotificationCenter()->
-		addObserver(this, callfuncO_selector(MainScene::doNotification), "popup", NULL);
 }
 
 void MainScene::initValue()
@@ -215,7 +210,7 @@ void MainScene::moveToSecondScene(Ref* pSender)
 void MainScene::moveToStartScene(Ref* pSender)
 {
 	_eventDispatcher->removeAllEventListeners();
-	NotificationCenter::sharedNotificationCenter()->removeAllObservers(this);
+	deleteAllNoti(this);
 	auto pScene = StartScene::createScene();
 	//Director::getInstance()->replaceScene(TransitionCrossFade::create(0.5f, pScene));
 	Director::getInstance()->replaceScene(TransitionZoomFlipAngular::create(0.5f, pScene));
@@ -227,10 +222,10 @@ void MainScene::moveToStartScene(Ref* pSender)
 void MainScene::doPop(Ref* pSender)
 {
 	auto pPop = PopLayer::create();
-	this->addChild(pPop, 100);
+	this->addChild(pPop);
 }
 
-void MainScene::doNotification(Object* obj)
+void MainScene::notiAction(Object* obj)
 {
 	auto pParam = (String*)obj;
 
@@ -241,9 +236,7 @@ void MainScene::doNotification(Object* obj)
 		Noel->getEventDispatcher()->resumeEventListenersForTarget(Noel, true);
 		bPaused = true;
 		log("pause");
-		//Director::sharedDirector()->pause();
 		this->pauseSchedulerAndActions();
-		//this->getEventDispatcher()->pauseEventListenersForTarget(actLayer, true);
 	}
 	else if (pParam->intValue() == 1) // Close
 	{
@@ -251,12 +244,9 @@ void MainScene::doNotification(Object* obj)
 	}
 	else if (pParam->intValue() == 2) // Move Scene
 	{
-		Noel->resumeAnimation();
 		log("move to startscene");
-		//Director::sharedDirector()->resume();
 		moveToStartScene(this);
 	}
-	
 }
 
 void MainScene::resumeDelay()

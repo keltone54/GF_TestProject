@@ -25,11 +25,16 @@ public:
 	void initListener();
 	void initValue();
 
-	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
 	void buttonSelect();
 
 	void doClose(Object* obj);
 	void doReturnStartScene(Object* obj);
+
+	void doConfirmPop(Ref* pSender);
+	void notiAction(Object* obj);
+	void resumeDispatcher();
+	void CallFuncDelay();
 
 	CREATE_FUNC(PopLayer);
 };

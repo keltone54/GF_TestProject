@@ -1,10 +1,13 @@
 #include <Psapi.h>
 #include "TestData.h"
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+#pragma execution_character_set("utf-8")
+#endif
+
 USING_NS_CC;
 
 #define KEY EventKeyboard::KeyCode
-
 
 const short wSizeX = 1280;
 const short wSizeY = 720;
@@ -50,3 +53,10 @@ enum actList
 	Victory,
 	VictoryLoop
 };
+
+#define createNoti(_class, _name, _func, _target) NotificationCenter::sharedNotificationCenter()->addObserver(_target, callfuncO_selector(_class::_func), _name, NULL)
+
+#define sendNoti(_message, _name) auto notiParam = String::create(_message);\
+NotificationCenter::sharedNotificationCenter()->postNotification(_name, notiParam)
+
+#define deleteAllNoti(_target) NotificationCenter::sharedNotificationCenter()->removeAllObservers(this)

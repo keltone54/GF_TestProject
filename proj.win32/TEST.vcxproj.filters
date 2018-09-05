@@ -69,6 +69,9 @@
     <ClCompile Include="..\Classes\TestObject.cpp">
       <Filter>src\Test</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\PopConfirm.cpp">
+      <Filter>src\Layer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -112,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\TestObject.h">
       <Filter>src\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PopConfirm.h">
+      <Filter>src\Layer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

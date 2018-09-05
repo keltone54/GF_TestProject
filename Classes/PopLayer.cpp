@@ -1,6 +1,8 @@
 #include "PopLayer.h"
 #include "GlobalDef.h"
 
+#include "PopConfirm.h"
+
 bool PopLayer::init()
 {
 	if (!LayerColor::init()) return false;
@@ -8,6 +10,8 @@ bool PopLayer::init()
 	//============================================================
 	
 	initValue();
+
+	sendNoti("0", "popup");
 
 	this->setOpacity(100.0f);
 
@@ -51,17 +55,13 @@ bool PopLayer::init()
 	
 
 	//============================================================
-	
+	createNoti(PopLayer,"Pause_Pop->StartScene", notiAction, this);
 	initListener();
-
 	return true;
 }
 
 void PopLayer::initListener()
 {
-	auto popParam = String::create("0");
-	NotificationCenter::sharedNotificationCenter()->postNotification("popup", popParam);
-
 	auto Keyboard_Listener = EventListenerKeyboard::create();
 	Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(PopLayer::onKeyPressed, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
@@ -106,13 +106,9 @@ void PopLayer::onKeyPressed(EventKeyboard::KeyCode keyCode, Event * event)
 		case 2:
 			break;
 		case 3:
-			doReturnStartScene(this);
+			doConfirmPop(this);
 			break;
 		}
-		break;
-
-	case KEY::KEY_V:
-		
 		break;
 	case KEY::KEY_GRAVE:
 		doClose(this);
@@ -145,14 +141,49 @@ void PopLayer::buttonSelect()
 
 void PopLayer::doClose(Object* obj)
 {
-	auto popParam = String::create("1");
-	NotificationCenter::sharedNotificationCenter()->postNotification("popup", popParam);
+	deleteAllNoti(this);
 	this->removeFromParentAndCleanup(true);
+	sendNoti("1", "popup");
 }
 
 void PopLayer::doReturnStartScene(Object * obj)
 {
-	auto popParam = String::create("2");
-	NotificationCenter::sharedNotificationCenter()->postNotification("popup", popParam);
+	deleteAllNoti(this);
 	this->removeFromParentAndCleanup(true);
+	sendNoti("2", "popup");
+}
+
+void PopLayer::doConfirmPop(Ref* pSender)
+{
+	auto pPop = PopConfirm::create();
+	this->addChild(pPop);
+}
+
+void PopLayer::notiAction(Object * obj)
+{
+	auto pParam = (String*)obj;
+
+	if (pParam->intValue() == 0) // Create
+	{
+		this->getEventDispatcher()->pauseEventListenersForTarget(this, true);
+	}
+	else if (pParam->intValue() == 1) // Confirm to StartScene
+	{
+		doReturnStartScene(this);
+	}
+	else if (pParam->intValue() == 2) // Cancel to StartScene
+	{
+		CallFuncDelay();
+	}
+}
+
+void PopLayer::resumeDispatcher()
+{
+	this->getEventDispatcher()->resumeEventListenersForTarget(this, true);
+}
+
+void PopLayer::CallFuncDelay()
+{
+	auto seq = Sequence::create(DelayTime::create(0.01), CallFunc::create(CC_CALLBACK_0(PopLayer::resumeDispatcher, this)), nullptr);
+	this->runAction(seq);
 }

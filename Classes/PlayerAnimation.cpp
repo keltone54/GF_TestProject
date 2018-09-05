@@ -19,9 +19,9 @@ bool PlayerAnimation::init()
 		anime[i].texture = SpriteFrameCache::getInstance();
 		anime[i].name = getTypeName(i);
 		anime[i].file = "GF/Noel/Noel-";
-		anime[i].file.append(anime[i].name.c_str());
+		anime[i].file.append(anime[i].name.getCString());
 		anime[i].file.append(".plist");
-		anime[i].texture->addSpriteFramesWithFile(anime[i].file);
+		anime[i].texture->addSpriteFramesWithFile(anime[i].file.getCString());
 		anime[i].maxFrame = getMaxFrame(i);
 		anime[i].anchor = getAnchor(i);
 	}
@@ -54,7 +54,7 @@ void PlayerAnimation::addAnimInfo(std::string _name, int _maxFrame, Vec2 _anchor
 	m_anchor.push_back(_anchor);
 }
 
-std::string PlayerAnimation::getTypeName(int _type)
+String PlayerAnimation::getTypeName(int _type)
 {
 	return m_name[_type];
 }
@@ -82,13 +82,13 @@ void PlayerAnimation::setAnimation(int _type)
 		for (int i = 0; i < anime[_type].maxFrame; i++)
 		{
 			char fileName[30];
-			sprintf(fileName, "BB_Noel-%s-%03d.png", anime[_type].name.c_str(), i);
+			sprintf(fileName, "BB_Noel-%s-%03d.png", anime[_type].name.getCString(), i);
 			SpriteFrame* frame = anime[_type].texture->getSpriteFrameByName(fileName);
 			animFrames.pushBack(frame);
 		}
 
 		char fileName[30];
-		sprintf(fileName, "BB_Noel-%s-000.png", anime[_type].name.c_str());
+		sprintf(fileName, "BB_Noel-%s-000.png", anime[_type].name.getCString());
 		bool saveFlip = this->isFlippedX();
 		this->initWithSpriteFrameName(fileName);
 		this->setFlippedX(saveFlip);

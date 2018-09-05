@@ -17,13 +17,13 @@ private:
 	{
 		SpriteFrameCache* texture;
 		int maxFrame;
-		std::string name;
-		std::string file;
+		String name;
+		String file;
 		Vec2 anchor;
 	};
 	aniStat anime[MAX_ANIM];
 
-	vector<std::string> m_name;
+	vector<String>		m_name;
 	vector<int>			m_maxFrame;
 	vector<Vec2>		m_anchor;
 
@@ -31,7 +31,7 @@ private:
 
 	void initValue();
 	void addAnimInfo(std::string _name, int _maxFrame, Vec2 _anchor);
-	std::string getTypeName(int _type);
+	String getTypeName(int _type);
 	int getMaxFrame(int _type);
 	Vec2 getAnchor(int _type);
 

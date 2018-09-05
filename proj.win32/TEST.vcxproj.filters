@@ -57,9 +57,6 @@
     <ClCompile Include="..\Classes\PlayerAnimation.cpp">
       <Filter>src\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\PopLayer.cpp">
-      <Filter>src\Layer</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\StartScene.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
@@ -70,6 +67,9 @@
       <Filter>src\Test</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\PopConfirm.cpp">
+      <Filter>src\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\PopPause.cpp">
       <Filter>src\Layer</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,9 +104,6 @@
     <ClInclude Include="..\Classes\GlobalDef.h">
       <Filter>src\ETC</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\PopLayer.h">
-      <Filter>src\Layer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\StartScene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
@@ -117,6 +114,9 @@
       <Filter>src\Test</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\PopConfirm.h">
+      <Filter>src\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PopPause.h">
       <Filter>src\Layer</Filter>
     </ClInclude>
   </ItemGroup>

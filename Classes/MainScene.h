@@ -6,7 +6,7 @@
 USING_NS_CC;
 
 class PlayerCharacter;
-class PopLayer;
+class PopPause;
 
 class MainScene : public cocos2d::Scene
 {

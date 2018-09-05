@@ -1,11 +1,11 @@
-#ifndef __POP_LAYER__
-#define __POP_LAYER__
+#ifndef __POP_PAUSE__
+#define __POP_PAUSE__
 
 #include "cocos2d.h"
 
 USING_NS_CC;
 
-class PopLayer : public cocos2d::LayerColor
+class PopPause : public cocos2d::LayerColor
 {
 private:
 
@@ -36,7 +36,7 @@ public:
 	void resumeDispatcher();
 	void CallFuncDelay();
 
-	CREATE_FUNC(PopLayer);
+	CREATE_FUNC(PopPause);
 };
 
-#endif //__POP_LAYER__
+#endif //__POP_PAUSE__

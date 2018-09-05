@@ -4,7 +4,7 @@
 #include "SecondScene.h"
 #include "StartScene.h"
 #include "PlayerCharacter.h"
-#include "PopLayer.h"
+#include "PopPause.h"
 
 Scene* MainScene::createScene()
 {
@@ -221,7 +221,7 @@ void MainScene::moveToStartScene(Ref* pSender)
 
 void MainScene::doPop(Ref* pSender)
 {
-	auto pPop = PopLayer::create();
+	auto pPop = PopPause::create();
 	this->addChild(pPop);
 }
 

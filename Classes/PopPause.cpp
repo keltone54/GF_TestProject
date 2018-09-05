@@ -1,9 +1,9 @@
-#include "PopLayer.h"
+#include "PopPause.h"
 #include "GlobalDef.h"
 
 #include "PopConfirm.h"
 
-bool PopLayer::init()
+bool PopPause::init()
 {
 	if (!LayerColor::init()) return false;
 
@@ -55,25 +55,25 @@ bool PopLayer::init()
 	
 
 	//============================================================
-	createNoti(PopLayer,"Pause_Pop->StartScene", notiAction, this);
+	createNoti(PopPause,"Pause_Pop->StartScene", notiAction, this);
 	initListener();
 	return true;
 }
 
-void PopLayer::initListener()
+void PopPause::initListener()
 {
 	auto Keyboard_Listener = EventListenerKeyboard::create();
-	Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(PopLayer::onKeyPressed, this);
+	Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(PopPause::onKeyPressed, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
 }
 
-void PopLayer::initValue()
+void PopPause::initValue()
 {
 	nSelected = 0;
 	bPressed = false;
 }
 
-void PopLayer::onKeyPressed(EventKeyboard::KeyCode keyCode, Event * event)
+void PopPause::onKeyPressed(EventKeyboard::KeyCode keyCode, Event * event)
 {
 	switch (keyCode)
 	{
@@ -119,7 +119,7 @@ void PopLayer::onKeyPressed(EventKeyboard::KeyCode keyCode, Event * event)
 	}
 }
 
-void PopLayer::buttonSelect()
+void PopPause::buttonSelect()
 {
 	if (bPressed)
 	{
@@ -139,27 +139,27 @@ void PopLayer::buttonSelect()
 	}
 }
 
-void PopLayer::doClose(Object* obj)
+void PopPause::doClose(Object* obj)
 {
 	deleteAllNoti(this);
 	this->removeFromParentAndCleanup(true);
 	sendNoti("1", "popup");
 }
 
-void PopLayer::doReturnStartScene(Object * obj)
+void PopPause::doReturnStartScene(Object * obj)
 {
 	deleteAllNoti(this);
 	this->removeFromParentAndCleanup(true);
 	sendNoti("2", "popup");
 }
 
-void PopLayer::doConfirmPop(Ref* pSender)
+void PopPause::doConfirmPop(Ref* pSender)
 {
 	auto pPop = PopConfirm::create();
 	this->addChild(pPop);
 }
 
-void PopLayer::notiAction(Object * obj)
+void PopPause::notiAction(Object * obj)
 {
 	auto pParam = (String*)obj;
 
@@ -177,13 +177,13 @@ void PopLayer::notiAction(Object * obj)
 	}
 }
 
-void PopLayer::resumeDispatcher()
+void PopPause::resumeDispatcher()
 {
 	this->getEventDispatcher()->resumeEventListenersForTarget(this, true);
 }
 
-void PopLayer::CallFuncDelay()
+void PopPause::CallFuncDelay()
 {
-	auto seq = Sequence::create(DelayTime::create(0.01), CallFunc::create(CC_CALLBACK_0(PopLayer::resumeDispatcher, this)), nullptr);
+	auto seq = Sequence::create(DelayTime::create(0.01), CallFunc::create(CC_CALLBACK_0(PopPause::resumeDispatcher, this)), nullptr);
 	this->runAction(seq);
 }

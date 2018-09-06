@@ -54,6 +54,13 @@ public:
 	void resumeAnimation();
 	bool isAnimationPaused();
 
+	void showHitBox(float _opacity);
+	Rect getHitBox();
+	bool getFlipedX();
+	
+	int getShootingCoolDown();
+	bool isShooting();
+
 	CREATE_FUNC(PlayerCharacter);
 };
 

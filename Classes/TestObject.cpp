@@ -3,22 +3,11 @@
 
 bool TestObject::init()
 {
-	if (!Node::init()) return false;
+	if (!Sprite::init()) return false;
 	//============================================================
 	// 레이어
-
-	box = Sprite::create("JackO.png");
-	this->addChild(box);
 	
-	auto karen = Sprite::create("Karen.png");
-	auto tsukihi = Sprite::create("Tsukihi.png");
-	box->addChild(karen);
-	box->addChild(tsukihi);
-	karen->setScale(0.25);
-	tsukihi->setScale(0.25);
-	karen->setPosition(pPos4(box));
-	tsukihi->setPosition(pPos6(box));
-	box->setScale(0.5);
+
 
 	//============================================================
 	// 초기화
@@ -27,7 +16,9 @@ bool TestObject::init()
 	//============================================================
 	// 내용
 
-
+	box = Sprite::create("JackO.png");
+	box->setScale(0.50);
+	this->addChild(box);
 
 	//============================================================
 	initListener();
@@ -49,6 +40,10 @@ void TestObject::initValue()
 	prsA = false;
 	prsD = false;
 	prsAD = false;
+
+	prsW = false;
+	prsS = false;
+	prsWS = false;
 }
 
 void TestObject::debugLabel()
@@ -61,10 +56,18 @@ void TestObject::callEveryFrame(float f)
 	if ((prsA || prsD) && !prsAD) prsAD = true;
 	else if (!prsA && !prsD && prsAD) prsAD = false;
 
+	if ((prsW || prsS) && !prsWS) prsWS = true;
+	else if (!prsW && !prsS && prsWS) prsWS = false;
+
 	if (prsAD && prsA)
-		box->setPosition(box->getPosition() + Vec2(-8, 0));
+		this->setPosition(this->getPosition() + Vec2(-4, 0));
 	if (prsAD && prsD)
-		box->setPosition(box->getPosition() + Vec2(8, 0));
+		this->setPosition(this->getPosition() + Vec2(4, 0));
+
+	if (prsWS && prsW)
+		this->setPosition(this->getPosition() + Vec2(0, 4));
+	if (prsWS && prsS)
+		this->setPosition(this->getPosition() + Vec2(0, -4));
 }
 
 void TestObject::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
@@ -76,6 +79,12 @@ void TestObject::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 		break;
 	case KEY::KEY_D:
 		prsD = true;
+		break;
+	case KEY::KEY_W:
+		prsW = true;
+		break;
+	case KEY::KEY_S:
+		prsS = true;
 		break;
 	}
 }
@@ -89,6 +98,12 @@ void TestObject::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
 		break;
 	case KEY::KEY_D:
 		prsD = false;
+		break;
+	case KEY::KEY_W:
+		prsW = false;
+		break;
+	case KEY::KEY_S:
+		prsS = false;
 		break;
 	}
 }

@@ -2,6 +2,7 @@
 #include "GlobalDef.h"
 
 #include "TestObject.h"
+#include "PlayerCharacter.h"
 
 Scene* TestScene::createScene()
 {
@@ -29,21 +30,12 @@ bool TestScene::init()
 	//============================================================
 	// ³»¿ë
 
-	auto z = Sprite::create();
-	z->setTextureRect(Rect(0, 0, 50, 50));
-	z->setColor(Color3B::WHITE);
-	z->setPosition(wPos4 + Vec2(200, 0));
-	actLayer1->addChild(z);
+	bltcache = Director::getInstance()->getTextureCache()->addImage("GF/Bullet/bullet_HG.png");
 
-	auto ac = MoveBy::create(0.5, Vec2(100, 0));
-	auto ac2 = ac->reverse();
-	auto seq = Sequence::create(ac, ac2, nullptr);
-	auto rep = RepeatForever::create(seq);
-	z->runAction(rep);
-
-	box = TestObject::create();
-	box->setPosition(wPos5);
-	this->addChild(box);
+	Noel = PlayerCharacter::create();
+	actLayer1->addChild(Noel);
+	Noel->setPosition(wPos5);
+	Noel->showHitBox(255);
 
 	//============================================================
 	initListener();
@@ -61,7 +53,7 @@ void TestScene::initListener()
 
 void TestScene::initValue()
 {
-	bPuz = false;
+	
 }
 
 void TestScene::initBackground()
@@ -79,6 +71,30 @@ void TestScene::debugLabel()
 	lblMemory->setAnchorPoint(anc1);
 	lblMemory->setColor(Color3B::WHITE);
 	this->addChild(lblMemory, 101);
+
+	lbl1 = Label::create("", "", 24);
+	lbl1->setPosition(wPos7 + Vec2(20, -20));
+	lbl1->setAnchorPoint(anc7);
+	lbl1->setColor(Color3B::WHITE);
+	this->addChild(lbl1);
+
+	lbl2 = Label::create("", "", 24);
+	lbl2->setPosition(lbl1->getPosition() + Vec2(0, -30));
+	lbl2->setAnchorPoint(anc7);
+	lbl2->setColor(Color3B::WHITE);
+	this->addChild(lbl2);
+
+	lbl3 = Label::create("", "", 24);
+	lbl3->setPosition(lbl2->getPosition() + Vec2(0, -30));
+	lbl3->setAnchorPoint(anc7);
+	lbl3->setColor(Color3B::WHITE);
+	this->addChild(lbl3);
+
+	lbl4 = Label::create("", "", 24);
+	lbl4->setPosition(lbl3->getPosition() + Vec2(0, -30));
+	lbl4->setAnchorPoint(anc7);
+	lbl4->setColor(Color3B::WHITE);
+	this->addChild(lbl4);
 }
 
 void TestScene::displayMemory()
@@ -91,42 +107,67 @@ void TestScene::displayMemory()
 
 void TestScene::callEveryFrame(float f)
 {
-
 	displayMemory();
 
+	for (int i = 0; i < v.size(); i++)
+	{
+		if (v[i]->getBoundingBox().intersectsRect(Noel->getHitBox()) || !v[i]->isVisible())
+		{
+			v[i]->removeFromParentAndCleanup(true);
+			v[i] = nullptr;
+			v.erase(v.begin() + i);
+		}
+	}
+
+	lbl1->setString(StringUtils::format("v Size : %d",v.size()));
+	//lbl2->setString(StringUtils::format(""));
+	//lbl3->setString(StringUtils::format(""));
+	//lbl4->setString(StringUtils::format(""));
+	
 }
 
 void TestScene::onKeyPressed(EventKeyboard::KeyCode keyCode, Event * event)
 {
 	switch (keyCode)
 	{
-	case KEY::KEY_1:
-	{
-		auto z = Sprite::create();
-		z->setTextureRect(Rect(0, 0, 20, 20));
-		z->setColor(Color3B::WHITE);
-		z->setPosition(wPos8 + Vec2(0, -100));
-		actLayer2->addChild(z);
-		z->setTag(99);
-
-		auto ac = MoveBy::create(5, Vec2(400, 0));
-		z->runAction(ac);
-	}
+	case KEY::KEY_SPACE:
+		createBullet();
 		break;
 	case KEY::KEY_GRAVE:
-		if (!bPuz)
-		{
-			box->pause();
-			box->getEventDispatcher()->resumeEventListenersForTarget(box, true);
-		}
-		else
-		{
-			box->resume();
-		}
-		bPuz ? bPuz = false : bPuz = true;
 		break;
 	case KEY::KEY_ESCAPE:
 		Director::sharedDirector()->end();
 		break;
+	}
+}
+
+void TestScene::createBullet()
+{
+	auto blt = Sprite::createWithTexture(bltcache);
+	actLayer1->addChild(blt);
+	blt->setOpacity(0);
+	v.push_back(blt);
+
+	if (Noel->getFlipedX())
+	{
+		auto seq = Sequence::create(
+			DelayTime::create(0.1),
+			FadeTo::create(0, 255),
+			MoveBy::create(1, Vec2(-wSizeX, 0)),
+			Hide::create(), nullptr);
+		blt->setFlippedX(true);
+		blt->runAction(seq);
+		blt->setPosition(Noel->getPosition() + Vec2(-50, 8));
+	}
+	else
+	{
+		auto seq = Sequence::create(
+			DelayTime::create(0.1),
+			FadeTo::create(0, 255),
+			MoveBy::create(1, Vec2(wSizeX, 0)),
+			Hide::create(), nullptr);
+		blt->setFlippedX(false);
+		blt->runAction(seq);
+		blt->setPosition(Noel->getPosition() + Vec2(50, 8));
 	}
 }

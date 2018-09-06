@@ -3,9 +3,6 @@
 
 USING_NS_CC;
 
-#define SHOOTING_COOLDOWN 20
-
-
 bool PlayerAnimation::init()
 {
 	if (!Sprite::init()) return false;

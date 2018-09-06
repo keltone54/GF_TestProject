@@ -5,17 +5,19 @@
 
 USING_NS_CC;
 
-class TestObject : public cocos2d::Node
+class TestObject : public cocos2d::Sprite
 {
 public: virtual bool init();
 private:
 	//====================================================
 
-	Sprite* box;
-
 	bool prsA;
 	bool prsD;
 	bool prsAD;
+	
+	bool prsW;
+	bool prsS;
+	bool prsWS;
 
 	//====================================================
 	void initListener();
@@ -27,6 +29,7 @@ private:
 public:
 	//====================================================
 	
+	Sprite * box;
 
 
 	//====================================================

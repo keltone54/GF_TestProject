@@ -9,6 +9,10 @@ USING_NS_CC;
 
 #define KEY EventKeyboard::KeyCode
 
+#define SHOOTING_COOLDOWN 20
+
+//=======================================
+
 const short wSizeX = 1280;
 const short wSizeY = 720;
 const short wCenterX = wSizeX / 2;

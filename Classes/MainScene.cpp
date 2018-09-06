@@ -56,6 +56,10 @@ void MainScene::initListener()
 void MainScene::initValue()
 {
 	bPaused = false;
+
+	bltcache = Director::getInstance()->getTextureCache()->addImage("GF/Bullet/bullet_HG.png");
+	bltfirecache = Director::getInstance()->getTextureCache()->addImage("GF/Effect/shotfire.png");
+
 }
 
 void MainScene::initBackground()
@@ -113,6 +117,22 @@ void MainScene::callEveryFrame(float f)
 	if (Noel->isMoveBackground())
 		bgLayer->setPositionX(bgLayer->getPositionX() + Noel->getMoveBackground());
 
+	for (int i = 0; i < v.size(); i++)
+	{
+		//if (v[i]->getBoundingBox().intersectsRect(Noel->getHitBox()) || !v[i]->isVisible())
+		if (!v[i]->isVisible())
+		{
+			v[i]->removeFromParentAndCleanup(true);
+			v[i] = nullptr;
+			v.erase(v.begin() + i);
+		}
+	}
+	if(Noel->isShooting() && Noel->getShootingCoolDown() == 1)
+	{
+		createBullet();
+	}
+
+
 	{
 		float minX1 = bgLayer->getPositionX() + (bgSprite[0]->getPositionX() - bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX() / 2);
 		float maxX1 = bgLayer->getPositionX() + (bgSprite[0]->getPositionX() + bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX() / 2);
@@ -132,7 +152,7 @@ void MainScene::callEveryFrame(float f)
 
 //==========================================================
 
-void MainScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event)
+void MainScene::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 {
 	if (!bPaused)
 	{
@@ -237,6 +257,10 @@ void MainScene::notiAction(Object* obj)
 		bPaused = true;
 		log("pause");
 		this->pauseSchedulerAndActions();
+		
+		for(int i = 0; i < v.size();i++)
+			this->getActionManager()->pauseTarget(v[i]);
+		this->getActionManager()->pauseTarget(bltfire);
 	}
 	else if (pParam->intValue() == 1) // Close
 	{
@@ -292,6 +316,57 @@ void MainScene::resumeAction()
 	//Director::sharedDirector()->resume();
 	this->resumeSchedulerAndActions();
 	//this->getEventDispatcher()->resumeEventListenersForTarget(actLayer, true);
+	for (int i = 0; i < v.size(); i++)
+		this->getActionManager()->resumeTarget(v[i]);
+	this->getActionManager()->resumeTarget(bltfire);
 }
 
 //==========================================================
+
+void MainScene::createBullet()
+{
+	auto blt = Sprite::createWithTexture(bltcache);
+	bltfire = Sprite::createWithTexture(bltfirecache);
+	actLayer->addChild(blt);
+	actLayer->addChild(bltfire);
+	blt->setOpacity(0);
+	bltfire->setOpacity(0);
+	v.push_back(blt);
+
+	auto seqfire = Sequence::create(
+		DelayTime::create(0.07),
+		FadeTo::create(0, 255),
+		DelayTime::create(0.05),
+		Hide::create(), RemoveSelf::create(true), nullptr);
+
+	if (Noel->getFlipedX())
+	{
+		auto seq = Sequence::create(
+			DelayTime::create(0.12),
+			FadeTo::create(0, 255),
+			MoveBy::create(0.5, Vec2(-wSizeX, 0)),
+			Hide::create(), nullptr);
+
+		blt->setFlippedX(true);
+		bltfire->setFlippedX(true);
+		blt->runAction(seq);
+		bltfire->runAction(seqfire);
+		blt->setPosition(Noel->getPosition() + Vec2(-50, 13));
+		bltfire->setPosition(Noel->getPosition() + Vec2(-70, 14));
+	}
+	else
+	{
+		auto seq = Sequence::create(
+			DelayTime::create(0.12),
+			FadeTo::create(0, 255),
+			MoveBy::create(0.5, Vec2(wSizeX, 0)),
+			Hide::create(), nullptr);
+
+		blt->setFlippedX(false);
+		bltfire->setFlippedX(false);
+		blt->runAction(seq);
+		bltfire->runAction(seqfire);
+		blt->setPosition(Noel->getPosition() + Vec2(50, 13));
+		bltfire->setPosition(Noel->getPosition() + Vec2(70, 14));
+	}
+}

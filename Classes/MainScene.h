@@ -29,7 +29,12 @@ private:
 	//=======================================
 
 	PlayerCharacter* Noel;
+	Texture2D* bltcache;
+	Texture2D* bltfirecache;
+	std::vector<Sprite*> v;
+
 	Sprite* bgSprite[2];
+	Sprite* bltfire;
 
 	//=======================================
 
@@ -72,6 +77,10 @@ public:
 	void resumeDelay();
 	void resumeAction();
 
+	//====================================================
+	
+	void createBullet();
+	
 	//====================================================
 
 	CREATE_FUNC(MainScene);

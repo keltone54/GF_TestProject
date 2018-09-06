@@ -34,10 +34,9 @@ void PlayerCharacter::initCharacter()
 	crtAnim->setAnimation(actList::Wait);
 	bodyBox->addChild(crtAnim);
 
-	bodyBox->setTextureRect(Rect(-50, -80, 50, 80));
-	//bodyBox->setTextureRect(Rect(-50, -80, 50, 90));
+	bodyBox->setTextureRect(Rect(-50, -80, 50, 90));
 	bodyBox->setColor(Color3B::GREEN);
-	bodyBox->setOpacity(0.0f);
+	bodyBox->setOpacity(0);
 
 	crtAnim->setPosition(Vec2(bodyBox->getContentSize().width / 2, 0));
 	crtAnim->setScale(0.65f);
@@ -342,4 +341,29 @@ void PlayerCharacter::resumeAnimation()
 bool PlayerCharacter::isAnimationPaused()
 {
 	return isPaused;
+}
+
+void PlayerCharacter::showHitBox(float _opacity)
+{
+	bodyBox->setOpacity(_opacity);
+}
+
+Rect PlayerCharacter::getHitBox()
+{
+	return Rect(this->getPosition() - bodyBox->getContentSize() / 2, bodyBox->getContentSize());
+}
+
+bool PlayerCharacter::getFlipedX()
+{
+	return crtAnim->isFlippedX();
+}
+
+int PlayerCharacter::getShootingCoolDown()
+{
+	return crtAnim->getShootingCooldown();
+}
+
+bool PlayerCharacter::isShooting()
+{
+	return crtAnim->isShooting();
 }

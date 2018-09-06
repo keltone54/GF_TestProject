@@ -146,7 +146,7 @@ void PlayerCharacter::callEveryFrame(float f)
 	}
 	else if (!crtAnim->isShooting() && isPressSPC && !isPaused)
 	{
-		crtAnim->setAnimation(actList::Attack);
+		crtAnim->setAnimation(actList::shotA);
 	}
 	else if (crtAnim->isShooting() && !isPaused)
 	{
@@ -222,6 +222,15 @@ void PlayerCharacter::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, coco
 		break;
 	case KEY::KEY_Q:
 		crtAnim->setAnimation(actList::Die);
+		break;
+	case KEY::KEY_R:
+		crtAnim->setAnimation(actList::mgA);
+		break;
+	case KEY::KEY_T:
+		crtAnim->setAnimation(actList::mgC);
+		break;
+	case KEY::KEY_Z:
+		crtAnim->setAnimation(actList::Attack);
 		break;
 	case KEY::KEY_SPACE:
 			isPressSPC = true;

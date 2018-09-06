@@ -9,8 +9,6 @@ USING_NS_CC;
 
 #define KEY EventKeyboard::KeyCode
 
-#define SHOOTING_COOLDOWN 20
-
 //=======================================
 
 const short wSizeX = 1280;
@@ -55,7 +53,11 @@ enum actList
 	Attack,
 	Die,
 	Victory,
-	VictoryLoop
+	VictoryLoop,
+	shotA,
+	mgA,
+	mgB,
+	mgC
 };
 
 #define createNoti(_class, _name, _func, _target) NotificationCenter::sharedNotificationCenter()->addObserver(_target, callfuncO_selector(_class::_func), _name, NULL)

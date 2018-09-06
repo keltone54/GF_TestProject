@@ -3,6 +3,8 @@
 
 USING_NS_CC;
 
+#define SHOOTING_COOLDOWN 13
+
 bool PlayerAnimation::init()
 {
 	if (!Sprite::init()) return false;
@@ -37,6 +39,10 @@ void PlayerAnimation::initValue()
 	addAnimInfo("die",			51,	 Vec2(211, 70));
 	addAnimInfo("victory",		140, Vec2(131, 34));
 	addAnimInfo("victoryloop",	40,	 Vec2(94, 25));
+	addAnimInfo("shotA",		13,	 Vec2(101, 25));
+	addAnimInfo("mgA",			37,  Vec2(221, 29));
+	addAnimInfo("mgB",			13,  Vec2(221, 29));
+	addAnimInfo("mgC",			25,  Vec2(221, 29));
 
 	ShootingCooldown = 0;
 	isShootingCooldown = false;
@@ -106,9 +112,9 @@ void PlayerAnimation::setAnimation(int _type)
 		auto animate = Animate::create(animation);
 		auto rep = RepeatForever::create(animate);
 
-		if (_type == actList::Wait || _type == actList::Move || _type == actList::VictoryLoop)
+		if (_type == actList::Wait || _type == actList::Move || _type == actList::VictoryLoop || _type == actList::mgB)
 			this->runAction(rep);
-		else if (_type == actList::Attack)
+		else if (_type == actList::Attack || _type == actList::shotA || _type == actList::mgC)
 		{
 			ShootingCooldown = true;
 
@@ -130,6 +136,14 @@ void PlayerAnimation::setAnimation(int _type)
 		else if (_type == Die)
 		{
 			this->runAction(animate);
+		}
+		else if (_type == actList::mgA)
+		{
+			auto seq = Sequence::create(
+				animate,
+				CallFunc::create(CC_CALLBACK_0(PlayerAnimation::setAnimation, this, actList::mgB)),
+				nullptr);
+			this->runAction(seq);
 		}
 	}
 }

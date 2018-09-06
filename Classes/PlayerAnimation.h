@@ -6,9 +6,7 @@
 USING_NS_CC;
 using namespace std;
 
-#define MAX_ANIM 6
-
-
+#define MAX_ANIM 10
 
 class PlayerAnimation : public cocos2d::Sprite
 {

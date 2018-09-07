@@ -37,12 +37,15 @@ private:
 	bool isShootingCooldown;
 	void setShootingCooldown() { ShootingCooldown = 0; isShootingCooldown = true; };
 
+	int MGInterval;
+	int MGIntervaln;
 	int MGStartDelay;
 	int MGEndDelay;
 	bool isMGRun;
 	bool isMGShooting;
-	void setMGStartDelay() { MGStartDelay = 0; isMGRun = true; log("setMGStartDelay"); };
-	void setMGEndDelay() { MGEndDelay = 0; isMGShooting = false; };
+	bool MGPhase;
+	void setMGStartDelay() { MGStartDelay = 0; isMGRun = true; };
+	void setMGEndDelay() { MGEndDelay = 0; isMGShooting = false; log("setMGEndDelay"); };
 	
 public:
 	virtual bool init();
@@ -56,9 +59,13 @@ public:
 	void runMGStartDelay();
 	void runMGEndDelay();
 	bool isMGRunning() { return isMGRun; };
+	bool isMGShootingRun() { return isMGShooting; };
 	int getMGStartDelay() { return MGStartDelay; };
 	int getMGEndDelay() { return MGEndDelay; };
-	bool isMGShootingRun() { return isMGShooting; };
+	bool getMGPhase() { return MGPhase; };
+	int getMGInterval() { return MGIntervaln; };
+	void setMGInterval(int _interval) { MGInterval = _interval; };
+	void runMGInterval();
 	
 
 	CREATE_FUNC(PlayerAnimation);

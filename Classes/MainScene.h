@@ -12,7 +12,6 @@ class MainScene : public cocos2d::Scene
 {
 public: static cocos2d::Scene* createScene();
 		virtual bool init();
-
 private:
 
 	// º¯¼ö ==============================================
@@ -29,12 +28,9 @@ private:
 	//=======================================
 
 	PlayerCharacter* Noel;
-	Texture2D* bltcache;
-	Texture2D* bltfirecache;
-	std::vector<Sprite*> v;
-
 	Sprite* bgSprite[2];
-	Sprite* bltfire;
+
+	std::vector<Sprite*> testBox;
 
 	//=======================================
 
@@ -78,9 +74,10 @@ public:
 	void resumeAction();
 
 	//====================================================
-	
-	void createBullet();
-	
+
+	void setTestBox();
+	void removeTestBox();
+
 	//====================================================
 
 	CREATE_FUNC(MainScene);

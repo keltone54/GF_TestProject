@@ -4,8 +4,9 @@
 USING_NS_CC;
 
 #define SHOOTING_COOLDOWN 13
-#define MG_A_DELAY 37
-#define MG_C_DELAY 25
+#define MG_A_DELAY 64
+#define MG_C_DELAY 37
+#define MG_INTERVAL 6
 
 bool PlayerAnimation::init()
 {
@@ -52,6 +53,9 @@ void PlayerAnimation::initValue()
 	MGEndDelay = 0;
 	isMGRun = false;
 	isMGShooting = false;
+	MGPhase = false;
+	MGInterval = MG_INTERVAL;
+	MGIntervaln = 0;
 
 	saveType = -1;
 }
@@ -124,7 +128,6 @@ void PlayerAnimation::setAnimation(int _type)
 			auto seq = Sequence::create(
 				CallFunc::create(CC_CALLBACK_0(PlayerAnimation::setMGStartDelay, this)),
 				animate,
-				CallFunc::create(CC_CALLBACK_0(PlayerAnimation::setAnimation, this, actList::mgB)),
 				nullptr);
 			this->runAction(seq);
 		}
@@ -154,27 +157,33 @@ void PlayerAnimation::runShootingCooldown()
 
 void PlayerAnimation::runMGStartDelay()
 {
-	if (!isMGShooting)
+	if (MGStartDelay >= MG_A_DELAY)
 	{
-		if (MGStartDelay >= MG_A_DELAY)
-		{
-			isMGShooting = true;
-			log("runMGStartDelay");
-		}
-		else
-			MGStartDelay++;
+		isMGShooting = true;
+		MGPhase = true;
+		MGStartDelay = 0;
 	}
+	else
+		MGStartDelay++;
 }
 
 void PlayerAnimation::runMGEndDelay()
 {
-	if (isMGRun)
+	MGIntervaln = 0;
+	if (MGEndDelay >= MG_C_DELAY)
 	{
-		if (MGEndDelay >= MG_C_DELAY)
-		{
-			isMGRun = false;
-		}
-		else
-			MGEndDelay++;
+		isMGRun = false;
+		MGPhase = false;
+		MGEndDelay = 0;
 	}
+	else
+		MGEndDelay++;
+}
+
+void PlayerAnimation::runMGInterval()
+{
+	if (MGIntervaln < MGInterval)
+		MGIntervaln++;
+	else
+		MGIntervaln = 0;
 }

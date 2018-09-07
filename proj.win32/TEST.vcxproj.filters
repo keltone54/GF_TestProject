@@ -13,9 +13,6 @@
     <Filter Include="src\Data">
       <UniqueIdentifier>{6f9807b5-c4f9-4ba5-b992-3db5a3570c9a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Manager">
-      <UniqueIdentifier>{8cdd7324-5056-4201-ae38-dac2efaa9405}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Scene">
       <UniqueIdentifier>{2b38f0f8-5251-40fd-b260-ec8695daabb7}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,9 @@
     </Filter>
     <Filter Include="src\Test">
       <UniqueIdentifier>{0f2b5af2-d2cc-4507-821e-5629e99544ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Character">
+      <UniqueIdentifier>{8cdd7324-5056-4201-ae38-dac2efaa9405}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -52,10 +52,10 @@
       <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\PlayerCharacter.cpp">
-      <Filter>src\Manager</Filter>
+      <Filter>src\Character</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\PlayerAnimation.cpp">
-      <Filter>src\Manager</Filter>
+      <Filter>src\Character</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\StartScene.cpp">
       <Filter>src\Scene</Filter>
@@ -71,6 +71,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\PopPause.cpp">
       <Filter>src\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Bullet.cpp">
+      <Filter>src\Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -96,10 +99,10 @@
       <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\PlayerCharacter.h">
-      <Filter>src\Manager</Filter>
+      <Filter>src\Character</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\PlayerAnimation.h">
-      <Filter>src\Manager</Filter>
+      <Filter>src\Character</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\GlobalDef.h">
       <Filter>src\ETC</Filter>
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\PopPause.h">
       <Filter>src\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Bullet.h">
+      <Filter>src\Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

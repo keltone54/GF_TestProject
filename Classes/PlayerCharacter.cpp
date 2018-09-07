@@ -2,6 +2,7 @@
 #include "GlobalDef.h"
 
 #include "PlayerAnimation.h"
+#include "Bullet.h"
 
 #define PLAYER_SPEED 8.0f
 
@@ -28,7 +29,7 @@ bool PlayerCharacter::init()
 void PlayerCharacter::initCharacter()
 {
 	bodyBox = Sprite::create();
-	this->addChild(bodyBox);
+	this->addChild(bodyBox, 11);
 
 	crtAnim = PlayerAnimation::create();
 	crtAnim->setAnimation(actList::Wait);
@@ -42,6 +43,7 @@ void PlayerCharacter::initCharacter()
 	crtAnim->setScale(0.65f);
 	//sPlayer->setOpacity(50.0f);
 
+	bullet.clear();
 
 	/*auto chkpos = Sprite::create();
 	chkpos->setTextureRect(Rect(0, 0, 10, 10));
@@ -85,37 +87,16 @@ void PlayerCharacter::initValue()
 void PlayerCharacter::debugLabel()
 {
 	TTFConfig ttfconfg("fonts/xenosphere.ttf", 24);
-	lbl_shootingCooldown = Label::createWithTTF(ttfconfg, "");
-	lbl_shootingCooldown->setPosition(Vec2(bodyBox->getContentSize().width / 2, bodyBox->getContentSize().height + 30.0f));
-	bodyBox->addChild(lbl_shootingCooldown);
-
-	lbl1 = Label::create("", "", 16);
-	lbl2 = Label::create("", "", 16);
-	lbl3 = Label::create("", "", 16);
-	lbl4 = Label::create("", "", 16);
-	this->addChild(lbl1);
-	this->addChild(lbl2);
-	this->addChild(lbl3);
-	this->addChild(lbl4);
-	lbl1->setColor(Color3B::WHITE);
-	lbl2->setColor(Color3B::WHITE);
-	lbl3->setColor(Color3B::WHITE);
-	lbl4->setColor(Color3B::WHITE);
-	lbl2->setPosition(pPos7(this) + Vec2(100, 30));
-	lbl1->setPosition(pPos7(this) + Vec2(100, 00));
-	lbl3->setPosition(pPos7(this) + Vec2(100, 60));
-	lbl4->setPosition(pPos7(this) + Vec2(100, 90));
-	lbl1->setAnchorPoint(anc7);
-	lbl2->setAnchorPoint(anc7);
-	lbl3->setAnchorPoint(anc7);
-	lbl4->setAnchorPoint(anc7);
+	lbl_TopHead = Label::createWithTTF(ttfconfg, "");
+	lbl_TopHead->setPosition(Vec2(bodyBox->getContentSize().width / 2, bodyBox->getContentSize().height + 30.0f));
+	bodyBox->addChild(lbl_TopHead);
 }
 
 //==========================================================
 
 void PlayerCharacter::callEveryFrame(float f)
 {
-
+	
 	if (!crtAnim->isShooting() && !crtAnim->isMGRunning() && !isPressSPC && !isPressShift)
 	{
 		if (isPressedLR || isPressedUD)
@@ -125,9 +106,18 @@ void PlayerCharacter::callEveryFrame(float f)
 				if (isLeft)
 				{
 					if (this->getPositionX() > 300.0f)
+					{
 						this->setPositionX(this->getPositionX() - PLAYER_SPEED);
+						for (int i = 0; i < bullet.size(); i++)
+							bullet[i]->setPositionX(bullet[i]->getPositionX() + PLAYER_SPEED);
+
+					}
 					else if (!isMoveBG)
+					{
 						isMoveBG = true;
+						for (int i = 0; i < bullet.size(); i++)
+							bullet[i]->setPositionX(bullet[i]->getPositionX() + PLAYER_SPEED);
+					}
 
 					if (!crtAnim->isFlippedX())
 						crtAnim->setFlippedX(true);
@@ -135,9 +125,18 @@ void PlayerCharacter::callEveryFrame(float f)
 				else if (!isLeft)
 				{
 					if (this->getPositionX() < wSizeX - 300.0f)
+					{
 						this->setPositionX(this->getPositionX() + PLAYER_SPEED);
+						for (int i = 0; i < bullet.size(); i++)
+							bullet[i]->setPositionX(bullet[i]->getPositionX() - PLAYER_SPEED);
+					}
 					else if (!isMoveBG)
+					{
 						isMoveBG = true;
+						for (int i = 0; i < bullet.size(); i++)
+							bullet[i]->setPositionX(bullet[i]->getPositionX() - PLAYER_SPEED);
+					}
+					
 
 					if (crtAnim->isFlippedX())
 						crtAnim->setFlippedX(false);
@@ -150,66 +149,67 @@ void PlayerCharacter::callEveryFrame(float f)
 			if (isPressedUD)
 			{
 				if (isUp && (this->getPositionY() < wSizeY - 220.0f))
-					this->setPosition(this->getPosition() + Vec2(0, PLAYER_SPEED / 2));
+				{
+					this->setPositionY(this->getPositionY() + PLAYER_SPEED / 2);
+					for(int i = 0; i < bullet.size();i++)
+						bullet[i]->setPositionY(bullet[i]->getPositionY() - PLAYER_SPEED / 2);
+				}
 				else if (!isUp && (this->getPositionY() > 130.0f))
-					this->setPosition(this->getPosition() + Vec2(0, -PLAYER_SPEED / 2));
-			}
-			
-			if (!isCanMove && !isPaused)
-			{
-				if (isPressedLR || isPressedUD)
-					crtAnim->setAnimation(actList::Move);
-				else
-					crtAnim->setAnimation(actList::Wait);
-
-				isCanMove = true;
+				{
+					this->setPositionY(this->getPositionY() - PLAYER_SPEED / 2);
+					for (int i = 0; i < bullet.size(); i++)
+						bullet[i]->setPositionY(bullet[i]->getPositionY() + PLAYER_SPEED / 2);
+				}
 			}
 		}
-	}
-	else if (!crtAnim->isShooting() && isPressSPC && !isPaused)
-	{
-		crtAnim->setAnimation(actList::shotA);
-	}
-	else if (crtAnim->isShooting() && !isPaused)
-	{
-		crtAnim->runShootingCooldown();
+		if (!isCanMove && !isPaused)
+		{
+			if (isPressedLR || isPressedUD)
+				crtAnim->setAnimation(actList::Move);
+			else
+				crtAnim->setAnimation(actList::Wait);
 
-		if(crtAnim->isShooting())
-			lbl_shootingCooldown->setString(StringUtils::format("%d", crtAnim->getShootingCooldown()));
-		else if (lbl_shootingCooldown->getString() != "")
-			lbl_shootingCooldown->setString("");
+			isCanMove = true;
+		}
 	}
-	else if (!crtAnim->isMGRunning() && !crtAnim->isMGShootingRun() && crtAnim->getMGStartDelay() == 0 && isPressShift && !isPaused)
-	{
+	else if (!crtAnim->isShooting() && !crtAnim->isMGRunning() && isPressSPC && !isPaused)
+		crtAnim->setAnimation(actList::shotA);
+	else if (crtAnim->isShooting() && !isPaused)
+		crtAnim->runShootingCooldown();
+	else if (!crtAnim->isMGRunning() && !crtAnim->isMGShootingRun() && isPressShift && !isPaused)
 		crtAnim->setAnimation(actList::mgA);
+	else if (crtAnim->isMGRunning() && !crtAnim->isMGShootingRun() && !crtAnim->getMGPhase() && !isPaused)
+		crtAnim->runMGStartDelay();
+	else if (crtAnim->isMGRunning() && !crtAnim->isMGShootingRun() && crtAnim->getMGPhase() && !isPaused)
+		crtAnim->runMGEndDelay();
+	else if (crtAnim->isMGRunning() && crtAnim->isMGShootingRun() && isPressShift && !isPaused)
+	{
+		crtAnim->setAnimation(actList::mgB);
+		crtAnim->runMGInterval();
 	}
 	else if (crtAnim->isMGRunning() && crtAnim->isMGShootingRun() && !isPressShift && !isPaused)
-	{
 		crtAnim->setAnimation(actList::mgC);
-		crtAnim->runMGEndDelay();
+	if(crtAnim->isShooting() && crtAnim->getShootingCooldown() == 5)
+		BulletCreate(bltType::HG);
+	if (crtAnim->getMGInterval() == 3)
+		BulletCreate(bltType::RF);
+	if (bullet.size() != 0)
+		Rect rct = bullet[0]->getBoundingBox();
+	if (bullet.size() != 0 && lbl_TopHead->getString() != std::to_string(bullet.size()))
+		lbl_TopHead->setString(StringUtils::format("%d", bullet.size()));
+	else if (bullet.size() == 0 && lbl_TopHead->getString() != "")
+		lbl_TopHead->setString("");
 
-		if (crtAnim->isMGRunning() && !crtAnim->isMGShootingRun())
-			lbl_shootingCooldown->setString(StringUtils::format("%d", crtAnim->getMGStartDelay()));
-		else if (lbl_shootingCooldown->getString() != "")
-			lbl_shootingCooldown->setString("");
-	}
-	else if (crtAnim->isMGRunning() && !crtAnim->isMGShootingRun() && !isPaused)
+	for (int i = 0; i < bullet.size(); i++)
 	{
-		crtAnim->runMGStartDelay();
-
-		if (crtAnim->isMGRunning() && !crtAnim->isMGShootingRun())
-			lbl_shootingCooldown->setString(StringUtils::format("%d", crtAnim->getMGStartDelay()));
-		else if (lbl_shootingCooldown->getString() != "")
-			lbl_shootingCooldown->setString("");
+		//if (v[i]->getBoundingBox().intersectsRect(Noel->getHitBox()) || !v[i]->isVisible())
+		if (!bullet[i]->isVisible())
+		{
+			bullet[i]->removeFromParentAndCleanup(true);
+			bullet[i] = nullptr;
+			bullet.erase(bullet.begin() + i);
+		}
 	}
-
-	
-
-	lbl1->setString(StringUtils::format("Running  : %d", (int)crtAnim->isMGRunning()));
-	lbl2->setString(StringUtils::format("Shooting : %d", (int)crtAnim->isMGShootingRun()));
-	lbl3->setString(StringUtils::format("StartDly : %d", (int)crtAnim->getMGStartDelay()));
-	lbl4->setString(StringUtils::format("End  Dly : %d", (int)crtAnim->getMGEndDelay()));
-
 }
 
 void PlayerCharacter::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event * event)
@@ -274,12 +274,6 @@ void PlayerCharacter::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, coco
 		break;
 	case KEY::KEY_Q:
 		crtAnim->setAnimation(actList::Die);
-		break;
-	case KEY::KEY_R:
-		crtAnim->setAnimation(actList::mgA);
-		break;
-	case KEY::KEY_T:
-		crtAnim->setAnimation(actList::mgC);
 		break;
 	case KEY::KEY_Z:
 		crtAnim->setAnimation(actList::Attack);
@@ -370,14 +364,6 @@ void PlayerCharacter::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, coc
 
 //==========================================================
 
-bool PlayerCharacter::isMoveBackground()
-{
-	if (isMoveBG)
-		return true;
-	else
-		return false;
-}
-
 float PlayerCharacter::getMoveBackground()
 {
 	isMoveBG = false;
@@ -391,9 +377,7 @@ float PlayerCharacter::getMoveBackground()
 
 void PlayerCharacter::pauseAnimation()
 {
-	crtAnim->pause();
-
-	isPaused = true;
+	crtAnim->pause(); isPaused = true;
 }
 
 void PlayerCharacter::resumeAnimation()
@@ -402,27 +386,10 @@ void PlayerCharacter::resumeAnimation()
 
 	isPaused = false;
 
-	if (!isPressedLR && !isPressedUD && !crtAnim->isShooting())
+	if (!isPressedLR && !isPressedUD && !crtAnim->isShooting() && !crtAnim->isMGRunning())
 		crtAnim->setAnimation(actList::Wait);
-	else if ((isPressedLR || isPressedUD) && !crtAnim->isShooting())
+	else if ((isPressedLR || isPressedUD) && !crtAnim->isShooting() && !crtAnim->isMGRunning())
 		crtAnim->setAnimation(actList::Move);
-}
-
-bool PlayerCharacter::isAnimationPaused()
-{
-	return isPaused;
-}
-
-//==========================================================
-
-void PlayerCharacter::showHitBox(float _opacity)
-{
-	bodyBox->setOpacity(_opacity);
-}
-
-Rect PlayerCharacter::getHitBox()
-{
-	return Rect(this->getPosition() - bodyBox->getContentSize() / 2, bodyBox->getContentSize());
 }
 
 //==========================================================
@@ -431,6 +398,8 @@ bool PlayerCharacter::getFlipedX()
 {
 	return crtAnim->isFlippedX();
 }
+
+//==========================================================
 
 int PlayerCharacter::getShootingCoolDown()
 {
@@ -444,3 +413,53 @@ bool PlayerCharacter::isShooting()
 
 //==========================================================
 
+void PlayerCharacter::BulletCreate(int _type)
+{
+	auto blt = Bullet::create();
+	this->addChild(blt, 10);
+	blt->SetBulletType(_type);
+	blt->setFlippedX(getFlipedX());
+
+	if (_type == 0)
+	{
+		blt->SetBulletSpeed(2.75);
+		blt->setPosition(blt->getPosition() + Vec2(0, 6));
+	}
+	else if (_type == 1)
+	{
+		blt->SetBulletSpeed(0.5);
+		blt->setScale(0.8);
+		if (!blt->isFlippedX())
+			blt->setPosition(blt->getPosition() + Vec2(50, -22));
+		else
+			blt->setPosition(blt->getPosition() + Vec2(-50, -22));
+		
+	}
+
+	blt->BulletCreate();
+	bullet.push_back(blt);
+}
+
+std::vector<Bullet*>* PlayerCharacter::BulletGroup()
+{
+	return &bullet;
+}
+
+Bullet* PlayerCharacter::BulletSprite(int n)
+{
+	return bullet[n];
+}
+
+void PlayerCharacter::RemoveBullet(int n)
+{
+	if (bullet.size() >= n)
+	{
+		/*bullet[n]->removeFromParentAndCleanup(true);
+		bullet[n] = nullptr;
+		bullet.erase(bullet.begin() + n);*/
+		bullet[n]->setVisible(false);
+	}
+
+}
+
+//==========================================================

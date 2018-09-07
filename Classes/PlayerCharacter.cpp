@@ -73,6 +73,7 @@ void PlayerCharacter::initValue()
 	isPressDown = false;
 
 	isPressSPC = false;
+	isPressShift = false;
 
 	isCanMove = true;
 
@@ -87,6 +88,27 @@ void PlayerCharacter::debugLabel()
 	lbl_shootingCooldown = Label::createWithTTF(ttfconfg, "");
 	lbl_shootingCooldown->setPosition(Vec2(bodyBox->getContentSize().width / 2, bodyBox->getContentSize().height + 30.0f));
 	bodyBox->addChild(lbl_shootingCooldown);
+
+	lbl1 = Label::create("", "", 16);
+	lbl2 = Label::create("", "", 16);
+	lbl3 = Label::create("", "", 16);
+	lbl4 = Label::create("", "", 16);
+	this->addChild(lbl1);
+	this->addChild(lbl2);
+	this->addChild(lbl3);
+	this->addChild(lbl4);
+	lbl1->setColor(Color3B::WHITE);
+	lbl2->setColor(Color3B::WHITE);
+	lbl3->setColor(Color3B::WHITE);
+	lbl4->setColor(Color3B::WHITE);
+	lbl2->setPosition(pPos7(this) + Vec2(100, 30));
+	lbl1->setPosition(pPos7(this) + Vec2(100, 00));
+	lbl3->setPosition(pPos7(this) + Vec2(100, 60));
+	lbl4->setPosition(pPos7(this) + Vec2(100, 90));
+	lbl1->setAnchorPoint(anc7);
+	lbl2->setAnchorPoint(anc7);
+	lbl3->setAnchorPoint(anc7);
+	lbl4->setAnchorPoint(anc7);
 }
 
 //==========================================================
@@ -94,7 +116,7 @@ void PlayerCharacter::debugLabel()
 void PlayerCharacter::callEveryFrame(float f)
 {
 
-	if (!crtAnim->isShooting() && !isPressSPC)
+	if (!crtAnim->isShooting() && !crtAnim->isMGRunning() && !isPressSPC && !isPressShift)
 	{
 		if (isPressedLR || isPressedUD)
 		{
@@ -157,6 +179,36 @@ void PlayerCharacter::callEveryFrame(float f)
 		else if (lbl_shootingCooldown->getString() != "")
 			lbl_shootingCooldown->setString("");
 	}
+	else if (!crtAnim->isMGRunning() && !crtAnim->isMGShootingRun() && crtAnim->getMGStartDelay() == 0 && isPressShift && !isPaused)
+	{
+		crtAnim->setAnimation(actList::mgA);
+	}
+	else if (crtAnim->isMGRunning() && crtAnim->isMGShootingRun() && !isPressShift && !isPaused)
+	{
+		crtAnim->setAnimation(actList::mgC);
+		crtAnim->runMGEndDelay();
+
+		if (crtAnim->isMGRunning() && !crtAnim->isMGShootingRun())
+			lbl_shootingCooldown->setString(StringUtils::format("%d", crtAnim->getMGStartDelay()));
+		else if (lbl_shootingCooldown->getString() != "")
+			lbl_shootingCooldown->setString("");
+	}
+	else if (crtAnim->isMGRunning() && !crtAnim->isMGShootingRun() && !isPaused)
+	{
+		crtAnim->runMGStartDelay();
+
+		if (crtAnim->isMGRunning() && !crtAnim->isMGShootingRun())
+			lbl_shootingCooldown->setString(StringUtils::format("%d", crtAnim->getMGStartDelay()));
+		else if (lbl_shootingCooldown->getString() != "")
+			lbl_shootingCooldown->setString("");
+	}
+
+	
+
+	lbl1->setString(StringUtils::format("Running  : %d", (int)crtAnim->isMGRunning()));
+	lbl2->setString(StringUtils::format("Shooting : %d", (int)crtAnim->isMGShootingRun()));
+	lbl3->setString(StringUtils::format("StartDly : %d", (int)crtAnim->getMGStartDelay()));
+	lbl4->setString(StringUtils::format("End  Dly : %d", (int)crtAnim->getMGEndDelay()));
 
 }
 
@@ -233,8 +285,12 @@ void PlayerCharacter::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, coco
 		crtAnim->setAnimation(actList::Attack);
 		break;
 	case KEY::KEY_SPACE:
-			isPressSPC = true;
-			isCanMove = false;
+		isPressSPC = true;
+		isCanMove = false;
+		break;
+	case KEY::KEY_SHIFT:
+		isPressShift = true;
+		isCanMove = false;
 		break;
 	}
 }
@@ -304,7 +360,10 @@ void PlayerCharacter::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, coc
 		}
 		break;
 	case KEY::KEY_SPACE:
-			isPressSPC = false;
+		isPressSPC = false;
+		break;
+	case KEY::KEY_SHIFT:
+		isPressShift = false;
 		break;
 	}
 }
@@ -327,6 +386,8 @@ float PlayerCharacter::getMoveBackground()
 	else
 		return -PLAYER_SPEED;
 }
+
+//==========================================================
 
 void PlayerCharacter::pauseAnimation()
 {
@@ -352,6 +413,8 @@ bool PlayerCharacter::isAnimationPaused()
 	return isPaused;
 }
 
+//==========================================================
+
 void PlayerCharacter::showHitBox(float _opacity)
 {
 	bodyBox->setOpacity(_opacity);
@@ -361,6 +424,8 @@ Rect PlayerCharacter::getHitBox()
 {
 	return Rect(this->getPosition() - bodyBox->getContentSize() / 2, bodyBox->getContentSize());
 }
+
+//==========================================================
 
 bool PlayerCharacter::getFlipedX()
 {
@@ -376,3 +441,6 @@ bool PlayerCharacter::isShooting()
 {
 	return crtAnim->isShooting();
 }
+
+//==========================================================
+

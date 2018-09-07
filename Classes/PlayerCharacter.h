@@ -14,6 +14,10 @@ private:
 	PlayerAnimation* crtAnim;
 	
 	Label* lbl_shootingCooldown;
+	Label* lbl1;
+	Label* lbl2;
+	Label* lbl3;
+	Label* lbl4;
 
 	bool isPressedLR;
 	bool isLeft;
@@ -26,6 +30,7 @@ private:
 	bool isPressDown;
 
 	bool isPressSPC;
+	bool isPressShift;
 
 	bool isCanMove;
 

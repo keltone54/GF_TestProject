@@ -4,6 +4,8 @@
 USING_NS_CC;
 
 #define SHOOTING_COOLDOWN 13
+#define MG_A_DELAY 37
+#define MG_C_DELAY 25
 
 bool PlayerAnimation::init()
 {
@@ -30,7 +32,6 @@ bool PlayerAnimation::init()
 	return true;
 }
 
-
 void PlayerAnimation::initValue()
 {
 	addAnimInfo("wait",			40,	 Vec2(91, 25));
@@ -47,29 +48,12 @@ void PlayerAnimation::initValue()
 	ShootingCooldown = 0;
 	isShootingCooldown = false;
 
+	MGStartDelay = 0;
+	MGEndDelay = 0;
+	isMGRun = false;
+	isMGShooting = false;
+
 	saveType = -1;
-}
-
-void PlayerAnimation::addAnimInfo(std::string _name, int _maxFrame, Vec2 _anchor)
-{
-	m_name.push_back(_name);
-	m_maxFrame.push_back(_maxFrame);
-	m_anchor.push_back(_anchor);
-}
-
-String PlayerAnimation::getTypeName(int _type)
-{
-	return m_name[_type];
-}
-
-int PlayerAnimation::getMaxFrame(int _type)
-{
-	return m_maxFrame[_type];
-}
-
-Vec2 PlayerAnimation::getAnchor(int _type)
-{
-	return m_anchor[_type];
 }
 
 void PlayerAnimation::setAnimation(int _type)
@@ -114,10 +98,8 @@ void PlayerAnimation::setAnimation(int _type)
 
 		if (_type == actList::Wait || _type == actList::Move || _type == actList::VictoryLoop || _type == actList::mgB)
 			this->runAction(rep);
-		else if (_type == actList::Attack || _type == actList::shotA || _type == actList::mgC)
+		else if (_type == actList::Attack || _type == actList::shotA)
 		{
-			ShootingCooldown = true;
-
 			auto seq = Sequence::create(
 				CallFunc::create(CC_CALLBACK_0(PlayerAnimation::setShootingCooldown, this)),
 				animate,
@@ -140,8 +122,18 @@ void PlayerAnimation::setAnimation(int _type)
 		else if (_type == actList::mgA)
 		{
 			auto seq = Sequence::create(
+				CallFunc::create(CC_CALLBACK_0(PlayerAnimation::setMGStartDelay, this)),
 				animate,
 				CallFunc::create(CC_CALLBACK_0(PlayerAnimation::setAnimation, this, actList::mgB)),
+				nullptr);
+			this->runAction(seq);
+		}
+		else if (_type == actList::mgC)
+		{
+			auto seq = Sequence::create(
+				CallFunc::create(CC_CALLBACK_0(PlayerAnimation::setMGEndDelay, this)),
+				animate,
+				CallFunc::create(CC_CALLBACK_0(PlayerAnimation::setAnimation, this, actList::Wait)),
 				nullptr);
 			this->runAction(seq);
 		}
@@ -149,12 +141,6 @@ void PlayerAnimation::setAnimation(int _type)
 }
 
 //==========================================================
-
-void PlayerAnimation::setShootingCooldown()
-{
-	ShootingCooldown = 0;
-	isShootingCooldown = true;
-}
 
 void PlayerAnimation::runShootingCooldown()
 {
@@ -164,12 +150,31 @@ void PlayerAnimation::runShootingCooldown()
 		ShootingCooldown++;
 }
 
-bool PlayerAnimation::isShooting()
+//==========================================================
+
+void PlayerAnimation::runMGStartDelay()
 {
-	return isShootingCooldown;
+	if (!isMGShooting)
+	{
+		if (MGStartDelay >= MG_A_DELAY)
+		{
+			isMGShooting = true;
+			log("runMGStartDelay");
+		}
+		else
+			MGStartDelay++;
+	}
 }
 
-int PlayerAnimation::getShootingCooldown()
+void PlayerAnimation::runMGEndDelay()
 {
-	return ShootingCooldown;
+	if (isMGRun)
+	{
+		if (MGEndDelay >= MG_C_DELAY)
+		{
+			isMGRun = false;
+		}
+		else
+			MGEndDelay++;
+	}
 }

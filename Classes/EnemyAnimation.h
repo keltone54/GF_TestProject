@@ -23,12 +23,15 @@ private:
 		Vec2 anchor;
 	};
 	aniStat anime[MAX_ANIM];
-
-	String enemyName;
-
 	vector<String>		m_name;
 	vector<int>			m_maxFrame;
 	vector<Vec2>		m_anchor;
+	String enemyName;
+	
+	Rect hitBox;
+	int health;
+	float moveSpeed;
+	bool ranger;
 
 	int saveType;
 
@@ -40,7 +43,10 @@ private:
 
 public:
 	void setAnimation(int _type);
-
+	Rect getHitBox() { return hitBox; };
+	int getHealth() { return health; };
+	float getMoveSpeed() { return moveSpeed; };
+	bool getRanger() { return ranger; };
 
 	static EnemyAnimation* EnemyAnimation::create(int _enemyType)
 	{

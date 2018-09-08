@@ -34,7 +34,7 @@ private:
 
 	std::vector<Sprite*> testBox;
 
-	EnemyCharacter* Aegis;
+	std::vector<EnemyCharacter*> Mob;
 
 	//=======================================
 
@@ -66,6 +66,7 @@ public:
 	void updateLabel(cocos2d::Label* pLabel);
 
 	double getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, int _magni);
+	void loopBG();
 
 	void moveToSecondScene(Ref* pSender);
 	void moveToStartScene(Ref* pSender);
@@ -81,6 +82,14 @@ public:
 
 	void setTestBox();
 	void removeTestBox();
+
+	//====================================================
+
+	void bulletCollision();
+
+	//====================================================
+
+	void createMob(int num);
 
 	//====================================================
 

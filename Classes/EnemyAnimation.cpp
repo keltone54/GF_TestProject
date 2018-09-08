@@ -36,11 +36,15 @@ void EnemyAnimation::initValue(int _enemyType)
 	{
 	case enemyType::Aegis:
 		enemyName = "Aegis";
+		hitBox = Rect(0, 0, 65, 110);
+		health = 8;
+		moveSpeed = 1.0;
+		ranger = false;
 
 		addAnimInfo("wait",   54, Vec2(86,  24));
 		addAnimInfo("move",	  54, Vec2(78,  24));
 		addAnimInfo("attack", 44, Vec2(94,  24));
-		addAnimInfo("die1",	  80, Vec2(75,  51));
+		addAnimInfo("die",	  80, Vec2(75,  51));
 		addAnimInfo("die2",	  70, Vec2(104, 50));
 		addAnimInfo("die3",	  47, Vec2(221, 37));
 		break;
@@ -96,6 +100,8 @@ void EnemyAnimation::setAnimation(int _type)
 			switch (_type)
 			{
 			case 0: // wait
+				this->runAction(rep);
+				break;
 			case 1: // move
 				this->runAction(rep);
 				break;
@@ -109,7 +115,11 @@ void EnemyAnimation::setAnimation(int _type)
 			}
 			break;
 			case 3: // die1
+				this->runAction(animate);
+				break;
 			case 4: // die2 
+				this->runAction(animate);
+				break;
 			case 5: // die3
 				this->runAction(animate);
 				break;

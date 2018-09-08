@@ -37,9 +37,7 @@ bool MainScene::init()
 	Noel->setPosition(wPos5);
 	actLayer->addChild(Noel);
 
-	Aegis = EnemyCharacter::create(enemyType::Aegis);
-	Aegis->setPosition(wPos5 + Vec2(-300, 0));
-	bgLayer->addChild(Aegis);
+	createMob(10);	
 
 	addLabelTimer(actLayer, -1, wPos8 - Vec2(0, 10.0f), anc8);
 
@@ -117,69 +115,21 @@ void MainScene::callEveryFrame(float f)
 
 	displayMemory();
 
-	if (Noel->isMoveBackground())
-		bgLayer->setPositionX(bgLayer->getPositionX() + Noel->getMoveBackground());
+	if (Noel->isMoveBackground()) bgLayer->setPositionX(bgLayer->getPositionX() + Noel->getMoveBackground());
 	
-	for (int i = 0; i < Noel->BulletGroup()->size(); i++)
+	bulletCollision();
+	loopBG();
+
+	for (int i = 0; i < Mob.size(); i++)
 	{
-		Rect Rct1 = Rect(
-			(-bgLayer->getPositionX() + Noel->getPositionX()) + Noel->BulletGroup()->at(i)->getPositionX(),
-			Noel->getPositionY() + Noel->BulletGroup()->at(i)->getPositionY() - 10,
-			Noel->BulletGroup()->at(i)->getBulletBoundBox().size.width - 2,
-			Noel->BulletGroup()->at(i)->getBulletBoundBox().size.height - 2
-		);
-		for (int j = 0; j < testBox.size(); j++)
-		{
-			Rect Rct2 = testBox[j]->getBoundingBox();
-
-			if (Rct2.intersectsRect(Rct1))
-			{
-				//testBox[j]->setColor(Color3B::RED);
-				//Noel->BulletGroup()->at(i)->removeFromParentAndCleanup(true);
-				Noel->RemoveBullet(i);
-				//Noel->BulletGroup()->erase(Noel->BulletGroup()->begin() + i);
-				
-				log("Collision: %d  / Size: %d", i, Noel->BulletGroup()->size());
-				testBox[j]->removeFromParentAndCleanup(true);
-				testBox[j] = nullptr;
-				testBox.erase(testBox.begin() + j);
-			}
-		}
-
-		//if (v[i]->getBoundingBox().intersectsRect(Noel->getHitBox()) || !v[i]->isVisible())
-		/*if (!Noel->BulletGroup()->at(i)->isVisible())
-		{
-			v[i]->removeFromParentAndCleanup(true);
-			v[i] = nullptr;
-			v.erase(v.begin() + i);
-		}*/
-	}
-
-	{
-		float minX1 = bgLayer->getPositionX() + (bgSprite[0]->getPositionX() - bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX() / 2);
-		float maxX1 = bgLayer->getPositionX() + (bgSprite[0]->getPositionX() + bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX() / 2);
-		float minX2 = bgLayer->getPositionX() + (bgSprite[1]->getPositionX() - bgSprite[1]->getContentSize().width * bgSprite[1]->getScaleX() / 2);
-		float maxX2 = bgLayer->getPositionX() + (bgSprite[1]->getPositionX() + bgSprite[1]->getContentSize().width * bgSprite[1]->getScaleX() / 2);
-
-		// 배경 이미지 무한반복
-		if (minX1 > 0 && minX2 > wSizeX) bgSprite[1]->setPositionX(bgSprite[1]->getPositionX() - wSizeX * 2);
-		else if (maxX1 < wSizeX && maxX2 < 0) bgSprite[1]->setPositionX(bgSprite[1]->getPositionX() + wSizeX * 2);
-		else if (minX2 > 0 && minX1 > wSizeX) bgSprite[0]->setPositionX(bgSprite[0]->getPositionX() - wSizeX * 2);
-		else if (maxX2 < wSizeX && maxX1 < 0) bgSprite[0]->setPositionX(bgSprite[0]->getPositionX() + wSizeX * 2);
+		if (!Mob[i]->isDead())
+			Mob[i]->setTargetPosition(Vec2(-bgLayer->getPositionX() + Noel->getPositionX(), Noel->getPositionY()));
 	}
 
 	//lblPosX->setString(StringUtils::format("Pos X : %d", (int)(-bgLayer->getPositionX() + Noel->getPositionX()) / 10));
 	//lblPosY->setString(StringUtils::format("Pos Y : %d", (int)Noel->getPositionY() / 10));
 
-	lblPosX->setString(StringUtils::format("Pos X : %d", testBox.size()));
-	
-	//if (Noel->BulletGroup()->size() != 0)
-	//{
-	//	//lblPosX->setString(StringUtils::format("Pos X : %d", (int)Noel->BulletSprite(0)->getPosition().x));
-	//	//lblPosY->setString(StringUtils::format("Pos Y : %d", (int)Noel->BulletSprite(0)->getPosition().y));
-	//	//lblPosX->setString(StringUtils::format("Pos X : %d", (int)Noel->getPositionX() + (int)Noel->BulletGroup()->at(0)->getPositionX()));
-	//	//lblPosY->setString(StringUtils::format("Pos Y : %d", (int)Noel->getPositionY() + (int)Noel->BulletGroup()->at(0)->getPositionY()));
-	//}
+	lblPosX->setString(StringUtils::format("Mob : %d", Mob.size()));
 }
 
 //==========================================================
@@ -190,12 +140,27 @@ void MainScene::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 	{
 		switch (keyCode)
 		{
-		case KEY::KEY_1:
+		case KEY::KEY_F:
 			removeTestBox();
 			setTestBox();
 			break;
-		case KEY::KEY_2:
+		case KEY::KEY_G:
 			removeTestBox();
+			break;
+		case KEY::KEY_1:
+			for(int i = 0; i < Mob.size();i++)
+				Mob[i]->order(enemyOrder::Wait_);
+			break;
+		case KEY::KEY_2:
+			for (int i = 0; i < Mob.size(); i++)
+				Mob[i]->order(enemyOrder::Chase_);
+			break;
+		case KEY::KEY_3:
+			for (int i = 0; i < Mob.size(); i++)
+				Mob[i]->order(enemyOrder::Attack_);
+			break;
+		case KEY::KEY_C:
+			createMob(3);
 			break;
 		case KEY::KEY_TAB:
 			moveToSecondScene(this);
@@ -254,6 +219,21 @@ double MainScene::getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, 
 	double t = c / _magni;
 
 	return t;
+}
+
+void MainScene::loopBG()
+{
+	float minX1 = bgLayer->getPositionX() + (bgSprite[0]->getPositionX() - bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX() / 2);
+	float maxX1 = bgLayer->getPositionX() + (bgSprite[0]->getPositionX() + bgSprite[0]->getContentSize().width * bgSprite[0]->getScaleX() / 2);
+	float minX2 = bgLayer->getPositionX() + (bgSprite[1]->getPositionX() - bgSprite[1]->getContentSize().width * bgSprite[1]->getScaleX() / 2);
+	float maxX2 = bgLayer->getPositionX() + (bgSprite[1]->getPositionX() + bgSprite[1]->getContentSize().width * bgSprite[1]->getScaleX() / 2);
+
+	// 배경 이미지 무한반복
+	if (minX1 > 0 && minX2 > wSizeX) bgSprite[1]->setPositionX(bgSprite[1]->getPositionX() - wSizeX * 2);
+	else if (maxX1 < wSizeX && maxX2 < 0) bgSprite[1]->setPositionX(bgSprite[1]->getPositionX() + wSizeX * 2);
+	else if (minX2 > 0 && minX1 > wSizeX) bgSprite[0]->setPositionX(bgSprite[0]->getPositionX() - wSizeX * 2);
+	else if (maxX2 < wSizeX && maxX1 < 0) bgSprite[0]->setPositionX(bgSprite[0]->getPositionX() + wSizeX * 2);
+
 }
 
 void MainScene::moveToSecondScene(Ref* pSender)
@@ -381,6 +361,72 @@ void MainScene::removeTestBox()
 			testBox[i] = nullptr;
 			testBox.erase(testBox.begin() + i);
 		}
+	}
+}
+
+void MainScene::bulletCollision()
+{
+	for (int i = 0; i < Noel->BulletGroup()->size(); i++)
+	{
+		Rect Rct1 = Rect(
+			(-bgLayer->getPositionX() + Noel->getPositionX()) + Noel->BulletGroup()->at(i)->getPositionX(),
+			Noel->getPositionY() + Noel->BulletGroup()->at(i)->getPositionY() - 10,
+			Noel->BulletGroup()->at(i)->getBulletBoundBox().size.width - 2,
+			Noel->BulletGroup()->at(i)->getBulletBoundBox().size.height - 2
+		);
+		for (int j = 0; j < testBox.size(); j++)
+		{
+			Rect Rct2 = testBox[j]->getBoundingBox();
+
+			if (Rct2.intersectsRect(Rct1))
+			{
+				Noel->RemoveBullet(i);
+
+				testBox[j]->removeFromParentAndCleanup(true);
+				testBox[j] = nullptr;
+				testBox.erase(testBox.begin() + j);
+			}
+		}
+
+		for (int j = 0; j < Mob.size(); j++)
+		{
+			if (!Mob[j]->isDead())
+			{
+				if (Mob[j]->getHitBox().intersectsRect(Rct1))
+				{
+					Noel->RemoveBullet(i);
+					
+					Mob[j]->setZOrder(81);
+					Mob[j]->damage(1);
+
+					if (Mob[j]->getOrder() == enemyOrder::Wait_)
+						Mob[j]->order(enemyOrder::Chase_);
+					
+					if(Mob[j]->getHealth() <= 0)
+					{
+						Mob[j]->setZOrder(79);
+						Mob.erase(Mob.begin() + j);
+					}
+					break;
+				}
+			}
+		}
+		
+	}
+}
+
+void MainScene::createMob(int num)
+{
+	for (int i = 0; i < num; i++)
+	{
+		auto Aegis = EnemyCharacter::create(enemyType::Aegis);
+		Aegis->setPosition(wPos4 + Vec2(random(0, 600), -180 + random(0, 370)));
+		Aegis->setScale(0.9);
+		Aegis->setTargetSize(Size(Noel->getHitBox().size.width, Noel->getHitBox().size.height));
+		bgLayer->addChild(Aegis);
+
+		Mob.push_back(Aegis);
+		Mob[i]->setZOrder(80);
 	}
 }
 

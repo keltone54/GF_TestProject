@@ -455,7 +455,12 @@ void PlayerCharacter::RemoveBullet(int n)
 		/*bullet[n]->removeFromParentAndCleanup(true);
 		bullet[n] = nullptr;
 		bullet.erase(bullet.begin() + n);*/
-		bullet[n]->setVisible(false);
+		//bullet[n]->setVisible(false);
+		bullet[n]->stopAllActions();
+		bullet[n]->removeFromParentAndCleanup(true);
+		bullet[n] = nullptr;
+		bullet.erase(bullet.begin() + n);
+
 	}
 
 }

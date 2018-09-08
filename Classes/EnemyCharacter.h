@@ -15,24 +15,37 @@ private:
 	int enemyType;
 
 	Sprite* bodyBox;
-	EnemyAnimation* crtAnim;
+	EnemyAnimation* eeAnim;
 
 	Label* lbl_TopHead;
 
+	bool m_isDead;
+	bool m_deadAction;
+
+	Sprite* healthBar;
+	Sprite* healthBarBorder;
+	int health;
+	int healthSave;
+	int healthMax;
+
+	Vec2 targetPos;
+	Size targetSize;
+
+	int orderType;
 	bool isCanMove;
-
-	bool isMoveBG;
-
 	bool isPaused;
 
 	void initCharacter();
 	void initListener();
 	void initValue();
 	void debugLabel();
+	void setHealthBar();
 
 	void callEveryFrame(float f);
-	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
-	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+
+	void deadAction();
+	void deathRandomAnimation();
+	void RemoveFPAC();
 
 public:
 
@@ -44,7 +57,16 @@ public:
 	void showHitBox(float _opacity) { bodyBox->setOpacity(_opacity); };
 	Rect getHitBox() { return Rect(this->getPosition() - bodyBox->getContentSize() / 2, bodyBox->getContentSize()); };
 	//====================================================
-	//bool getFlipedX();
+	bool getFlipedX();
+	bool isDead() { return m_isDead; };
+	void order(int _order);
+	int getOrder() { return orderType; };
+	void damage(int _damage) { health -= _damage; };
+	void setTargetPosition(Vec2 _targetPos) { targetPos = _targetPos; };
+	void setTargetSize(Size _targetSize) { targetSize = _targetSize; };
+	int getHealth() { return health; };
+	//====================================================
+	void chaseTarget();
 	//====================================================
 
 	static EnemyCharacter* EnemyCharacter::create(int _enemyType)

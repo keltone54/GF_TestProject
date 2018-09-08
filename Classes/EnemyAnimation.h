@@ -43,6 +43,7 @@ private:
 
 public:
 	void setAnimation(int _type);
+	void setSaveTypeReset();
 	Rect getHitBox() { return hitBox; };
 	int getHealth() { return health; };
 	float getMoveSpeed() { return moveSpeed; };

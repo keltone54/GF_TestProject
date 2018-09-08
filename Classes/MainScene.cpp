@@ -279,6 +279,11 @@ void MainScene::notiAction(Object* obj)
 		
 		for(int i = 0; i < Noel->BulletGroup()->size();i++)
 			this->getActionManager()->pauseTarget(Noel->BulletGroup()->at(i));
+		for (int i = 0; i < Mob.size(); i++)
+		{
+			Mob[i]->pauseAnimation();
+			Mob[i]->pause();
+		}
 	}
 	else if (pParam->intValue() == 1) // Close
 	{
@@ -336,6 +341,11 @@ void MainScene::resumeAction()
 	//this->getEventDispatcher()->resumeEventListenersForTarget(actLayer, true);
 	for (int i = 0; i < Noel->BulletGroup()->size(); i++)
 		this->getActionManager()->resumeTarget(Noel->BulletGroup()->at(i));
+	for (int i = 0; i < Mob.size(); i++)
+	{
+		Mob[i]->resumeAnimation();
+		Mob[i]->resume();
+	}
 }
 
 void MainScene::setTestBox()
@@ -385,6 +395,7 @@ void MainScene::bulletCollision()
 				testBox[j]->removeFromParentAndCleanup(true);
 				testBox[j] = nullptr;
 				testBox.erase(testBox.begin() + j);
+				break;
 			}
 		}
 

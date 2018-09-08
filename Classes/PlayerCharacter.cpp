@@ -27,7 +27,7 @@ bool PlayerCharacter::init()
 void PlayerCharacter::initCharacter()
 {
 	bodyBox = Sprite::create();
-	this->addChild(bodyBox, 11);
+	this->addChild(bodyBox, 1);
 
 	crtAnim = PlayerAnimation::create();
 	crtAnim->setAnimation(actList::Wait);
@@ -193,10 +193,13 @@ void PlayerCharacter::callEveryFrame(float f)
 		BulletCreate(bltType::RF);
 	if (bullet.size() != 0)
 		Rect rct = bullet[0]->getBoundingBox();
-	if (bullet.size() != 0 && lbl_TopHead->getString() != std::to_string(bullet.size()))
-		lbl_TopHead->setString(StringUtils::format("%d", bullet.size()));
-	else if (bullet.size() == 0 && lbl_TopHead->getString() != "")
-		lbl_TopHead->setString("");
+
+	//==================================================================================
+	//if (bullet.size() != 0 && lbl_TopHead->getString() != std::to_string(bullet.size()))
+	//	lbl_TopHead->setString(StringUtils::format("%d", bullet.size()));
+	//else if (bullet.size() == 0 && lbl_TopHead->getString() != "")
+	//	lbl_TopHead->setString("");
+	//==================================================================================
 
 	for (int i = 0; i < bullet.size(); i++)
 	{
@@ -414,7 +417,7 @@ bool PlayerCharacter::isShooting()
 void PlayerCharacter::BulletCreate(int _type)
 {
 	auto blt = Bullet::create();
-	this->addChild(blt, 10);
+	this->addChild(blt);
 	blt->SetBulletType(_type);
 	blt->setFlippedX(getFlipedX());
 
@@ -452,10 +455,6 @@ void PlayerCharacter::RemoveBullet(int n)
 {
 	if (bullet.size() >= n)
 	{
-		/*bullet[n]->removeFromParentAndCleanup(true);
-		bullet[n] = nullptr;
-		bullet.erase(bullet.begin() + n);*/
-		//bullet[n]->setVisible(false);
 		bullet[n]->stopAllActions();
 		bullet[n]->removeFromParentAndCleanup(true);
 		bullet[n] = nullptr;

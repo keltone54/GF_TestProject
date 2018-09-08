@@ -9,7 +9,7 @@ bool EnemyCharacter::init(int _enemyType)
 	//============================================================
 
 	enemyType = _enemyType;
-	this->getActionManager();
+
 	initCharacter();
 	initValue();
 	debugLabel();
@@ -22,7 +22,7 @@ bool EnemyCharacter::init(int _enemyType)
 void EnemyCharacter::initCharacter()
 {
 	bodyBox = Sprite::create();
-	this->addChild(bodyBox, 11);
+	this->addChild(bodyBox);
 
 	eeAnim = EnemyAnimation::create(enemyType);
 
@@ -95,13 +95,13 @@ void EnemyCharacter::callEveryFrame(float f)
 				if (targetPos.x < this->getPositionX() && !getFlipedX())
 				{
 					eeAnim->setFlipX(true);
-					eeAnim->setAnimation(0);
+					eeAnim->setSaveTypeReset();
 					eeAnim->setAnimation(1);
 				}
 				else if (targetPos.x > this->getPositionX() && getFlipedX())
 				{
 					eeAnim->setFlipX(false);
-					eeAnim->setAnimation(0);
+					eeAnim->setSaveTypeReset();
 					eeAnim->setAnimation(1);
 				}
 			}
@@ -190,4 +190,14 @@ void EnemyCharacter::deathRandomAnimation()
 void EnemyCharacter::RemoveFPAC()
 {
 	this->removeFromParentAndCleanup(true);
+}
+
+void EnemyCharacter::pauseAnimation()
+{
+	eeAnim->pause(); isPaused = true;
+}
+
+void EnemyCharacter::resumeAnimation()
+{
+	eeAnim->resume(); isPaused = false;
 }

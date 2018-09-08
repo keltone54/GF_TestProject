@@ -50,8 +50,8 @@ private:
 public:
 
 	//====================================================
-	//void pauseAnimation();
-	//void resumeAnimation();
+	void pauseAnimation();
+	void resumeAnimation();
 	bool isAnimationPaused() { return isPaused; };
 	//====================================================
 	void showHitBox(float _opacity) { bodyBox->setOpacity(_opacity); };

@@ -7,7 +7,7 @@ USING_NS_CC;
 
 class TestObject : public cocos2d::Sprite
 {
-public: virtual bool init();
+public: virtual bool init(int _type);
 private:
 	//====================================================
 
@@ -31,9 +31,20 @@ public:
 	
 	Sprite * box;
 
-
 	//====================================================
-	CREATE_FUNC(TestObject);
+	
+	static TestObject* TestObject::create(int _type)
+	{
+		TestObject* obj = new (std::nothrow) TestObject;
+		if (obj && obj->init(_type))
+		{
+			obj->autorelease();
+			return obj;
+		}
+		CC_SAFE_DELETE(obj);
+		return nullptr;
+	}
+
 };
 
 #endif //__TestObject__

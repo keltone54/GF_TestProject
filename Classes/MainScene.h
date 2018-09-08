@@ -8,6 +8,8 @@ USING_NS_CC;
 class PlayerCharacter;
 class PopPause;
 
+class EnemyCharacter;
+
 class MainScene : public cocos2d::Scene
 {
 public: static cocos2d::Scene* createScene();
@@ -31,6 +33,8 @@ private:
 	Sprite* bgSprite[2];
 
 	std::vector<Sprite*> testBox;
+
+	EnemyCharacter* Aegis;
 
 	//=======================================
 
@@ -83,4 +87,4 @@ public:
 	CREATE_FUNC(MainScene);
 };
 
-#endif // __MainScene_SCENE_H__
+#endif //__MainScene_SCENE_H__

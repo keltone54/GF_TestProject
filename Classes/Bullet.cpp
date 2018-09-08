@@ -18,7 +18,7 @@ bool Bullet::init()
 void Bullet::initValue()
 {
 	bulletType = 0;
-	maxRange = 640;
+	maxRange = 960;
 	speed = 1.0f;
 
 	Fire_txCache = Director::getInstance()->getTextureCache()->addImage("GF/Effect/shotfire.png");

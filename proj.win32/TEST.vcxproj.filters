@@ -10,17 +10,8 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Data">
-      <UniqueIdentifier>{6f9807b5-c4f9-4ba5-b992-3db5a3570c9a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Scene">
       <UniqueIdentifier>{2b38f0f8-5251-40fd-b260-ec8695daabb7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\ETC">
-      <UniqueIdentifier>{1282dbb0-8590-485b-986d-f0cde15f47f9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Layer">
-      <UniqueIdentifier>{37ffd3ca-b4bb-4ef2-a1cd-94dd1a5728b6}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Test">
       <UniqueIdentifier>{0f2b5af2-d2cc-4507-821e-5629e99544ab}</UniqueIdentifier>
@@ -28,25 +19,25 @@
     <Filter Include="src\Character">
       <UniqueIdentifier>{8cdd7324-5056-4201-ae38-dac2efaa9405}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Enemy">
+      <UniqueIdentifier>{6f9807b5-c4f9-4ba5-b992-3db5a3570c9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Data">
+      <UniqueIdentifier>{1282dbb0-8590-485b-986d-f0cde15f47f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ETC">
+      <UniqueIdentifier>{37ffd3ca-b4bb-4ef2-a1cd-94dd1a5728b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Pop">
+      <UniqueIdentifier>{5708d4f4-f90b-4f94-8768-2aa46c3a1a4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\TestData.cpp">
-      <Filter>src\Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Soldier_Data.cpp">
-      <Filter>src\Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Officer_Data.cpp">
-      <Filter>src\Data</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SecondScene.cpp">
       <Filter>src\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\AppDelegate.cpp">
-      <Filter>src\ETC</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\MainScene.cpp">
       <Filter>src\Scene</Filter>
@@ -66,34 +57,40 @@
     <ClCompile Include="..\Classes\TestObject.cpp">
       <Filter>src\Test</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\PopConfirm.cpp">
-      <Filter>src\Layer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\PopPause.cpp">
-      <Filter>src\Layer</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Bullet.cpp">
       <Filter>src\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\PopConfirm.cpp">
+      <Filter>src\Pop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\PopPause.cpp">
+      <Filter>src\Pop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\AppDelegate.cpp">
+      <Filter>src\ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Officer_Data.cpp">
+      <Filter>src\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Soldier_Data.cpp">
+      <Filter>src\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TestData.cpp">
+      <Filter>src\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\EnemyAnimation.cpp">
+      <Filter>src\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\EnemyCharacter.cpp">
+      <Filter>src\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
       <Filter>win32</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\TestData.h">
-      <Filter>src\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Soldier_Data.h">
-      <Filter>src\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Officer_Data.h">
-      <Filter>src\Data</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SecondScene.h">
       <Filter>src\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\AppDelegate.h">
-      <Filter>src\ETC</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\MainScene.h">
       <Filter>src\Scene</Filter>
@@ -104,9 +101,6 @@
     <ClInclude Include="..\Classes\PlayerAnimation.h">
       <Filter>src\Character</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\GlobalDef.h">
-      <Filter>src\ETC</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\StartScene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
@@ -116,14 +110,35 @@
     <ClInclude Include="..\Classes\TestObject.h">
       <Filter>src\Test</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\PopConfirm.h">
-      <Filter>src\Layer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\PopPause.h">
-      <Filter>src\Layer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Bullet.h">
       <Filter>src\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PopPause.h">
+      <Filter>src\Pop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PopConfirm.h">
+      <Filter>src\Pop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GlobalDef.h">
+      <Filter>src\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AppDelegate.h">
+      <Filter>src\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Officer_Data.h">
+      <Filter>src\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Soldier_Data.h">
+      <Filter>src\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TestData.h">
+      <Filter>src\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\EnemyAnimation.h">
+      <Filter>src\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\EnemyCharacter.h">
+      <Filter>src\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

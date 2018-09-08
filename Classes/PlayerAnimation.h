@@ -1,5 +1,5 @@
-#ifndef __PlayerSprite__
-#define __PlayerSprite__
+#ifndef __Player_Animation__
+#define __Player_Animation__
 
 #include "cocos2d.h"
 
@@ -10,6 +10,7 @@ using namespace std;
 
 class PlayerAnimation : public cocos2d::Sprite
 {
+public:	virtual bool init();
 private:
 	struct aniStat
 	{
@@ -45,10 +46,9 @@ private:
 	bool isMGShooting;
 	bool MGPhase;
 	void setMGStartDelay() { MGStartDelay = 0; isMGRun = true; };
-	void setMGEndDelay() { MGEndDelay = 0; isMGShooting = false; log("setMGEndDelay"); };
+	void setMGEndDelay() { MGEndDelay = 0; isMGShooting = false; };
 	
 public:
-	virtual bool init();
 
 	void setAnimation(int _type);
 
@@ -71,4 +71,4 @@ public:
 	CREATE_FUNC(PlayerAnimation);
 };
 
-#endif
+#endif //__Player_Animation__

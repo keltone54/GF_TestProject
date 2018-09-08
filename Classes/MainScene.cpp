@@ -7,6 +7,8 @@
 #include "PopPause.h"
 #include "Bullet.h"
 
+#include "EnemyCharacter.h"
+
 Scene* MainScene::createScene()
 {
 	return MainScene::create();
@@ -34,6 +36,10 @@ bool MainScene::init()
 	Noel = PlayerCharacter::create();
 	Noel->setPosition(wPos5);
 	actLayer->addChild(Noel);
+
+	Aegis = EnemyCharacter::create(enemyType::Aegis);
+	Aegis->setPosition(wPos5 + Vec2(-300, 0));
+	bgLayer->addChild(Aegis);
 
 	addLabelTimer(actLayer, -1, wPos8 - Vec2(0, 10.0f), anc8);
 
@@ -185,6 +191,7 @@ void MainScene::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 		switch (keyCode)
 		{
 		case KEY::KEY_1:
+			removeTestBox();
 			setTestBox();
 			break;
 		case KEY::KEY_2:

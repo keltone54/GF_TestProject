@@ -11,7 +11,6 @@
 bool PlayerCharacter::init()
 {
 	if (!Node::init()) return false;
-
 	//============================================================
 
 	initCharacter();
@@ -19,7 +18,6 @@ bool PlayerCharacter::init()
 	debugLabel();
 
 	//============================================================
-
 	initListener();
 	return true;
 }
@@ -422,7 +420,7 @@ void PlayerCharacter::BulletCreate(int _type)
 
 	if (_type == 0)
 	{
-		blt->SetBulletSpeed(2.75);
+		blt->SetBulletSpeed(0.75);
 		blt->setPosition(blt->getPosition() + Vec2(0, 6));
 	}
 	else if (_type == 1)

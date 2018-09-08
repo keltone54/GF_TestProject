@@ -1,12 +1,12 @@
 #include "TestObject.h"
 #include "GlobalDef.h"
 
-bool TestObject::init()
+bool TestObject::init(int _type)
 {
 	if (!Sprite::init()) return false;
 	//============================================================
 	// 레이어
-	
+
 
 
 	//============================================================
@@ -16,8 +16,10 @@ bool TestObject::init()
 	//============================================================
 	// 내용
 
-	box = Sprite::create("JackO.png");
-	box->setScale(0.50);
+	box = Sprite::create();
+	box->setTextureRect(Rect(0, 0, 100, 100));
+	if (_type == 0) box->setColor(Color3B::RED);
+	else if (_type == 1) box->setColor(Color3B::GREEN);
 	this->addChild(box);
 
 	//============================================================

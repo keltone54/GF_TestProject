@@ -67,6 +67,11 @@ enum bltType
 	MG
 };
 
+enum enemyType
+{
+	Aegis
+};
+
 #define createNoti(_class, _name, _func, _target) NotificationCenter::sharedNotificationCenter()->addObserver(_target, callfuncO_selector(_class::_func), _name, NULL)
 
 #define sendNoti(_message, _name) auto notiParam = String::create(_message);\

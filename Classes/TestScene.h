@@ -11,16 +11,14 @@ class TestScene : public cocos2d::Scene
 {
 public: static Scene* createScene();
 		virtual bool init();
-private:
 	//====================================================
 
 	Layer* bgLayer;
-	Layer* actLayer1;
-	Layer* actLayer2;
+	Layer* actLayer;
 
 	Label* lblMemory;
 
-	TestObject* box;
+
 
 	//====================================================
 	void initListener();
@@ -28,11 +26,15 @@ private:
 	void initBackground();
 	void debugLabel();
 	void displayMemory();
-	void callEveryFrame(float f);
-	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
-public:
 	//====================================================
-
+	void callEveryFrame(float f);
+	//====================================================
+	bool onTouchBegan(Touch* touch,	Event* event);
+	//void onTouchMoved(Touch* touch,	Event* event);
+	void onTouchEnded(Touch* touch,	Event* event);
+	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
+	//====================================================
+	
 
 
 	//====================================================

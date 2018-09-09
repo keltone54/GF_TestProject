@@ -31,6 +31,9 @@
     <Filter Include="src\Pop">
       <UniqueIdentifier>{5708d4f4-f90b-4f94-8768-2aa46c3a1a4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\AStar">
+      <UniqueIdentifier>{695b428e-4f08-474d-ae55-3323decc692b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

@@ -61,15 +61,19 @@ void TestObject::callEveryFrame(float f)
 	if ((prsW || prsS) && !prsWS) prsWS = true;
 	else if (!prsW && !prsS && prsWS) prsWS = false;
 
-	if (prsAD && prsA)
-		this->setPosition(this->getPosition() + Vec2(-4, 0));
-	if (prsAD && prsD)
-		this->setPosition(this->getPosition() + Vec2(4, 0));
 
-	if (prsWS && prsW)
-		this->setPosition(this->getPosition() + Vec2(0, 4));
-	if (prsWS && prsS)
-		this->setPosition(this->getPosition() + Vec2(0, -4));
+	if (box->getColor() == Color3B::GREEN)
+	{
+		if (prsAD && prsA)
+			this->setPosition(this->getPosition() + Vec2(-4, 0));
+		if (prsAD && prsD)
+			this->setPosition(this->getPosition() + Vec2(4, 0));
+
+		if (prsWS && prsW)
+			this->setPosition(this->getPosition() + Vec2(0, 4));
+		if (prsWS && prsS)
+			this->setPosition(this->getPosition() + Vec2(0, -4));
+	}
 }
 
 void TestObject::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)

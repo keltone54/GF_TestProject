@@ -96,7 +96,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	register_all_packages();
 
 	// create a scene. it's an autorelease object
-	auto scene = MainScene::createScene();
+	auto scene = TestScene::createScene();
 	//auto scene = StartScene::createScene();
 
 	// run

@@ -7,7 +7,7 @@ bool EnemyCharacter::init(int _enemyType)
 {
 	if (!Node::init()) return false;
 	//============================================================
-
+	
 	enemyType = _enemyType;
 
 	initCharacter();
@@ -157,15 +157,20 @@ void EnemyCharacter::chaseTarget()
 {
 	if (!eeAnim->getRanger())
 	{
-		if (targetPos.x - targetSize.width * 1.5 > this->getPositionX())
-			this->setPositionX(this->getPositionX() + eeAnim->getMoveSpeed());
-		else if (targetPos.x + targetSize.width * 1.5 < this->getPositionX())
-			this->setPositionX(this->getPositionX() - eeAnim->getMoveSpeed());
+		if (getDistance(this->getPosition(), targetPos, 1) < 300)
+		{
+			if (targetPos.x - targetSize.width * 1.5 > this->getPositionX())
+				this->setPositionX(this->getPositionX() + eeAnim->getMoveSpeed());
+			else if (targetPos.x + targetSize.width * 1.5 < this->getPositionX())
+				this->setPositionX(this->getPositionX() - eeAnim->getMoveSpeed());
 
-		if (targetPos.y - eeAnim->getMoveSpeed() > this->getPositionY())
-			this->setPositionY(this->getPositionY() + eeAnim->getMoveSpeed() / 2);
-		else if (targetPos.y + eeAnim->getMoveSpeed() < this->getPositionY())
-			this->setPositionY(this->getPositionY() - eeAnim->getMoveSpeed() / 2);
+			if (targetPos.y - eeAnim->getMoveSpeed() > this->getPositionY())
+				this->setPositionY(this->getPositionY() + eeAnim->getMoveSpeed() / 2);
+			else if (targetPos.y + eeAnim->getMoveSpeed() < this->getPositionY())
+				this->setPositionY(this->getPositionY() - eeAnim->getMoveSpeed() / 2);
+		}
+		else
+			order(enemyOrder::March_);
 	}
 }
 
@@ -176,7 +181,7 @@ void EnemyCharacter::marching()
 	else if (eeAnim->isFlippedX())
 		this->setPositionX(this->getPositionX() - eeAnim->getMoveSpeed());
 	
-	if (getDistance(this->getPosition(), targetPos, 1) < 150)
+	if (getDistance(this->getPosition(), targetPos, 1) < 200)
 	{
 		if((!eeAnim->isFlippedX() && this->getPositionX() < targetPos.x + targetSize.width * 2) ||
 			(eeAnim->isFlippedX() && this->getPositionX() > targetPos.x - targetSize.width * 2))

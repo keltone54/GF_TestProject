@@ -146,7 +146,7 @@ void PlayerCharacter::callEveryFrame(float f)
 			}
 			if (isPressedUD)
 			{
-				if (isUp && (this->getPositionY() < wSizeY - 220.0f))
+				if (isUp && (this->getPositionY() < wSizeY - 230.0f))
 				{
 					this->setPositionY(this->getPositionY() + PLAYER_SPEED / 2);
 					for(int i = 0; i < bullet.size();i++)

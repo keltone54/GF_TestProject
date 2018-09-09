@@ -11,6 +11,8 @@ public: virtual bool init(int _type);
 private:
 	//====================================================
 
+	Sprite * box;
+
 	bool prsA;
 	bool prsD;
 	bool prsAD;
@@ -29,7 +31,7 @@ private:
 public:
 	//====================================================
 	
-	Sprite * box;
+	Rect getHitBox() { return Rect(this->getPosition() - box->getContentSize() / 2, box->getContentSize()); };
 
 	//====================================================
 	

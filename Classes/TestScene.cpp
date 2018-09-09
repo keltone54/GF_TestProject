@@ -2,7 +2,6 @@
 #include "GlobalDef.h"
 
 #include "TestObject.h"
-#include "EnemyCharacter.h"
 
 Scene* TestScene::createScene()
 {
@@ -16,11 +15,9 @@ bool TestScene::init()
 	// 레이어
 
 	bgLayer = Layer::create();
-	actLayer1 = Layer::create();
-	actLayer2 = Layer::create();
+	actLayer = Layer::create();
 	this->addChild(bgLayer);
-	this->addChild(actLayer1);
-	this->addChild(actLayer2);
+	this->addChild(actLayer);
 
 	//============================================================
 	// 초기화
@@ -30,17 +27,7 @@ bool TestScene::init()
 	//============================================================
 	// 내용
 
-	box = TestObject::create(1);
-	this->addChild(box);
-	box->setPosition(wPos5);
-
-	auto b2 = TestObject::create(0);
-	this->addChild(b2);
-	b2->setPosition(wPos5 + Vec2(200, 0));
-
-	auto z = EnemyCharacter::create(enemyType::Aegis);
-	this->addChild(z);
-	z->setPosition(wPos5);
+	
 
 	//============================================================
 	initListener();
@@ -53,7 +40,14 @@ void TestScene::initListener()
 	
 	auto Keyboard_Listener = EventListenerKeyboard::create();
 	Keyboard_Listener->onKeyPressed = CC_CALLBACK_2(TestScene::onKeyPressed, this);
+	
+	auto Touch_Listener = EventListenerTouchOneByOne::create();
+	Touch_Listener->setSwallowTouches(true);
+	Touch_Listener->onTouchBegan = CC_CALLBACK_2(TestScene::onTouchBegan, this);
+	Touch_Listener->onTouchEnded = CC_CALLBACK_2(TestScene::onTouchEnded, this);
+
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(Keyboard_Listener, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(Touch_Listener, this);
 }
 
 void TestScene::initValue()
@@ -86,10 +80,24 @@ void TestScene::displayMemory()
 	lblMemory->setString(StringUtils::format("Memory: %dkb", (int)pmc.WorkingSetSize / 1024));
 }
 
+//=========================================================================
+
 void TestScene::callEveryFrame(float f)
 {
 	displayMemory();
+}
 
+//=========================================================================
+
+bool TestScene::onTouchBegan(Touch* touch, Event* event)
+{
+	auto tp = touch->getLocation();
+	
+	return true;
+}
+
+void TestScene::onTouchEnded(Touch* touch, Event* event)
+{
 
 }
 
@@ -106,3 +114,4 @@ void TestScene::onKeyPressed(EventKeyboard::KeyCode keyCode, Event * event)
 		break;
 	}
 }
+

@@ -58,6 +58,8 @@ public:
 	Rect getHitBox() { return Rect(this->getPosition() - bodyBox->getContentSize() / 2, bodyBox->getContentSize()); };
 	//====================================================
 	bool getFlipedX();
+	void setFlipedX(bool _flip);
+	//====================================================
 	bool isDead() { return m_isDead; };
 	void order(int _order);
 	int getOrder() { return orderType; };
@@ -67,6 +69,8 @@ public:
 	int getHealth() { return health; };
 	//====================================================
 	void chaseTarget();
+	void marching();
+	double getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, int _magni);
 	//====================================================
 
 	static EnemyCharacter* EnemyCharacter::create(int _enemyType)

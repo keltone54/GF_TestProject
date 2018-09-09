@@ -31,7 +31,7 @@ void EnemyCharacter::initCharacter()
 
 	bodyBox->setTextureRect(eeAnim->getHitBox());
 	bodyBox->setColor(Color3B::GREEN);
-	bodyBox->setOpacity(0);
+	bodyBox->setOpacity(0); // 히트박스 켜기/끄기
 
 	eeAnim->setPosition(Vec2(bodyBox->getContentSize().width / 2, 0));
 	eeAnim->setScale(0.65f);
@@ -93,21 +93,15 @@ void EnemyCharacter::callEveryFrame(float f)
 			if (orderType == enemyOrder::Chase_)
 			{
 				if (targetPos.x < this->getPositionX() && !getFlipedX())
-				{
-					eeAnim->setFlipX(true);
-					eeAnim->setSaveTypeReset();
-					eeAnim->setAnimation(1);
-				}
+					setFlipedX(true);
 				else if (targetPos.x > this->getPositionX() && getFlipedX())
-				{
-					eeAnim->setFlipX(false);
-					eeAnim->setSaveTypeReset();
-					eeAnim->setAnimation(1);
-				}
+					setFlipedX(false);
 			}
 		}
 		if (orderType == enemyOrder::Chase_)
 			chaseTarget();
+		else if (orderType == enemyOrder::March_)
+			marching();
 	}
 	else if (m_isDead && !m_deadAction)
 		deadAction();
@@ -130,6 +124,14 @@ bool EnemyCharacter::getFlipedX()
 	return eeAnim->isFlippedX();
 }
 
+void EnemyCharacter::setFlipedX(bool _flip)
+{
+	eeAnim->setFlippedX(_flip);
+	int n = eeAnim->getSaveType();
+	eeAnim->saveTypeReset();
+	eeAnim->setAnimation(n);
+}
+
 void EnemyCharacter::order(int _order)
 {
 	orderType = _order;
@@ -144,6 +146,9 @@ void EnemyCharacter::order(int _order)
 		break;
 	case enemyOrder::Attack_:
 		eeAnim->setAnimation(2);
+		break;
+	case enemyOrder::March_:
+		eeAnim->setAnimation(1);
 		break;
 	}
 }
@@ -162,6 +167,29 @@ void EnemyCharacter::chaseTarget()
 		else if (targetPos.y + eeAnim->getMoveSpeed() < this->getPositionY())
 			this->setPositionY(this->getPositionY() - eeAnim->getMoveSpeed() / 2);
 	}
+}
+
+void EnemyCharacter::marching()
+{
+	if (!eeAnim->isFlippedX())
+		this->setPositionX(this->getPositionX() + eeAnim->getMoveSpeed());
+	else if (eeAnim->isFlippedX())
+		this->setPositionX(this->getPositionX() - eeAnim->getMoveSpeed());
+	
+	if (getDistance(this->getPosition(), targetPos, 1) < 150)
+	{
+		if((!eeAnim->isFlippedX() && this->getPositionX() < targetPos.x + targetSize.width * 2) ||
+			(eeAnim->isFlippedX() && this->getPositionX() > targetPos.x - targetSize.width * 2))
+			order(enemyOrder::Chase_);
+	}
+}
+
+double EnemyCharacter::getDistance(const cocos2d::Vec2& p1, const cocos2d::Vec2& p2, int _magni)
+{
+	double c = sqrt(((p1.x - p2.x) * (p1.x - p2.x)) + ((p1.y - p2.y) * (p1.y - p2.y)));
+	double t = c / _magni;
+
+	return t;
 }
 
 void EnemyCharacter::deadAction()

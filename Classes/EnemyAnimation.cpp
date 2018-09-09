@@ -129,7 +129,7 @@ void EnemyAnimation::setAnimation(int _type)
 	}
 }
 
-void EnemyAnimation::setSaveTypeReset()
+void EnemyAnimation::saveTypeReset()
 {
 	saveType = -1;
 }

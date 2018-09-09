@@ -43,11 +43,12 @@ private:
 
 public:
 	void setAnimation(int _type);
-	void setSaveTypeReset();
+	void saveTypeReset();
 	Rect getHitBox() { return hitBox; };
 	int getHealth() { return health; };
 	float getMoveSpeed() { return moveSpeed; };
 	bool getRanger() { return ranger; };
+	int getSaveType() { return saveType; };
 
 	static EnemyAnimation* EnemyAnimation::create(int _enemyType)
 	{

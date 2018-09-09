@@ -120,9 +120,10 @@ void MainScene::callEveryFrame(float f)
 	bulletCollision();
 	loopBG();
 
+	
 	for (int i = 0; i < Mob.size(); i++)
 	{
-		if (!Mob[i]->isDead())
+		if (!Mob[i]->isDead() && Mob[i]->getOrder() != Wait_)
 			Mob[i]->setTargetPosition(Vec2(-bgLayer->getPositionX() + Noel->getPositionX(), Noel->getPositionY()));
 	}
 
@@ -148,16 +149,13 @@ void MainScene::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 			removeTestBox();
 			break;
 		case KEY::KEY_1:
-			for(int i = 0; i < Mob.size();i++)
-				Mob[i]->order(enemyOrder::Wait_);
+			sendOrder(enemyOrder::Wait_);
 			break;
 		case KEY::KEY_2:
-			for (int i = 0; i < Mob.size(); i++)
-				Mob[i]->order(enemyOrder::Chase_);
+			sendOrder(enemyOrder::March_);
 			break;
 		case KEY::KEY_3:
-			for (int i = 0; i < Mob.size(); i++)
-				Mob[i]->order(enemyOrder::Attack_);
+			sendOrder(enemyOrder::Chase_);
 			break;
 		case KEY::KEY_C:
 			createMob(3);
@@ -410,8 +408,10 @@ void MainScene::bulletCollision()
 					Mob[j]->setZOrder(81);
 					Mob[j]->damage(1);
 
-					if (Mob[j]->getOrder() == enemyOrder::Wait_)
-						Mob[j]->order(enemyOrder::Chase_);
+					if (Mob[j]->getOrder() == enemyOrder::Wait_) // 대기 상태에서 피격 시 액션
+					{
+						Mob[j]->order(enemyOrder::March_);
+					}
 					
 					if(Mob[j]->getHealth() <= 0)
 					{
@@ -422,7 +422,6 @@ void MainScene::bulletCollision()
 				}
 			}
 		}
-		
 	}
 }
 
@@ -431,14 +430,24 @@ void MainScene::createMob(int num)
 	for (int i = 0; i < num; i++)
 	{
 		auto Aegis = EnemyCharacter::create(enemyType::Aegis);
-		Aegis->setPosition(wPos4 + Vec2(random(0, 600), -180 + random(0, 370)));
+		Aegis->setPosition(wPos4 + Vec2(-200 - Aegis->getHitBox().size.width * random(1, 20), -220 + (random(0, 6) * 60)));
 		Aegis->setScale(0.9);
 		Aegis->setTargetSize(Size(Noel->getHitBox().size.width, Noel->getHitBox().size.height));
+		Aegis->order(enemyOrder::March_);
 		bgLayer->addChild(Aegis);
 
 		Mob.push_back(Aegis);
-		Mob[i]->setZOrder(80);
+		Aegis->setZOrder(80);
+
+		if (Aegis->getPositionX() > -bgLayer->getPositionX() + Noel->getPositionX())
+			Aegis->setFlipedX(true);
 	}
+}
+
+void MainScene::sendOrder(int _order)
+{
+	for (int i = 0; i < Mob.size(); i++)
+		Mob[i]->order(_order);
 }
 
 //==========================================================

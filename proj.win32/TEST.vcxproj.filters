@@ -10,28 +10,28 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Scene">
-      <UniqueIdentifier>{2b38f0f8-5251-40fd-b260-ec8695daabb7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Test">
-      <UniqueIdentifier>{0f2b5af2-d2cc-4507-821e-5629e99544ab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Character">
-      <UniqueIdentifier>{8cdd7324-5056-4201-ae38-dac2efaa9405}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Enemy">
-      <UniqueIdentifier>{6f9807b5-c4f9-4ba5-b992-3db5a3570c9a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Data">
+    <Filter Include="src\2. Data">
       <UniqueIdentifier>{1282dbb0-8590-485b-986d-f0cde15f47f9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\ETC">
-      <UniqueIdentifier>{37ffd3ca-b4bb-4ef2-a1cd-94dd1a5728b6}</UniqueIdentifier>
+    <Filter Include="src\3. Scene">
+      <UniqueIdentifier>{2b38f0f8-5251-40fd-b260-ec8695daabb7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Pop">
+    <Filter Include="src\4. Pop">
       <UniqueIdentifier>{5708d4f4-f90b-4f94-8768-2aa46c3a1a4e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\AStar">
+    <Filter Include="src\99. Test">
+      <UniqueIdentifier>{0f2b5af2-d2cc-4507-821e-5629e99544ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\1. ETC">
+      <UniqueIdentifier>{37ffd3ca-b4bb-4ef2-a1cd-94dd1a5728b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\5. Character">
+      <UniqueIdentifier>{8cdd7324-5056-4201-ae38-dac2efaa9405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\6. Enemy">
+      <UniqueIdentifier>{6f9807b5-c4f9-4ba5-b992-3db5a3570c9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\7. Box2D">
       <UniqueIdentifier>{695b428e-4f08-474d-ae55-3323decc692b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -40,52 +40,55 @@
       <Filter>win32</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SecondScene.cpp">
-      <Filter>src\Scene</Filter>
+      <Filter>src\3. Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\MainScene.cpp">
-      <Filter>src\Scene</Filter>
+      <Filter>src\3. Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\PlayerCharacter.cpp">
-      <Filter>src\Character</Filter>
+      <Filter>src\5. Character</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\PlayerAnimation.cpp">
-      <Filter>src\Character</Filter>
+      <Filter>src\5. Character</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\StartScene.cpp">
-      <Filter>src\Scene</Filter>
+      <Filter>src\3. Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\TestScene.cpp">
-      <Filter>src\Test</Filter>
+      <Filter>src\99. Test</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\TestObject.cpp">
-      <Filter>src\Test</Filter>
+      <Filter>src\99. Test</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Bullet.cpp">
-      <Filter>src\Character</Filter>
+      <Filter>src\5. Character</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\PopConfirm.cpp">
-      <Filter>src\Pop</Filter>
+      <Filter>src\4. Pop</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\PopPause.cpp">
-      <Filter>src\Pop</Filter>
+      <Filter>src\4. Pop</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\AppDelegate.cpp">
-      <Filter>src\ETC</Filter>
+      <Filter>src\1. ETC</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Officer_Data.cpp">
-      <Filter>src\Data</Filter>
+      <Filter>src\2. Data</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Soldier_Data.cpp">
-      <Filter>src\Data</Filter>
+      <Filter>src\2. Data</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\TestData.cpp">
-      <Filter>src\Data</Filter>
+      <Filter>src\2. Data</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\EnemyAnimation.cpp">
-      <Filter>src\Enemy</Filter>
+      <Filter>src\6. Enemy</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\EnemyCharacter.cpp">
-      <Filter>src\Enemy</Filter>
+      <Filter>src\6. Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GLES-Render.cpp">
+      <Filter>src\7. Box2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -93,55 +96,58 @@
       <Filter>win32</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SecondScene.h">
-      <Filter>src\Scene</Filter>
+      <Filter>src\3. Scene</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\MainScene.h">
-      <Filter>src\Scene</Filter>
+      <Filter>src\3. Scene</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\PlayerCharacter.h">
-      <Filter>src\Character</Filter>
+      <Filter>src\5. Character</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\PlayerAnimation.h">
-      <Filter>src\Character</Filter>
+      <Filter>src\5. Character</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\StartScene.h">
-      <Filter>src\Scene</Filter>
+      <Filter>src\3. Scene</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\TestScene.h">
-      <Filter>src\Test</Filter>
+      <Filter>src\99. Test</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\TestObject.h">
-      <Filter>src\Test</Filter>
+      <Filter>src\99. Test</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Bullet.h">
-      <Filter>src\Character</Filter>
+      <Filter>src\5. Character</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\PopPause.h">
-      <Filter>src\Pop</Filter>
+      <Filter>src\4. Pop</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\PopConfirm.h">
-      <Filter>src\Pop</Filter>
+      <Filter>src\4. Pop</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\GlobalDef.h">
-      <Filter>src\ETC</Filter>
+      <Filter>src\1. ETC</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\AppDelegate.h">
-      <Filter>src\ETC</Filter>
+      <Filter>src\1. ETC</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Officer_Data.h">
-      <Filter>src\Data</Filter>
+      <Filter>src\2. Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Soldier_Data.h">
-      <Filter>src\Data</Filter>
+      <Filter>src\2. Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\TestData.h">
-      <Filter>src\Data</Filter>
+      <Filter>src\2. Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\EnemyAnimation.h">
-      <Filter>src\Enemy</Filter>
+      <Filter>src\6. Enemy</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\EnemyCharacter.h">
-      <Filter>src\Enemy</Filter>
+      <Filter>src\6. Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GLES-Render.h">
+      <Filter>src\7. Box2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

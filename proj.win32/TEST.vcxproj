@@ -153,6 +153,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Bullet.cpp" />
     <ClCompile Include="..\Classes\EnemyAnimation.cpp" />
     <ClCompile Include="..\Classes\EnemyCharacter.cpp" />
+    <ClCompile Include="..\Classes\GLES-Render.cpp" />
     <ClCompile Include="..\Classes\PlayerCharacter.cpp" />
     <ClCompile Include="..\Classes\PlayerAnimation.cpp" />
     <ClCompile Include="..\Classes\MainScene.cpp" />
@@ -172,6 +173,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Bullet.h" />
     <ClInclude Include="..\Classes\EnemyAnimation.h" />
     <ClInclude Include="..\Classes\EnemyCharacter.h" />
+    <ClInclude Include="..\Classes\GLES-Render.h" />
     <ClInclude Include="..\Classes\GlobalDef.h" />
     <ClInclude Include="..\Classes\PlayerCharacter.h" />
     <ClInclude Include="..\Classes\PlayerAnimation.h" />

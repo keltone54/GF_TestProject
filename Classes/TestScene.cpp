@@ -35,9 +35,7 @@ bool TestScene::init()
 	texture = Director::getInstance()->getTextureCache()->addImage("blocks.png");
 
 	if (this->createBox2dWorld(true))
-	{
 		this->setBox2dWorld();
-	}
 
 	//============================================================
 	initListener();
@@ -339,7 +337,7 @@ b2Body* TestScene::addNewSprite(Vec2 point, Size size, b2BodyType bodytype,	cons
 
 	// 월드에 바디데프의 정보로 바디를 만든다.
 	b2Body* body = _world->CreateBody(&bodyDef);
-
+	
 	// 바디에 적용할 물리 속성용 바디의 모양을 만든다.
 	b2FixtureDef fixtureDef;
 	b2PolygonShape dynamicBox;
